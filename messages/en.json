@@ -1,0 +1,101 @@
+{
+  "home": {
+    "label": "Overview"
+  },
+  "order": {
+    "label": "Orders",
+    "list": {
+      "label": "Order List"
+    }
+  },
+  "return_order": {
+    "list": {
+      "label": "Returns"
+    }
+  },
+  "shipment": {
+    "label": "Shipping",
+    "list": {
+      "label": "Shipments"
+    }
+  },
+  "product": {
+    "label": "Products",
+    "list": {
+      "label": "Product List"
+    }
+  },
+  "collection": {
+    "list": {
+      "label": "Collections"
+    }
+  },
+  "catalog": {
+    "list": {
+      "label": "Price List"
+    }
+  },
+  "inventory": {
+    "label": "Inventory",
+    "list": {
+      "label": "Stock"
+    }
+  },
+  "supplier": {
+    "list": {
+      "label": "Suppliers"
+    }
+  },
+  "customer": {
+    "label": "Customers",
+    "list": {
+      "label": "Customer List"
+    }
+  },
+  "customer_group": {
+    "list": {
+      "label": "Customer Groups"
+    }
+  },
+  "discount": {
+    "list": {
+      "label": "Promotions"
+    }
+  },
+  "settings": {
+    "label": "Settings"
+  },
+  "general_setting": {
+    "label": "General Settings"
+  },
+  "location_management": {
+    "label": "Branch Management"
+  },
+  "payment_method_management": {
+    "label": "Payment Methods"
+  },
+  "checkout_management": {
+    "label": "Checkout Page"
+  },
+  "shipping_partner": {
+    "label": "Shipping Partners"
+  },
+  "shipping_management": {
+    "label": "Shipping Settings"
+  },
+  "tax_management": {
+    "label": "Taxes"
+  },
+  "employee_management": {
+    "label": "Employee Management"
+  },
+  "channel_management": {
+    "label": "Sales Channels"
+  },
+  "notification_management": {
+    "label": "Notifications"
+  },
+  "event_management": {
+    "label": "Activity Log"
+  }
+}
