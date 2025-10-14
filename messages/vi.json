@@ -1,0 +1,147 @@
+{
+  "home": {
+    "label": "Tổng quan",
+    "title": "Tổng quan"
+  },
+  "order": {
+    "title": "Quản lý đơn hàng",
+    "label": "Đơn hàng",
+    "list": {
+      "label": "Danh sách đơn hàng"
+    }
+  },
+  "return_order": {
+    "title": "Quản lý đơn hoàn hàng",
+    "list": {
+      "label": "Trả hàng"
+    }
+  },
+  "shipment": {
+    "title": "Quản lý vận đơn",
+    "label": "Vận chuyển",
+    "list": {
+      "label": "Vận đơn"
+    }
+  },
+  "product": {
+    "title": "Quản lý sản phẩm",
+    "label": "Sản phẩm",
+    "list": {
+      "label": "Danh sách sản phẩm"
+    }
+  },
+  "collection": {
+    "title": "Quản lý danh mục sản phẩm",
+    "list": {
+      "label": "Danh mục sản phẩm"
+    }
+  },
+  "catalog": {
+    "title": "Quản lý bảng giá",
+    "list": {
+      "label": "Bảng giá"
+    }
+  },
+  "inventory": {
+    "title": "Quản lý tồn kho",
+    "label": "Quản lý kho",
+    "list": {
+      "label": "Tồn kho"
+    }
+  },
+  "supplier": {
+    "list": {
+      "label": "Nhà cung cấp"
+    }
+  },
+  "customer": {
+    "title": "Quản lý khách hàng",
+    "label": "Khách hàng",
+    "list": {
+      "label": "Danh sách khách hàng"
+    }
+  },
+  "customer_group": {
+    "list": {
+      "label": "Nhóm khách hàng"
+    }
+  },
+  "discount": {
+    "list": {
+      "label": "Khuyến mãi"
+    }
+  },
+  "settings": {
+    "label": "Cấu hình"
+  },
+  "general_setting": {
+    "label": "Cấu hình chung"
+  },
+  "location_management": {
+    "label": "Quản lý chi nhánh"
+  },
+  "payment_method_management": {
+    "label": "Phương thức thanh toán"
+  },
+  "checkout_management": {
+    "label": "Trang thanh toán"
+  },
+  "shipping_partner": {
+    "label": "Đối tác vận chuyển"
+  },
+  "shipping_management": {
+    "label": "Cấu hình vận chuyển"
+  },
+  "tax_management": {
+    "label": "Thuế"
+  },
+  "employee_management": {
+    "label": "Quản lý nhân viên"
+  },
+  "channel_management": {
+    "label": "Kênh bán hàng",
+    "add_channel": "Thêm kênh bán hàng",
+    "remove_channel": "Xóa kênh bán hàng"
+  },
+  "notification_management": {
+    "label": "Thông báo"
+  },
+  "event_management": {
+    "label": "Nhật ký hoạt động"
+  },
+  "auth": {
+    "login": "Đăng nhập vào cửa hàng của bạn",
+    "phone_label": "Số điện thoại",
+    "password_label": "Mật khẩu",
+    "name_label": "Họ và tên",
+    "store_name_label": "Tên cửa hàng",
+    "province_code_label": "Tỉnh/Thành phố",
+    "confirm_password_label": "Xác nhận mật khẩu",
+    "password_required": "Mật khẩu là bắt buộc",
+    "phone_required": "Số điện thoại là bắt buộc",
+    "name_required": "Họ và tên là bắt buộc",
+    "store_name_required": "Tên cửa hàng là bắt buộc",
+    "province_code_required": "Tỉnh/Thành phố là bắt buộc",
+    "phone_validate": "Số điện thoại không hợp lệ",
+    "password_validate": "Mật khẩu phải gồm 8-20 ký tự, gồm ít nhất 1 chữ cái và 1 số",
+    "remember_me": "Ghi nhớ đăng nhập",
+    "phone_placeholder": "Nhập số điện thoại",
+    "password_placeholder": "Nhập mật khẩu",
+    "confirm_password_placeholder": "Xác nhận mật khẩu",
+    "name_placeholder": "Nhập họ và tên",
+    "store_name_placeholder": "Nhập tên cửa hàng",
+    "province_code_placeholder": "Chọn tỉnh/thành phố",
+    "confirm_password_required": "Xác nhận mật khẩu là bắt buộc",
+    "confirm_password_validate": "Mật khẩu xác nhận không khớp",
+    "login_button": "Đăng nhập",
+    "register_button": "Đăng ký",
+    "forgot_password": "Quên mật khẩu?",
+    "no_account": "Chưa có tài khoản?",
+    "register": "Đăng ký tài khoản",
+    "register_description": "Miễn phí trọn đời tối ưu vận hành kinh doanh online toàn diện",
+    "login_title": "Đăng nhập",
+    "register_title": "Đăng ký",
+    "login_success": "Đăng nhập thành công",
+    "register_success": "Đăng ký thành công"
+  }
+}
