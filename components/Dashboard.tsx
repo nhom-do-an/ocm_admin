@@ -7,8 +7,7 @@ import { useGlobalContext } from '@/hooks/useGlobalContext'
 
 
 function Dashboard({ children }: { children: React.ReactNode }) {
-    const [collapsed, setCollapsed] = useState(false)
-    const { openSidebar, setOpenSidebar } = useGlobalContext()
+    const { openSidebar, setOpenSidebar, collapsed, setCollapsed } = useGlobalContext()
     const [width, setWidth] = useState<number>(typeof window !== "undefined" ? window.innerWidth : 0);
 
     useEffect(() => {
@@ -20,7 +19,7 @@ function Dashboard({ children }: { children: React.ReactNode }) {
         <div className="min-h-screen flex flex-col w-screen">
             <div className="flex-1 w-full">
                 <div className="flex flex-row h-screen ">
-                    <div className={`max-sm:hidden h-screen fixed top-0 left-0 ${collapsed ? "w-20" : "w-64"} transition-all !border-r !border-white`}>
+                    <div className={`max-sm:hidden h-screen fixed top-0 left-0 ${collapsed ? "w-20" : "w-64"} transition-all !border-r !border-white z-50`}>
                         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} menuItems={menuItems} menuClass='max-h-[calc(100%-80px)] overflow-y-auto scrollbar-hidden mt-[60px]' />
                     </div>
                     {openSidebar &&
@@ -43,11 +42,11 @@ function Dashboard({ children }: { children: React.ReactNode }) {
                     }
 
                     <div className={`flex-1 max-h-screen h-screen  ${collapsed ? "ml-20" : "ml-64"} transition-all max-sm:ml-0 relative`}>
-                        <div className={`fixed ${collapsed ? "left-20 w-[calc(100%-80px)]" : "left-64 w-[calc(100%-256px)]"}  max-sm:top-0 max-sm:left-0 max-sm:w-full transition-all duration-200`}>
+                        <div className={`fixed ${collapsed ? "left-20 w-[calc(100%-80px)]" : "left-64 w-[calc(100%-256px)]"}  max-sm:top-0 max-sm:left-0 max-sm:w-full transition-all`}>
                             <Header />
                         </div>
 
-                        <div className="pt-2 px-5 mt-[55px] h-[calc(100%-55px)] overflow-y-scroll "> {children}</div>
+                        <div className={`absolute top-[55px] left-0 w-full px-5 h-[calc(100%-55px)] overflow-y-scroll`}> {children}</div>
                     </div>
                 </div>
 

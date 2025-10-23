@@ -1,11 +1,13 @@
 'use client';
 
+import { useGlobalContext } from '@/hooks/useGlobalContext';
 import channelService from '@/services/channel';
 import { TChannelResponse } from '@/types/response/channel';
 import { useEffect, useState } from 'react';
 
 
 const useChannel = () => {
+    const { setPublications } = useGlobalContext();
     const [loading, setLoading] = useState(false);
     const [channels, setChannels] = useState<TChannelResponse[]>([]);
     const [installLoading, setInstallLoading] = useState(false);
@@ -25,8 +27,8 @@ const useChannel = () => {
     const installChannel = async (channelId: number) => {
         setInstallLoading(true);
         try {
-            await channelService.installChannel(channelId);
-            await getChannels();
+            const response = await Promise.all([channelService.installChannel(channelId), channelService.getPublications(), getChannels()]);
+            setPublications(response[1]);
         } catch (error) {
             console.error('Failed to connect channel:', error);
         } finally {
@@ -37,8 +39,8 @@ const useChannel = () => {
     const removePublication = async (channelId: number) => {
         setInstallLoading(true);
         try {
-            await channelService.removePublication(channelId);
-            await getChannels();
+            const response = await Promise.all([channelService.removePublication(channelId), channelService.getPublications(), getChannels()]);
+            setPublications(response[1]);
         } catch (error) {
             console.error('Failed to remove channel:', error);
         } finally {

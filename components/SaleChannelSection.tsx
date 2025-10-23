@@ -12,14 +12,24 @@ interface SalesChannelSectionProps {
 
 const SalesChannelSection: React.FC<SalesChannelSectionProps> = ({ collapsed }) => {
     const router = useAppRouter()
-    const { publications } = useGlobalContext()
+    const { publications, user } = useGlobalContext()
 
     const getChannelLink = (alias: string) => {
+        let url = ''
+        console.log("alias", alias)
         switch (alias) {
-            case 'website':
-                return process.env.NEXT_PUBLIC_WEBSITE_URL || '#'
+            case 'web':
+                if (process.env.NEXT_PUBLIC_WEB_PATH) {
+                    url = `http://${user?.domain_store}.${process.env.NEXT_PUBLIC_WEB_PATH}`
+                }
+                console.log("url", url)
+                return url || '#'
+
             case 'pos':
-                return process.env.NEXT_PUBLIC_POS_URL || '#'
+                if (process.env.NEXT_PUBLIC_POS_PATH) {
+                    url = `http://${user?.domain_store}.${process.env.NEXT_PUBLIC_POS_PATH}`
+                }
+                return url || '#'
             default:
                 return '#'
         }

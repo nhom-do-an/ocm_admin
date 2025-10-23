@@ -1,3 +1,4 @@
+import { EProductStatus, EProductType } from "@/types/enums/enum"
 
 export const SCREEN = {
     LOGIN: {
@@ -127,3 +128,14 @@ export const SCREEN = {
         LABEL: "event_management.label"
     }
 }
+
+export const PTypeOptions = [
+    { label: 'Sản phẩm thường', value: EProductType.Normal },
+    { label: 'Sản phẩm combo', value: EProductType.Combo },
+    { label: 'Sản phẩm có đơn vị quy đổi', value: EProductType.Packsize },
+]
+
+export const PStatusOptions = [
+    { label: 'Đang bán', value: EProductStatus.ACTIVE },
+    { label: 'Ngừng hoạt động', value: EProductStatus.INACTIVE },
+]
