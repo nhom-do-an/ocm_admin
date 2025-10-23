@@ -24,7 +24,10 @@ type GlobalContextType = {
     setSettingOpen: (open: boolean) => void;
     existingStore: boolean;
     loading: boolean;
-    publications?: TPublicationResponse[];
+    publications: TPublicationResponse[];
+    setPublications: (publications: TPublicationResponse[]) => void;
+    collapsed: boolean;
+    setCollapsed: (collapsed: boolean) => void;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -36,6 +39,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const [existingStore, setExistingStore] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [publications, setPublications] = useState<TPublicationResponse[]>([]);
+    const [collapsed, setCollapsed] = useState(false)
+
 
     const fetchUser = async () => {
         setLoading(true);
@@ -81,7 +86,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 setSettingOpen,
                 existingStore,
                 loading,
-                publications
+                publications,
+                collapsed,
+                setCollapsed,
+                setPublications,
             }}
         >
             {children}

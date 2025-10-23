@@ -28,7 +28,16 @@ export default async function LocaleLayout({
     if (!locales.includes(locale as Locale)) notFound()
     return (
         <NextIntlClientProvider messages={messages} locale={locale}>
-            <NextTopLoader showSpinner={false} />
+            <NextTopLoader
+                color="#29d"
+                initialPosition={0.3}
+                crawlSpeed={200}
+                height={3}
+                crawl={true}
+                showSpinner={false}
+                easing="ease"
+                speed={500}
+            />
             <Providers>
                 {children}
             </Providers>

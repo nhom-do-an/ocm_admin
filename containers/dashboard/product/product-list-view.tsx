@@ -1,23 +1,16 @@
 'use client'
 import React from 'react'
-import { Table, Button, Input, Select, Space, Dropdown, Image, Tag } from 'antd'
-import { Search, Plus, Filter } from 'lucide-react'
-import type { ColumnsType, } from 'antd/es/table'
-import FilterDrawer from '@/components/FilterDrawer'
+import { Table, Button, Input, Select, Space, Dropdown, Image, Tag, Tooltip } from 'antd'
+import { Search, Plus, Filter, X, ChevronDown } from 'lucide-react'
+import type { ColumnsType } from 'antd/es/table'
+import FilterDrawer from '@/containers/dashboard/product/components/FilterDrawer'
 import { useProductList } from './hooks/use-product-list'
+import { Product } from '@/types/response/product'
+import dayjs from 'dayjs'
+import { PStatusOptions, PTypeOptions } from '@/constants/constant'
+import { useRouter } from 'next/navigation'
 
-interface Product {
-    id: string
-    name: string
-    image?: string
-    availableStock: number
-    category: string
-    brand: string
-    createdAt: string
-    variants?: number
-}
-
-const ProductList: React.FC = () => {
+const ProductListView: React.FC = () => {
     const {
         products,
         loading,
@@ -29,10 +22,22 @@ const ProductList: React.FC = () => {
         onSelectChange,
         handleTableChange,
         handleFilterChange,
-        handleAddProduct,
         handleAdvancedFilter,
         handleApplyAdvancedFilter,
+        handleClearFilters,
+        vendors,
     } = useProductList()
+
+    const activeFiltersCount = Object.keys(filters).filter(key =>
+        !['page', 'limit'].includes(key) &&
+        filters[key as keyof typeof filters] !== undefined &&
+        filters[key as keyof typeof filters] !== '' &&
+        (Array.isArray(filters[key as keyof typeof filters])
+            ? (filters[key as keyof typeof filters] as any[]).length > 0
+            : true)
+    ).length
+
+    const router = useRouter()
 
     const columns: ColumnsType<Product> = [
         {
@@ -40,55 +45,118 @@ const ProductList: React.FC = () => {
             dataIndex: 'name',
             key: 'name',
             width: 350,
-            render: (text: string, record: Product) => (
-                <Space size="middle">
-                    <Image
-                        width={40}
-                        height={40}
-                        alt="Product Image"
-                        src={record.image || 'error'}
-                        fallback="data:image/png;base64,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"
-                        style={{ objectFit: 'cover', borderRadius: 4 }}
-                    />
-                    <div>
-                        <a href="#" className="text-blue-600 hover:text-blue-800">{text}</a>
-                        {record.variants && record.variants > 0 && (
-                            <div className="text-xs text-gray-500">({record.variants} phiên bản)</div>
-                        )}
-                    </div>
-                </Space>
-            ),
+            fixed: 'left',
+            render: (_, record) => {
+                const mainImage = record.images?.[0]?.url
+                const variantCount = record.variants?.length || 0
+
+                return (
+                    <Space size="middle">
+                        {mainImage ? <Image
+                            width={40}
+                            height={40}
+                            alt={record.name}
+                            src={mainImage || '/placeholder.png'}
+                            fallback="/placeholder.png"
+                            style={{ objectFit: 'cover', borderRadius: 4 }}
+                            preview={false}
+                        /> : <Image
+                            width={40}
+                            height={40}
+                            alt={record.name}
+                            src="/icon/default_image.png"
+                            className='text-gray-300'
+
+                        />}
+
+                        <div>
+                            <button onClick={() => router.push(`/product/${record.id}`)} className='cursor-pointer'>
+                                <span className="text-blue-600 hover:text-blue-800 font-medium">{record.name}</span>
+                            </button>
+                            {variantCount > 0 && (
+                                <div className="text-xs text-gray-500">
+                                    {variantCount} phiên bản
+                                </div>
+                            )}
+                            {/* {record.tags?.length > 0 && (
+                                <div className="mt-1 flex flex-wrap gap-1">
+                                    {record.tags.slice(0, 3).map((tag) => (
+                                        <Tag key={tag} color="blue" className="m-0 text-xs">
+                                            {tag}
+                                        </Tag>
+                                    ))}
+                                    {record.tags.length > 3 && (
+                                        <Tag className="m-0 text-xs">+{record.tags.length - 3}</Tag>
+                                    )}
+                                </div>
+                            )} */}
+                        </div>
+                    </Space>
+                )
+            },
         },
         {
             title: 'Có thể bán',
-            dataIndex: 'availableStock',
-            key: 'availableStock',
-            width: 150,
+            key: 'available',
+            width: 120,
             align: 'center',
-            render: (stock: number) => (
-                <span className={stock <= 0 ? 'text-red-500' : 'text-gray-900'}>
-                    {stock}
-                </span>
-            ),
+            render: (_, record) => {
+                const totalStock = record.variants?.reduce(
+                    (acc, v) => acc + (v.inventory_quantity || 0),
+                    0
+                )
+                return (
+                    <span className={totalStock! <= 0 ? 'text-red-500 font-medium' : 'text-gray-900'}>
+                        {totalStock?.toLocaleString('vi-VN') || 0}
+                    </span>
+                )
+            },
         },
         {
             title: 'Loại',
-            dataIndex: 'category',
-            key: 'category',
+            dataIndex: 'product_type',
+            key: 'product_type',
             width: 150,
+            render: (text) => text || '-',
         },
         {
             title: 'Nhãn hiệu',
-            dataIndex: 'brand',
-            key: 'brand',
+            dataIndex: 'vendor',
+            key: 'vendor',
             width: 150,
+            render: (text) => text || '-',
         },
         {
-            title: 'Ngày khởi tạo',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            width: 130,
+            align: 'center',
+            render: (status) => {
+                const statusConfig = {
+                    active: { color: 'green', text: 'Đang bán' },
+                    inactive: { color: 'red', text: 'Ngừng bán' },
+                }
+                const config = statusConfig[status as keyof typeof statusConfig] || { color: 'default', text: status }
+                return <Tag color={config.color}>{config.text}</Tag>
+            },
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'created_at',
+            key: 'created_at',
             width: 150,
-            align: 'right',
+            align: 'center',
+            render: (date) => {
+                if (!date) return '-'
+                const formatted = dayjs(date).format('DD/MM/YYYY')
+                const fullDate = dayjs(date).format('DD/MM/YYYY HH:mm:ss')
+                return (
+                    <Tooltip title={fullDate}>
+                        <span className="cursor-help">{formatted}</span>
+                    </Tooltip>
+                )
+            },
         },
     ]
 
@@ -97,112 +165,229 @@ const ProductList: React.FC = () => {
         onChange: onSelectChange,
     }
 
+    const handleAddProduct = (type: 'normal' | 'combo' | 'packsize') => {
+        switch (type) {
+            case 'normal':
+                router.push('/product/create')
+                break
+            case 'combo':
+                router.push('/product/create?type=combo')
+                break
+            case 'packsize':
+                router.push('/product/create?type=packsize')
+                break
+        }
+    }
+
     return (
-        <div className="p-6 max-w-[1200px] mx-auto ">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold">Danh sách sản phẩm</h1>
-                <Space>
-                    <Dropdown
-                        menu={{
-                            items: [
-                                {
-                                    key: 'add',
-                                    label: 'Thêm sản phẩm thường',
-                                    onClick: handleAddProduct,
-                                },
-                                {
-                                    key: 'add-combo',
-                                    label: 'Thêm combo',
-                                },
-                            ],
-                        }}
-                        placement="bottomRight"
-                    >
-                        <Button type="primary" icon={<Plus size={16} />}>
+        <div className="flex flex-col h-screen overflow-hidden max-ư-[1000px] overflow-x-scroll">
+            {/* Header - Fixed */}
+            <div className="flex-shrink-0 px-6 pt-6 pb-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl !font-semibold">Danh sách sản phẩm</h1>
+                    </div>
+                    <Space>
+                        <Dropdown.Button
+                            type="primary"
+                            size="large"
+                            icon={<ChevronDown size={16} />}
+                            onClick={() => handleAddProduct('normal')}
+                            menu={{
+                                items: [
+                                    {
+                                        key: 'combo',
+                                        label: 'Thêm sản phẩm combo',
+                                        onClick: () => handleAddProduct('combo')
+                                    },
+                                    {
+                                        key: 'packsize',
+                                        label: 'Thêm sản phẩm có đơn vị quy đổi',
+                                        onClick: () => handleAddProduct('packsize')
+                                    },
+                                ],
+                            }}
+                            placement="bottomRight"
+                        >
+                            <Plus size={16} className="inline mr-1" />
                             Thêm sản phẩm
-                        </Button>
-                    </Dropdown>
-                </Space>
-            </div>
-
-            <div className="bg-white shadow-md rounded-sm pt-5 pb-2">
-                {/* Filters */}
-                <div className="flex items-center gap-3 mb-4 px-5">
-                    <Input
-                        placeholder="Tìm kiếm theo mã sản phẩm, tên sản phẩm"
-                        prefix={<Search size={16} />}
-                        className="w-[400px]"
-                        value={filters.searchText}
-                        onChange={(e) => handleFilterChange('searchText', e.target.value)}
-                    />
-                    <Select
-                        placeholder="Kênh bán hàng"
-                        className="w-[200px]"
-                        value={filters.channel || undefined}
-                        onChange={(value) => handleFilterChange('channel', value)}
-                        options={[
-                            { label: 'Tất cả kênh', value: '' },
-                            { label: 'Website', value: 'website' },
-                            { label: 'Cửa hàng', value: 'store' },
-                        ]}
-                    />
-                    <Select
-                        placeholder="Loại sản phẩm"
-                        className="w-[200px]"
-                        value={filters.category || undefined}
-                        onChange={(value) => handleFilterChange('category', value)}
-                        options={[
-                            { label: 'Tất cả loại', value: '' },
-                            { label: 'Laptop', value: 'laptop' },
-                            { label: 'Âm thanh', value: 'audio' },
-                        ]}
-                    />
-                    <Select
-                        placeholder="Tag"
-                        className="w-[150px]"
-                        value={filters.tag || undefined}
-                        onChange={(value) => handleFilterChange('tag', value)}
-                        options={[
-                            { label: 'Tất cả tag', value: '' },
-                            { label: 'Mới', value: 'new' },
-                            { label: 'Hot', value: 'hot' },
-                        ]}
-                    />
-                    <Button icon={<Filter size={16} />} onClick={handleAdvancedFilter}>
-                        Bộ lọc khác
-                    </Button>
+                        </Dropdown.Button>
+                    </Space>
                 </div>
-
-                {/* Table */}
-                <Table
-                    rowSelection={rowSelection}
-                    columns={columns}
-                    dataSource={products}
-                    loading={loading}
-                    className='!rounded-none !z-10'
-                    rowKey="id"
-                    pagination={{
-                        ...pagination,
-                        showSizeChanger: true,
-                        showTotal: (total, range) => `Từ ${range[0]} đến ${range[1]} trên tổng ${total}`,
-                        position: ['bottomCenter'],
-                    }}
-                    onChange={handleTableChange}
-                    scroll={{ x: 1000 }}
-                />
-
-                {/* Advanced Filter Drawer */}
-                <FilterDrawer
-                    open={openAdvancedFilter}
-                    onClose={() => setOpenAdvancedFilter(false)}
-                    onApplyFilter={handleApplyAdvancedFilter}
-                />
             </div>
 
+            {/* Main Content - Scrollable */}
+            <div className="flex-1 overflow-hidden px-6 pb-6">
+                <div className="bg-white shadow-sm rounded-lg h-full flex flex-col">
+                    {/* Filters Bar - Fixed */}
+                    <div className="flex-shrink-0 p-4">
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <Input
+                                placeholder="Tìm theo mã, tên sản phẩm..."
+                                prefix={<Search size={16} className="text-gray-400" />}
+                                className="w-[350px]"
+                                value={filters.key}
+                                onChange={(e) => handleFilterChange('key', e.target.value)}
+                                allowClear
+                            />
 
+                            <Select
+                                placeholder="Nhãn hiệu"
+                                mode="multiple"
+                                maxTagCount="responsive"
+                                className="min-w-[200px]"
+                                value={filters.vendors}
+                                onChange={(value) => handleFilterChange('vendors', value)}
+                                options={vendors.map(v => ({ label: v, value: v }))}
+                                allowClear
+                            />
+
+                            <Select
+                                placeholder="Hình thức sản phẩm"
+                                mode="multiple"
+                                maxTagCount="responsive"
+                                className="min-w-[200px]"
+                                value={filters.types}
+                                onChange={(value) => handleFilterChange('types', value)}
+                                options={PTypeOptions}
+                                allowClear
+                            />
+
+                            <Select
+                                placeholder="Trạng thái"
+                                mode="multiple"
+                                maxTagCount="responsive"
+                                className="min-w-[180px]"
+                                value={filters.statuses}
+                                onChange={(value) => handleFilterChange('statuses', value)}
+                                options={PStatusOptions}
+                                allowClear
+                            />
+
+                            <Button
+                                icon={<Filter size={16} />}
+                                onClick={handleAdvancedFilter}
+                                className="relative"
+                            >
+                                Bộ lọc khác
+                                {activeFiltersCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                        {activeFiltersCount}
+                                    </span>
+                                )}
+                            </Button>
+
+                            {activeFiltersCount > 0 && (
+                                <Button
+                                    icon={<X size={16} />}
+                                    onClick={handleClearFilters}
+                                    danger
+                                    type="text"
+                                >
+                                    Xóa bộ lọc
+                                </Button>
+                            )}
+                        </div>
+
+                        {/* Active Filters Display */}
+                        {activeFiltersCount > 0 && (
+                            <div className="mt-3 flex items-center gap-2 flex-wrap">
+                                <span className="text-sm text-gray-500">Đang lọc:</span>
+                                {filters.vendors && filters.vendors?.length > 0 && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('vendors', [])}>
+                                        Nhãn hiệu: {filters.vendors.join(', ')}
+                                    </Tag>
+                                )}
+                                {filters.product_types && filters.product_types?.length > 0 && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('product_types', [])} className='word-wrap'>
+                                        Loại: {filters.product_types.join(', ')}
+                                    </Tag>
+                                )}
+                                {filters.types && filters.types?.length > 0 && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('types', [])}>
+                                        Hình thức: {filters.types.map((type) => PTypeOptions.find((opt) => opt.value === type)?.label).filter(Boolean).join(', ') || 'Không có hình thức được chọn'}
+                                    </Tag>
+                                )}
+                                {filters.statuses && filters.statuses?.length > 0 && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('statuses', [])}>
+                                        Trạng thái: {filters.statuses
+                                            .map((status) => PStatusOptions.find((opt) => opt.value === status)?.label)
+                                            .filter(Boolean)
+                                            .join(', ') || 'Không có trạng thái được chọn'}
+                                    </Tag>
+                                )}
+                                {filters.tags && filters.tags?.length > 0 && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('tags', [])}>
+                                        Tag: {filters.tags.join(', ')}
+                                    </Tag>
+                                )}
+                                {filters.min_price !== undefined && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('min_price', undefined)}>
+                                        Giá từ: {filters.min_price.toLocaleString('vi-VN')}₫
+                                    </Tag>
+                                )}
+                                {filters.max_price !== undefined && (
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('max_price', undefined)}>
+                                        Giá đến: {filters.max_price.toLocaleString('vi-VN')}₫
+                                    </Tag>
+                                )}
+
+                                {filters.min_created_at && filters.max_created_at && (
+                                    <Tag closable color='blue' onClose={() => {
+                                        handleFilterChange('min_created_at', undefined)
+                                        handleFilterChange('max_created_at', undefined)
+                                    }}>
+                                        Ngày: {filters.min_created_at} - {filters.max_created_at}
+                                    </Tag>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Table - Scrollable */}
+                    <div className="flex-1 overflow-y-scroll">
+                        <Table
+                            rowSelection={rowSelection}
+                            columns={columns}
+                            dataSource={products}
+                            loading={loading}
+                            rowKey="id"
+                            pagination={{
+                                ...pagination,
+                                showSizeChanger: true,
+                                showTotal: (total, range) => (
+                                    <span className="text-sm text-gray-600">
+                                        Hiển thị <strong>{range[0]}-{range[1]}</strong> trong tổng số <strong>{total}</strong> sản phẩm
+                                    </span>
+                                ),
+                                position: ['bottomCenter'],
+                                pageSizeOptions: ['10', '20', '50', '100'],
+                            }}
+                            onChange={handleTableChange}
+                            scroll={{ x: 'max-content', y: 410 }}
+                            sticky
+                            locale={{
+                                emptyText: (
+                                    <div className="py-8">
+                                        <p className="text-gray-400 text-lg mb-2">Không tìm thấy sản phẩm nào</p>
+                                        <p className="text-gray-400 text-sm">Thử điều chỉnh bộ lọc hoặc thêm sản phẩm mới</p>
+                                    </div>
+                                )
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Filter Drawer */}
+            <FilterDrawer
+                open={openAdvancedFilter}
+                onClose={() => setOpenAdvancedFilter(false)}
+                onApplyFilter={handleApplyAdvancedFilter}
+                initialFilters={filters}
+            />
         </div>
     )
 }
 
-export default ProductList
+export default ProductListView

@@ -6,6 +6,8 @@ import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { ConfigProvider, } from 'antd'
 import { GlobalProvider } from '@/hooks/useGlobalContext'
 import { NotificationProvider } from '@/hooks/useNotification'
+import viVN from 'antd/es/locale/vi_VN'
+import { LoaderProvider } from '@/hooks/useGlobalLoader'
 
 const store = makeStore()
 
@@ -29,9 +31,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <AntdRegistry>
           <ConfigProvider
             theme={antdTheme}
+            locale={viVN}
           >
             <NotificationProvider>
-              {children}
+              <LoaderProvider>
+                {children}
+              </LoaderProvider>
+
             </NotificationProvider>
           </ConfigProvider>
         </AntdRegistry>

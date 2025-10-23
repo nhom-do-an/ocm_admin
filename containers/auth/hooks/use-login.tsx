@@ -1,10 +1,10 @@
 'use client';
 
 import { SCREEN } from '@/constants/constant';
-import useChannel from '@/containers/dashboard/setting/channel/hooks/use-channel';
 import { useGlobalContext } from '@/hooks/useGlobalContext';
 import { useGlobalNotification } from '@/hooks/useNotification';
 import authService from '@/services/auth';
+import channelService from '@/services/channel';
 import storage from '@/storages/storage';
 import { STORAGE_KEYS } from '@/storages/storage-key';
 
@@ -20,10 +20,9 @@ const useLogin = () => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
-    const { setUser } = useGlobalContext();
+    const { setUser, setPublications } = useGlobalContext();
     const t = useTranslations('auth');
     const notification = useGlobalNotification();
-    const { getChannels } = useChannel();
 
     const loginSchema = Yup.object({
         phone: Yup.string()
@@ -40,11 +39,12 @@ const useLogin = () => {
             const { phone, password } = formik.values;
             setLoading(true);
             try {
-                const [response] = await Promise.all([authService.login({ phone, password }), getChannels()]);
+                const [response, publications] = await Promise.all([authService.login({ phone, password }), channelService.getPublications()]);
 
                 storage.setItem(STORAGE_KEYS.ACCESS_TOKEN, response.access_token);
                 storage.setItem(STORAGE_KEYS.REFRESH_TOKEN, response.refresh_token);
                 setUser(response);
+                setPublications(publications || []);
                 router.push(SCREEN.HOME.PATH);
                 notification.success({ message: t('login_success') });
             } catch (error) {
