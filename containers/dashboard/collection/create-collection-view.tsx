@@ -177,7 +177,7 @@ const CreateCollectionView: React.FC = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="max-w-[1400px] mx-auto p-6 mt-[80px]">
+                    <div className="max-w-[1400px] mx-auto p-6">
                         <Form
                             form={form}
                             layout="vertical"
