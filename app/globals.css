@@ -33,7 +33,7 @@
     @apply bg-[var(--primary)] !text-white px-4 py-2 rounded;
   }
   .secondary-button {
-    @apply !text-[var(--primary)] font-semibold px-4 py-2 rounded border border-[var(--primary)];
+    @apply !text-[var(--primary)] font-semibold px-4 py-2 rounded border !border-[var(--primary)];
   }
   .custom-input input::placeholder {
     @apply !text-[var(--input-placeholder)] font-normal px-1;

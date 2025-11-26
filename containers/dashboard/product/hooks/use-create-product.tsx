@@ -6,6 +6,7 @@ import channelService from "@/services/channel"
 import collectionService from "@/services/collection"
 import locationService from "@/services/location"
 import productService from "@/services/product"
+import { ELocationStatus } from "@/types/enums/enum"
 import { TPublicationResponse } from "@/types/response/channel"
 import { Collection } from "@/types/response/collection"
 import { Location } from "@/types/response/locations"
@@ -60,7 +61,7 @@ export const useCreateProduct = () => {
         try {
             if (id) {
                 const response = await Promise.all([
-                    locationService.getListLocation(),
+                    locationService.getListLocations({ status: ELocationStatus.ACTIVE, inventory_management: true }),
                     productService.getProductTypeList(),
                     productService.getVendorList(),
                     productService.getTagsList(),
@@ -69,7 +70,7 @@ export const useCreateProduct = () => {
                     productService.getDetailProductByID(Number(id)),
 
                 ])
-                setLocations(response[0] || [])
+                setLocations(response[0].locations || [])
                 setProductTypes(response[1] || [])
                 setVendors(response[2] || [])
                 setTags(response[3] || [])

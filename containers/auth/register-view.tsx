@@ -1,9 +1,9 @@
 'use client';
 
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select, } from 'antd';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { LockKeyhole, User, Phone, Store, MapPin } from 'lucide-react';
+import { LockKeyhole, User, Phone, Store } from 'lucide-react';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import useRegister from './hooks/use-register';
@@ -27,11 +27,11 @@ const RegisterView = () => {
     const { loading, form, formik, fetchLoading, provinces } = useRegister();
     const t = useTranslations('auth');
     return <ProtectedRegisterRoute>
-        {fetchLoading ? <Loader /> : <div className="w-screen h-screen center overflow-y-scroll">
+        {fetchLoading ? <Loader /> : <div className="w-screen h-screen center overflow-y-scroll px-4">
             <div className="w-full max-sm:w-[500px] rounded-lg px-8 py-3 max-w-[600px] bg-white shadow-lg h-fit overflow-y-scroll">
                 <Image src="/icon/full_logo.png" alt="Logo" width={200} height={80} className=" mx-auto" />
-                <h1 className="text-start text-[26px] font-bold]">{t('register')}</h1>
-                <p className="text-start text-[16px] text-gray-600 !mb-[40px]">{t('register_description')}</p>
+                <h1 className="text-start text-[26px] font-semibold text-gray-900">{t('register')}</h1>
+                <p className="text-start text-[14px] text-gray-500 !mb-[28px]">{t('register_description')}</p>
                 <Form form={form} layout="vertical" onFinish={formik.handleSubmit} className='max-w-[500px] !mx-auto'>
                     <div className="flex items-center justify-between gap-4 mb-3 max-sm:flex-col">
                         <Form.Item
@@ -86,7 +86,7 @@ const RegisterView = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label={<label htmlFor="province" className='mt-3 max-sm:mt-0'>
+                            label={<label htmlFor="province_code" className='mt-3 max-sm:mt-0'>
                                 {t('province_code_label')}<span className='text-red-500'>*</span>
                             </label>}
                             name="province_code"
@@ -98,7 +98,6 @@ const RegisterView = () => {
                                 id="province_code"
                                 className="!h-10 "
                                 placeholder={t('province_code_placeholder')}
-                                prefix={<MapPin size={18} />}
 
                                 showSearch
                                 optionFilterProp="children"
@@ -150,16 +149,33 @@ const RegisterView = () => {
                         </Form.Item>
                     </div>
 
+                    {/* <div className='mb-3'>
+                        <Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)}>
+                            <span className='text-[14px] text-gray-700'>
+                                {t('i_agree_prefix')}{' '}
+                                <a href="#" className='text-blue-600 hover:underline'>{t('privacy_policy')}</a>{' '}
+                                &{' '}
+                                <a href="#" className='text-blue-600 hover:underline'>{t('terms_of_use')}</a>
+                            </span>
+                        </Checkbox>
+                    </div> */}
+
 
                     <Form.Item>
+                        {(() => {
+                            const isDisabled = loading || !formik.isValid || !formik.dirty;
+                            return (
                         <Button
                             type="primary"
                             htmlType="submit"
                             loading={loading}
-                            className="  bg-[#006663] text-white w-[220px] !h-[50px] !rounded-full !max-w-[300px] !block !mx-auto !text-[20px] !mt-4"
+                            disabled={isDisabled}
+                            className={`${isDisabled ? 'bg-gray-300 text-white !border-gray-300' : 'bg-[#006663] text-white hover:opacity-90'} w-[220px] max-sm:w-full !h-[50px] !rounded-full !max-w-[300px] !block !mx-auto !text-[18px] !mt-4`}
                         >
                             {t('register_button')}
                         </Button>
+                            );
+                        })()}
                     </Form.Item>
                 </Form>
             </div >

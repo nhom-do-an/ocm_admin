@@ -99,6 +99,7 @@ const useRegister = () => {
             const response = await regionService.getListRegions({ type: ERegionType.PROVINCE, parent_code: "VN" });
             setProvinces(response);
         } catch (error) {
+            setProvinces([]);
             console.log("Error fetching provinces:", error);
         } finally {
             setFetchLoading(false);

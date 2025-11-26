@@ -32,9 +32,60 @@ export const API = {
     },
     LOCATION: {
         LIST: '/admin/locations',
+        GET_DETAIL: (id: number) => `/admin/locations/${id}`,
+        CREATE: '/admin/locations',
+        UPDATE: (id: number) => `/admin/locations/${id}`,
     },
     ATTACHMENT: {
         UPLOAD: '/admin/file/upload',
     },
-
+    CUSTOMER: {
+        GET_CUSTOMERS: '/admin/customers',
+        CREATE_CUSTOMER: '/admin/customers',
+        GET_CUSTOMER_DETAIL: (id: number) => `/admin/customers/${id}`,
+        GET_CUSTOMER_ADDRESS_LIST: (id: number) => `/admin/customers/${id}/addresses`,
+    },
+    OLD_REGION: {
+        GET_LIST: '/old-region/list',
+    },
+    ORDER: {
+        GET_ORDERS: '/admin/orders',
+        CREATE_ORDER: '/admin/orders',
+        GET_ORDER_DETAIL: (id: number) => `/admin/orders/${id}`,
+        GET_EVENTS: (id: number) => `/admin/orders/${id}/events`,
+        GET_TRANSACTIONS: (id: number) => `/admin/orders/${id}/transactions`,
+        UPDATE_ORDER: (id: number) => `/admin/orders/${id}`,
+        UPDATE_ORDER_ITEMS: (id: number) => `/admin/orders/${id}/items`,
+        CREATE_ORDER_PAYMENTS: (id: number) => `/admin/orders/${id}/payments`,
+    },
+    VARIANT: {
+        GET_VARIANTS: '/admin/variants',
+    },
+    PAYMENT_METHOD: {
+        GET_PAYMENT_METHODS: '/admin/payment-methods',
+    },
+    CUSTOMER_ORDER: {
+        GET_CUSTOMER_ORDERS: '/orders',
+    },
+    SOURCE: {
+        GET_SOURCES: '/admin/sources',
+    },
+    USER: {
+        GET_LIST_USERS: '/admin/users',
+        GET_OWNER: '/admin/users/owner',
+        GET_STAFFS: '/admin/users/staffs',
+        CREATE_STAFF: '/admin/users/staffs',
+        UPDATE_STAFF: (id: number) => `/admin/users/staffs/${id}`,
+        GET_USER_SUMMARY: '/admin/users/summary',
+    },
+    SHIPPING_RATE: {
+        GET_LIST: '/admin/shipping/rates',
+    },
+    DELIVERY_PROVIDER: {
+        GET_LIST: '/admin/delivery-providers',
+        CREATE: '/admin/delivery-providers',
+    },
+    EVENT: {
+        GET_EVENTS: '/admin/events',
+    },
 };

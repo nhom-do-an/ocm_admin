@@ -1,9 +1,8 @@
+import OrderListView from '@/containers/dashboard/order/order-list-view'
 import React from 'react'
 
 const OrderList = () => {
-    return (
-        <div>OrderList</div>
-    )
+    return <OrderListView />
 }
 
 export default OrderList

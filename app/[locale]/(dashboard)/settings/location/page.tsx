@@ -1,9 +1,8 @@
+import LocationManagementView from '@/containers/dashboard/setting/location/location-view'
 import React from 'react'
 
 function Location() {
-    return (
-        <div>Location</div>
-    )
+    return <LocationManagementView />
 }
 
 export default Location
