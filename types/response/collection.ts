@@ -14,6 +14,7 @@ export interface Collection {
     image?: Attachment;
     created_at?: string;
     updated_at?: string;
+    products_count?: number;
 }
 
 

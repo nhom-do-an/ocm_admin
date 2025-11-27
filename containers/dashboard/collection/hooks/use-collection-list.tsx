@@ -23,6 +23,7 @@ export const useCollectionList = () => {
         total: 0,
     })
     const [filters, setFilters] = useState<InternalFilters>({})
+    const [initialized, setInitialized] = useState(false)
     const { startLoading, stopLoading } = useLoader();
 
 
@@ -32,15 +33,26 @@ export const useCollectionList = () => {
         // Parse pagination
         const page = searchParams.get('page')
         const limit = searchParams.get('limit')
-        if (page) setPagination(prev => ({ ...prev, current: parseInt(page) }))
-        if (limit) setPagination(prev => ({ ...prev, pageSize: parseInt(limit) }))
+        if (page) {
+            const pageNum = parseInt(page)
+            if (!isNaN(pageNum)) {
+                setPagination(prev => ({ ...prev, current: pageNum }))
+            }
+        }
+        if (limit) {
+            const sizeNum = parseInt(limit)
+            if (!isNaN(sizeNum)) {
+                setPagination(prev => ({ ...prev, pageSize: sizeNum }))
+            }
+        }
 
         // Parse string filters
         const key = searchParams.get('key')
         if (key) params.key = key
 
         setFilters(params)
-    }, [])
+        setInitialized(true)
+    }, [searchParams])
 
 
     const updateURLParams = (newFilters: InternalFilters, newPagination?: any) => {
@@ -62,7 +74,11 @@ export const useCollectionList = () => {
         startLoading()
         setLoading(true)
         try {
-            const response = await collectionService.getCollections()
+            const response = await collectionService.getCollections({
+                page: pagination.current,
+                size: pagination.pageSize,
+                key: filters.key,
+            })
             setCollections(response.collections || [])
             setPagination((prev) => ({ ...prev, total: response.count || 0 }))
         } catch (error) {
@@ -106,8 +122,9 @@ export const useCollectionList = () => {
     }
 
     useEffect(() => {
+        if (!initialized) return
         fetchCollections()
-    }, [pagination.current, pagination.pageSize, filters])
+    }, [initialized, pagination.current, pagination.pageSize, filters])
 
     return {
         collections,

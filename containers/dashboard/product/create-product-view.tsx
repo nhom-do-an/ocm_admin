@@ -32,6 +32,8 @@ import { TPublicationResponse } from '@/types/response/channel'
 import { useRouter } from 'next/navigation'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
 import Image from 'next/image'
+import inventoryLevelService, { ChangeInventoryReason } from '@/services/inventory-level'
+import { InventoryLevel } from '@/types/response/inventory-level'
 
 const { TextArea } = Input
 
@@ -83,6 +85,12 @@ const CreateProduct: React.FC = () => {
     const [isModalDeleteVisible, setIsModalDeleteVisible] = useState<boolean>(false);
     const [imageSelectModalVisible, setImageSelectModalVisible] = useState<boolean>(false);
     const [selectingImageForVariantIndex, setSelectingImageForVariantIndex] = useState<number | null>(null);
+    const [inventoryLevels, setInventoryLevels] = useState<InventoryLevel[]>([])
+    const [adjustModalVisible, setAdjustModalVisible] = useState(false)
+    const [selectedLevel, setSelectedLevel] = useState<InventoryLevel | null>(null)
+    const [adjustValue, setAdjustValue] = useState<number>(0)
+    const [newQuantity, setNewQuantity] = useState<number>(0)
+    const [reason, setReason] = useState<ChangeInventoryReason>('fact_inventory')
     const router = useRouter()
     const generateVariantCombinations = (attrs: ProductAttribute[]): Array<{
         title: string
@@ -205,74 +213,121 @@ const CreateProduct: React.FC = () => {
         setImageSelectModalVisible(true)
     }
 
-    const variantColumns: ColumnsType<any> = [
-        {
-            title: '',
-            width: 40,
-            render: () => <Checkbox />,
-        },
-        {
-            title: 'Hình ảnh',
-            key: 'image',
-            width: 80,
-            render: (_, record, index) => (
-                <div
-                    className="w-12 h-12 border rounded cursor-pointer hover:border-blue-500 flex items-center justify-center overflow-hidden"
-                    onClick={() => handleSelectImageForVariant(index)}
-                >
-                    {record.image && record.image.url ? (
-                        <Image src={record.image.url} alt={record.title} className="w-full h-full object-cover" width={50} height={50} />
-                    ) : (
-                        <UploadIcon size={20} className="text-gray-400" />
-                    )}
-                </div>
-            ),
-        },
-
-        {
-            title: 'Phiên bản',
-            key: 'variant',
-            render: (_, record, index) => (
-                <div>
-                    <div className="font-medium">{record.title}</div>
-                    <Space size="small">
-                        <Button
-                            type="link"
-                            size="small"
-                            className="p-0 h-auto"
-                            onClick={() => {
-                                setEditingVariant(record)
-                                setEditingVariantIndex(index)
-                                setVariantModalVisible(true)
-                            }}
-                        >
-                            Chỉnh sửa
-                        </Button>
-                        <Button
-                            type="link"
-                            size="small"
-                            danger
-                            className="p-0 h-auto"
-                            onClick={() => handleDeleteVariant(index)}
-                        >
-                            Xóa
-                        </Button>
-                    </Space>
-
-                </div>
-            ),
-        },
-        {
-            title: 'Giá bán',
-            dataIndex: 'price',
-            render: (price) => `${price ? price.toLocaleString('vi-VN') : 0}₫`,
-        },
-        {
-            title: 'Có thể bán',
-            key: 'variant',
-            render: (_, record, index) => `${editMode ? record.inventory_quantity : `${inventoryQuantity.map(iq => iq.available).reduce((a, b) => a + b, 0)} tại ${locations.length} kho`}`,
-        },
-    ]
+    const variantColumns: ColumnsType<any> = editMode
+        ? [
+            {
+                title: 'Hình ảnh',
+                key: 'image',
+                width: 80,
+                render: (_, record) => (
+                    <div className="w-12 h-12 border rounded flex items-center justify-center overflow-hidden">
+                        {record.image && record.image.url ? (
+                            <Image src={record.image.url} alt={record.title} className="w-full h-full object-cover" width={50} height={50} />
+                        ) : (
+                            <UploadIcon size={20} className="text-gray-400" />
+                        )}
+                    </div>
+                ),
+            },
+            {
+                title: 'Phiên bản',
+                key: 'variant',
+                render: (_: any, record: any) => (
+                    <button
+                        className="font-medium text-blue-600 hover:text-blue-800"
+                        onClick={() => {
+                            if (record.id || product?.id) {
+                                const pid = product?.id || record.product_id
+                                const vid = record.id
+                                if (pid && vid) {
+                                    router.push(`/product/${pid}/variant/${vid}`)
+                                }
+                            }
+                        }}
+                    >
+                        {record.title}
+                    </button>
+                ),
+            },
+            {
+                title: 'Giá bán',
+                dataIndex: 'price',
+                render: (price: number) => `${price ? price.toLocaleString('vi-VN') : 0}₫`,
+            },
+            {
+                title: 'Có thể bán',
+                key: 'variant',
+                render: (_: any, record: any) =>
+                    `${record.inventory_quantity ?? 0}`,
+            },
+        ]
+        : [
+            {
+                title: '',
+                width: 40,
+                render: () => <Checkbox />,
+            },
+            {
+                title: 'Hình ảnh',
+                key: 'image',
+                width: 80,
+                render: (_: any, record: any, index: number) => (
+                    <div
+                        className="w-12 h-12 border rounded cursor-pointer hover:border-blue-500 flex items-center justify-center overflow-hidden"
+                        onClick={() => handleSelectImageForVariant(index)}
+                    >
+                        {record.image && record.image.url ? (
+                            <Image src={record.image.url} alt={record.title} className="w-full h-full object-cover" width={50} height={50} />
+                        ) : (
+                            <UploadIcon size={20} className="text-gray-400" />
+                        )}
+                    </div>
+                ),
+            },
+            {
+                title: 'Phiên bản',
+                key: 'variant',
+                render: (_: any, record: any, index: number) => (
+                    <div>
+                        <div className="font-medium">{record.title}</div>
+                        <Space size="small">
+                            <Button
+                                type="link"
+                                size="small"
+                                className="p-0 h-auto"
+                                onClick={() => {
+                                    setEditingVariant(record)
+                                    setEditingVariantIndex(index)
+                                    setVariantModalVisible(true)
+                                }}
+                            >
+                                Chỉnh sửa
+                            </Button>
+                            <Button
+                                type="link"
+                                size="small"
+                                danger
+                                className="p-0 h-auto"
+                                onClick={() => handleDeleteVariant(index)}
+                            >
+                                Xóa
+                            </Button>
+                        </Space>
+                    </div>
+                ),
+            },
+            {
+                title: 'Giá bán',
+                dataIndex: 'price',
+                render: (price: number) => `${price ? price.toLocaleString('vi-VN') : 0}₫`,
+            },
+            {
+                title: 'Có thể bán',
+                key: 'variant',
+                render: (_: any, record: any) =>
+                    `${inventoryQuantity.map(iq => iq.available).reduce((a, b) => a + b, 0)} tại ${locations.length} kho`,
+            },
+        ]
 
     const handleSaveVariant = (values: any) => {
         if (editingVariantIndex !== null) {
@@ -306,6 +361,33 @@ const CreateProduct: React.FC = () => {
             type: EProductType.Normal,
             status: EProductStatus.ACTIVE,
             collections: selectedCollections,
+        }
+        if (productData.variants.length == 0) {
+            const defaultVariant: ProductVariant = {
+                title: "Default Title",
+                option1: "Default Title",
+                sku: form.getFieldValue('sku') || '',
+                barcode: form.getFieldValue('barcode') || '',
+                price: form.getFieldValue('price'),
+                compare_at_price: form.getFieldValue('compare_at_price') || 0,
+                cost_price: form.getFieldValue('cost_price') || 0,
+                tracked: form.getFieldValue('tracked') || false,
+                lot_management: form.getFieldValue('lot_management') || false,
+                requires_shipping: form.getFieldValue('requires_shipping') || true,
+                position: 1,
+                weight: form.getFieldValue('weight') || 0,
+                weight_unit: form.getFieldValue('weight_unit') || 'g',
+                unit: form.getFieldValue('unit') || '',
+                inventory_quantities: inventoryQuantity
+            }
+            productData.variants.push(defaultVariant)
+
+            const defaultAttribute: ProductAttribute = {
+                name: "Title",
+                values: ["Default Title"],
+                position: 1
+            }
+            productData.attributes.push(defaultAttribute)
         }
         console.log("data::", productData)
         if (editMode && product) {
@@ -370,6 +452,118 @@ const CreateProduct: React.FC = () => {
             }
         }
     }, [loading])
+
+    // Fetch inventory levels khi có default variant
+    useEffect(() => {
+        const fetchInventoryLevels = async () => {
+            if (hasDefaultVariant && editMode && product?.variants?.[0]?.id) {
+                try {
+                    const res = await inventoryLevelService.getInventoryLevels({
+                        variant_id: product.variants[0].id,
+                        page: 1,
+                        size: 100,
+                    })
+                    setInventoryLevels(res.inventory_levels || [])
+                } catch (error) {
+                    console.error('Error fetching inventory levels:', error)
+                }
+            }
+        }
+        fetchInventoryLevels()
+    }, [hasDefaultVariant, editMode, product?.variants])
+
+    const inventoryLevelColumns: ColumnsType<InventoryLevel> = [
+        {
+            title: 'Kho lưu trữ',
+            dataIndex: 'location_name',
+            key: 'location_name',
+        },
+        {
+            title: 'Tồn kho',
+            dataIndex: 'available',
+            key: 'available',
+            align: 'right',
+            render: (val: number, record) => (
+                <Button
+                    type="link"
+                    size="small"
+                    onClick={() => openAdjustModal(record)}
+                >
+                    {val?.toLocaleString('vi-VN') ?? 0}
+                </Button>
+            ),
+        },
+        {
+            title: 'Hàng đang về',
+            dataIndex: 'committed',
+            key: 'committed',
+            align: 'right',
+            render: (val: number) => val?.toLocaleString('vi-VN') ?? 0,
+        },
+        {
+            title: 'Đang giao dịch',
+            dataIndex: 'incoming',
+            key: 'incoming',
+            align: 'right',
+            render: (val: number) => val?.toLocaleString('vi-VN') ?? 0,
+        },
+        {
+            title: 'Có thể bán',
+            dataIndex: 'on_hand',
+            key: 'on_hand',
+            align: 'right',
+            render: (val: number) => val?.toLocaleString('vi-VN') ?? 0,
+        },
+    ]
+
+    const openAdjustModal = (level: InventoryLevel) => {
+        setSelectedLevel(level)
+        setAdjustValue(0)
+        setNewQuantity(level.available)
+        setReason('fact_inventory')
+        setAdjustModalVisible(true)
+    }
+
+    const handleChangeNewQuantity = (value: number | null) => {
+        if (value === null || !selectedLevel) return
+        setNewQuantity(value)
+        setAdjustValue(value - (selectedLevel.available || 0))
+    }
+
+    const handleChangeAdjustValue = (value: number | null) => {
+        if (value === null || !selectedLevel) return
+        setAdjustValue(value)
+        setNewQuantity((selectedLevel.available || 0) + value)
+    }
+
+    const handleSaveAdjust = async () => {
+        if (!selectedLevel || !product?.variants?.[0]?.id) return
+        if (!adjustValue) {
+            setAdjustModalVisible(false)
+            return
+        }
+        try {
+            await inventoryLevelService.updateInventoryLevel({
+                location_id: selectedLevel.location_id,
+                variant_id: product.variants[0].id,
+                reason,
+                change_value: adjustValue,
+                reference_document_id: 0,
+            })
+            setAdjustModalVisible(false)
+            // Refetch inventory levels
+            const res = await inventoryLevelService.getInventoryLevels({
+                variant_id: product.variants[0].id,
+                page: 1,
+                size: 100,
+            })
+            setInventoryLevels(res.inventory_levels || [])
+            notification.success({ message: 'Cập nhật tồn kho thành công' })
+        } catch (error) {
+            console.error('Error updating inventory level:', error)
+            notification.error({ message: 'Cập nhật tồn kho thất bại' })
+        }
+    }
 
     const handleSelectPublication = (e: any, pub: TPublicationResponse) => {
         if (e.target.checked) {
@@ -656,6 +850,51 @@ const CreateProduct: React.FC = () => {
                                     </>)}
 
 
+                            </Card>}
+
+                            {/* Thông tin kho - cho default variant */}
+                            {editMode && hasDefaultVariant && <Card className="!mb-2">
+                                <h2 className="text-lg font-semibold mb-4">Thông tin kho</h2>
+                                <Space direction="vertical" className="w-full">
+                                    <div className="flex flex-col gap-1">
+                                        <Form.Item
+                                            name="lot_management"
+                                            valuePropName="checked"
+                                        >
+                                            <Checkbox>Quản lý tồn kho</Checkbox>
+                                        </Form.Item>
+                                        <Form.Item
+                                            name="tracked"
+                                            valuePropName="checked"
+                                        >
+                                            <Checkbox>Cho phép bán âm</Checkbox>
+                                        </Form.Item>
+                                        <Form.Item
+                                            name="requires_shipping"
+                                            valuePropName="checked"
+                                        >
+                                            <Checkbox>
+                                                Sản phẩm yêu cầu vận chuyển
+                                            </Checkbox>
+                                        </Form.Item>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-semibold mb-2">
+                                            Bảng phân bổ tồn kho
+                                        </h3>
+                                        <Table<InventoryLevel>
+                                            size="small"
+                                            dataSource={inventoryLevels}
+                                            columns={inventoryLevelColumns}
+                                            rowKey={(record) =>
+                                                String(record.id)
+                                            }
+                                            pagination={false}
+                                            loading={loading}
+                                        />
+                                    </div>
+                                </Space>
                             </Card>}
 
                             {/* Vận chuyển */}
@@ -1102,10 +1341,79 @@ const CreateProduct: React.FC = () => {
                 </div>
             </Modal>
 
-
-        </div>}</>
-
+            {/* Modal điều chỉnh tồn kho */}
+            <Modal
+                title="Điều chỉnh tồn kho"
+                open={adjustModalVisible}
+                onCancel={() => setAdjustModalVisible(false)}
+                onOk={handleSaveAdjust}
+                okText="Lưu"
+                cancelText="Hủy"
+            >
+                <div className="space-y-4">
+                    <div>
+                        <div className="text-sm text-gray-500 mb-1">
+                            Kho lưu trữ
+                        </div>
+                        <div className="font-medium">
+                            {selectedLevel?.location_name || '-'}
+                        </div>
+                    </div>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <div className="text-sm text-gray-500 mb-1">
+                                Điều chỉnh
+                            </div>
+                            <InputNumber
+                                className="w-full"
+                                value={adjustValue}
+                                onChange={handleChangeAdjustValue}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <div className="text-sm text-gray-500 mb-1">
+                                Tồn kho mới
+                            </div>
+                            <InputNumber
+                                className="w-full"
+                                value={newQuantity}
+                                onChange={handleChangeNewQuantity}
+                            />
+                        </Col>
+                    </Row>
+                    <div>
+                        <div className="text-sm text-gray-500 mb-1">
+                            Lý do
+                        </div>
+                        <Form.Item noStyle>
+                            <Select
+                                className="w-full"
+                                value={reason}
+                                onChange={(value: ChangeInventoryReason) => setReason(value)}
+                                options={[
+                                    {
+                                        value: 'fact_inventory',
+                                        label: 'Cập nhật tồn kho thực tế',
+                                    },
+                                    {
+                                        value: 'create_product',
+                                        label: 'Tạo sản phẩm',
+                                    },
+                                    {
+                                        value: 'create_order',
+                                        label: 'Tạo đơn hàng',
+                                    },
+                                ]}
+                            />
+                        </Form.Item>
+                    </div>
+                </div>
+            </Modal>
+        </div>}
+        </>
     )
+
+
 }
 
 export default CreateProduct

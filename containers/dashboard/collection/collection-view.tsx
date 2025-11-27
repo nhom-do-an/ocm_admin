@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, Button, Input, Space, Image, Tooltip } from 'antd'
 import { Search, Plus, X } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 import { useCollectionList } from './hooks/use-collection-list'
 import { Collection } from '@/types/response/collection'
+import { useDebounce } from '@/hooks/useDebounce'
 
 const CollectionListView: React.FC = () => {
     const {
@@ -19,6 +20,20 @@ const CollectionListView: React.FC = () => {
         handleFilterChange,
         handleClearFilters,
     } = useCollectionList()
+
+    const [searchKey, setSearchKey] = useState<string>(filters.key || '')
+    const debouncedKey = useDebounce(searchKey, 500)
+
+    // Đồng bộ khi filters.key thay đổi từ URL
+    useEffect(() => {
+        setSearchKey(filters.key || '')
+    }, [filters.key])
+
+    // Áp dụng debounce để gọi API / cập nhật URL
+    useEffect(() => {
+        if (debouncedKey === filters.key) return
+        handleFilterChange('key', debouncedKey || undefined)
+    }, [debouncedKey])
 
     const activeFiltersCount = Object.keys(filters).filter(key =>
         !['page', 'limit'].includes(key) &&
@@ -68,13 +83,13 @@ const CollectionListView: React.FC = () => {
         },
         {
             title: 'Số sản phẩm',
-            key: 'available',
+            key: 'products_count',
             width: 120,
             align: 'center',
-            render: () => {
+            render: (_, record) => {
                 return (
-                    <span >
-                        0
+                    <span>
+                        {record.products_count ?? 0}
                     </span>
                 )
             },
@@ -85,11 +100,13 @@ const CollectionListView: React.FC = () => {
             key: 'type',
             width: 150,
             render: (_, record) => {
-                return (
-                    <span>
-                        {record.type || '-'}
-                    </span>
-                )
+                let label = '-'
+                if (record.type === 'manual') {
+                    label = 'Thủ công'
+                } else if (record.type === 'smart') {
+                    label = 'Tự động'
+                }
+                return <span>{label}</span>
             }
         },
 
@@ -142,8 +159,8 @@ const CollectionListView: React.FC = () => {
                                 placeholder="Tìm tên danh mục.."
                                 prefix={<Search size={16} className="text-gray-400" />}
                                 className="w-[350px]"
-                                value={filters.key}
-                                onChange={(e) => handleFilterChange('key', e.target.value)}
+                                value={searchKey}
+                                onChange={(e) => setSearchKey(e.target.value)}
                                 allowClear
                             />
 

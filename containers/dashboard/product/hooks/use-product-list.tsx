@@ -5,6 +5,8 @@ import productService from '@/services/product'
 import { GetListProductsRequest } from '@/types/request/product'
 import { Product } from '@/types/response/product'
 import { useLoader } from '@/hooks/useGlobalLoader'
+import { Collection } from '@/types/response/collection'
+import collectionService from '@/services/collection'
 
 // Interface for internal state (arrays)
 interface InternalFilters {
@@ -32,6 +34,7 @@ export const useProductList = () => {
     const [productTypes, setProductTypes] = useState<string[]>([])
     const [vendors, setVendors] = useState<string[]>([])
     const [tags, setTags] = useState<string[]>([])
+    const [collections, setCollections] = useState<Collection[]>([])
     const [loading, setLoading] = useState(false)
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
     const [openAdvancedFilter, setOpenAdvancedFilter] = useState(false)
@@ -41,18 +44,29 @@ export const useProductList = () => {
         total: 0,
     })
     const [filters, setFilters] = useState<InternalFilters>({})
+    const [initialized, setInitialized] = useState(false)
     const { startLoading, stopLoading } = useLoader();
 
 
-    // 📌 Parse params từ URL khi khởi tạo
+    // 📌 Parse params từ URL
     useEffect(() => {
         const params: InternalFilters = {}
 
         // Parse pagination
         const page = searchParams.get('page')
         const limit = searchParams.get('limit')
-        if (page) setPagination(prev => ({ ...prev, current: parseInt(page) }))
-        if (limit) setPagination(prev => ({ ...prev, pageSize: parseInt(limit) }))
+        if (page) {
+            const pageNum = parseInt(page)
+            if (!isNaN(pageNum)) {
+                setPagination(prev => ({ ...prev, current: pageNum }))
+            }
+        }
+        if (limit) {
+            const sizeNum = parseInt(limit)
+            if (!isNaN(sizeNum)) {
+                setPagination(prev => ({ ...prev, pageSize: sizeNum }))
+            }
+        }
 
         // Parse string filters
         const key = searchParams.get('key')
@@ -92,7 +106,8 @@ export const useProductList = () => {
         if (sort_type) params.sort_type = sort_type as 'asc' | 'desc'
 
         setFilters(params)
-    }, [])
+        setInitialized(true)
+    }, [searchParams])
 
     // 📌 Convert arrays to comma-separated strings for API
     const prepareRequestParams = (internalFilters: InternalFilters): GetListProductsRequest => {
@@ -104,21 +119,21 @@ export const useProductList = () => {
         if (internalFilters.key) apiParams.key = internalFilters.key
         if (internalFilters.store_id) apiParams.store_id = internalFilters.store_id
 
-        // Convert arrays to comma-separated strings
+        // Convert arrays (typed in InternalFilters) sang dạng tương ứng GetListProductsRequest
         if (internalFilters.vendors?.length) {
-            apiParams.vendors = internalFilters.vendors as any
+            apiParams.vendors = [...internalFilters.vendors]
         }
         if (internalFilters.product_types?.length) {
-            apiParams.product_types = internalFilters.product_types as any
+            apiParams.product_types = [...internalFilters.product_types]
         }
         if (internalFilters.types?.length) {
-            apiParams.types = internalFilters.types as any
+            apiParams.types = [...internalFilters.types]
         }
         if (internalFilters.statuses?.length) {
-            apiParams.statuses = internalFilters.statuses as any
+            apiParams.statuses = [...internalFilters.statuses]
         }
         if (internalFilters.tags?.length) {
-            apiParams.tags = internalFilters.tags as any
+            apiParams.tags = [...internalFilters.tags]
         }
         if (internalFilters.collection_ids?.length) {
             apiParams.collection_ids = internalFilters.collection_ids
@@ -146,7 +161,12 @@ export const useProductList = () => {
         return apiParams
     }
 
-    const updateURLParams = (newFilters: InternalFilters, newPagination?: any) => {
+    interface TablePagination {
+        current: number;
+        pageSize: number;
+    }
+
+    const updateURLParams = (newFilters: InternalFilters, newPagination?: TablePagination) => {
         const params = new URLSearchParams()
 
         // Add pagination
@@ -190,12 +210,14 @@ export const useProductList = () => {
                 productService.getProductTypeList(),
                 productService.getVendorList(),
                 productService.getTagsList(),
+                collectionService.getCollections({ page: 1, size: 1000 }),
             ])
             setProducts(response[0].products || [])
             setPagination((prev) => ({ ...prev, total: response[0].count || 0 }))
             setProductTypes(response[1] || [])
             setVendors(response[2] || [])
             setTags(response[3] || [])
+            setCollections(response[4]?.collections || [])
         } catch (error) {
             console.error('Error fetching products:', error)
         } finally {
@@ -210,7 +232,7 @@ export const useProductList = () => {
     }
 
     // 📌 Khi đổi trang hoặc kích thước bảng
-    const handleTableChange = (newPagination: any) => {
+    const handleTableChange = (newPagination: TablePagination) => {
         const updatedPagination = {
             ...pagination,
             current: newPagination.current,
@@ -220,7 +242,7 @@ export const useProductList = () => {
         updateURLParams(filters, updatedPagination)
     }
 
-    const handleFilterChange = (key: keyof InternalFilters, value: any) => {
+    const handleFilterChange = (key: keyof InternalFilters, value: unknown) => {
         const newFilters = { ...filters, [key]: value }
         setFilters(newFilters)
         const newPagination = { current: 1, pageSize: pagination.pageSize }
@@ -252,8 +274,10 @@ export const useProductList = () => {
     }
 
     useEffect(() => {
+        if (!initialized) return
         fetchProducts()
-    }, [pagination.current, pagination.pageSize, filters])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialized, pagination.current, pagination.pageSize, filters])
 
     return {
         products,
@@ -274,5 +298,6 @@ export const useProductList = () => {
         productTypes,
         vendors,
         tags,
+        collections,
     }
 }

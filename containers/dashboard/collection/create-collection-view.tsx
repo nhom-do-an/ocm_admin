@@ -10,10 +10,18 @@ import {
     Row,
     Col,
     UploadFile,
+    Modal,
+    Table,
+    Image,
+    Tag,
+    Tooltip,
 } from 'antd'
 import { ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import TinyEditor from '@/components/TinyEditor'
 import { Attachment, Collection } from '@/types/response/collection'
+import { Product } from '@/types/response/product'
+import type { ColumnsType } from 'antd/es/table'
+import dayjs from 'dayjs'
 import attachmentService from '@/services/attachment'
 import { useGlobalNotification } from '@/hooks/useNotification'
 import { useRouter } from 'next/navigation'
@@ -30,7 +38,7 @@ interface FormValues {
 }
 
 const CreateCollectionView: React.FC = () => {
-    const { collection, loading, editMode, createCollection } = useCreateCollection()
+    const { collection, loading, editMode, collectionProducts, loadingProducts, createCollection, updateCollection, deleteCollection } = useCreateCollection()
     const { collapsed } = useGlobalContext()
     const [form] = Form.useForm<FormValues>()
     const [content, setContent] = useState('')
@@ -38,6 +46,7 @@ const CreateCollectionView: React.FC = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([])
     const [openSeo, setOpenSeo] = useState<boolean>(false)
     const [isChanged, setIsChanged] = useState<boolean>(false)
+    const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false)
 
     const notification = useGlobalNotification()
     const router = useRouter()
@@ -104,8 +113,13 @@ const CreateCollectionView: React.FC = () => {
         if (images.length > 0) {
             collectionData.image = images[0]
         }
-        console.log("data::", collectionData)
-        await createCollection(collectionData)
+
+        if (editMode && collection?.id) {
+            await updateCollection(collectionData)
+            setIsChanged(false)
+        } else {
+            await createCollection(collectionData)
+        }
     }
 
     const handleUpload = async (options: any) => {
@@ -142,6 +156,154 @@ const CreateCollectionView: React.FC = () => {
 
     const onBack = () => router.back()
 
+    const onDelete = () => {
+        if (!collection?.id) return
+        setOpenDeleteModal(true)
+    }
+
+    const handleConfirmDelete = async () => {
+        if (!collection?.id) return
+        await deleteCollection(collection.id as number)
+        setOpenDeleteModal(false)
+    }
+
+    const handleViewAllProducts = () => {
+        if (!collection?.id) return
+        const params = new URLSearchParams({
+            page: '1',
+            limit: '20',
+            collection_ids: String(collection.id),
+        })
+        router.push(`/product/list?${params.toString()}`)
+    }
+
+    const productColumns: ColumnsType<Product> = [
+        {
+            title: 'Sản phẩm',
+            dataIndex: 'name',
+            key: 'name',
+            width: 260,
+            render: (_, record) => {
+                const mainImage = record.images?.[0]?.url
+                const variantCount = record.variants?.length || 0
+
+                return (
+                    <Space size="middle">
+                        {mainImage ? (
+                            <Image
+                                width={40}
+                                height={40}
+                                alt={record.name}
+                                src={mainImage || '/placeholder.png'}
+                                fallback="/placeholder.png"
+                                style={{ objectFit: 'cover', borderRadius: 4 }}
+                                preview={false}
+                            />
+                        ) : (
+                            <Image
+                                width={40}
+                                height={40}
+                                alt={record.name}
+                                src="/icon/default_image.png"
+                                className="text-gray-300"
+                                preview={false}
+                            />
+                        )}
+
+                        <div>
+                            <button
+                                onClick={() => router.push(`/product/${record.id}`)}
+                                className="cursor-pointer"
+                            >
+                                <span className="text-blue-600 hover:text-blue-800 font-medium">
+                                    {record.name}
+                                </span>
+                            </button>
+                            {variantCount > 0 && (
+                                <div className="text-xs text-gray-500">
+                                    {variantCount} phiên bản
+                                </div>
+                            )}
+                        </div>
+                    </Space>
+                )
+            },
+        },
+        {
+            title: 'Có thể bán',
+            key: 'available',
+            width: 120,
+            align: 'center',
+            render: (_, record) => {
+                const totalStock = record.variants?.reduce(
+                    (acc, v) => acc + (v.inventory_quantity || 0),
+                    0
+                )
+                return (
+                    <span
+                        className={
+                            (totalStock ?? 0) <= 0
+                                ? 'text-red-500 font-medium'
+                                : 'text-gray-900'
+                        }
+                    >
+                        {totalStock?.toLocaleString('vi-VN') || 0}
+                    </span>
+                )
+            },
+        },
+        {
+            title: 'Loại',
+            dataIndex: 'product_type',
+            key: 'product_type',
+            width: 150,
+            render: (text) => text || '-',
+        },
+        {
+            title: 'Nhãn hiệu',
+            dataIndex: 'vendor',
+            key: 'vendor',
+            width: 150,
+            render: (text) => text || '-',
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            width: 130,
+            align: 'center',
+            render: (status) => {
+                const statusConfig = {
+                    active: { color: 'green', text: 'Đang bán' },
+                    inactive: { color: 'red', text: 'Ngừng bán' },
+                } as const
+                const config =
+                    statusConfig[status as keyof typeof statusConfig] || {
+                        color: 'default',
+                        text: status,
+                    }
+                return <Tag color={config.color}>{config.text}</Tag>
+            },
+        },
+        {
+            title: 'Ngày tạo',
+            dataIndex: 'created_at',
+            key: 'created_at',
+            width: 150,
+            align: 'center',
+            render: (date) => {
+                if (!date) return '-'
+                const formatted = dayjs(date).format('DD/MM/YYYY')
+                const fullDate = dayjs(date).format('DD/MM/YYYY HH:mm:ss')
+                return (
+                    <Tooltip title={fullDate}>
+                        <span className="cursor-help">{formatted}</span>
+                    </Tooltip>
+                )
+            },
+        },
+    ]
+
     return (
         <>
             {loading ? null : (
@@ -158,6 +320,11 @@ const CreateCollectionView: React.FC = () => {
                                 />
                             </div>
                             <Space>
+                                {editMode && (
+                                    <Button danger onClick={onDelete}>
+                                        Xoá
+                                    </Button>
+                                )}
                                 {editMode ? (
                                     <Button
                                         type="primary"
@@ -252,7 +419,6 @@ const CreateCollectionView: React.FC = () => {
                                             customRequest={handleUpload}
                                             onRemove={handleRemove}
                                             accept="image/*"
-                                            disabled={fileList.length >= 1}
                                             className="py-3"
                                         >
                                             <div className="text-center !mb-2">
@@ -263,10 +429,52 @@ const CreateCollectionView: React.FC = () => {
                                     </Card>
                                 </Col>
                             </Row>
+                            {editMode && collection && (
+                                <Row gutter={24} className="mt-4">
+                                    <Col span={24}>
+                                        <Card className="!mb-2">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <h2 className="text-lg font-semibold">
+                                                    Sản phẩm trong danh mục
+                                                </h2>
+                                                {collection.products_count &&
+                                                    collection.products_count > 10 && (
+                                                        <Button
+                                                            type="link"
+                                                            onClick={handleViewAllProducts}
+                                                        >
+                                                            Xem tất cả (
+                                                            {collection.products_count} sản phẩm)
+                                                        </Button>
+                                                    )}
+                                            </div>
+                                            <Table<Product>
+                                                dataSource={collectionProducts.slice(0, 10)}
+                                                loading={loadingProducts}
+                                                rowKey="id"
+                                                pagination={false}
+                                                scroll={{ x: 'max-content' }}
+                                                columns={productColumns}
+                                            />
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            )}
                         </Form>
                     </div>
                 </div>
             )}
+            <Modal
+                title="Xác nhận xoá danh mục"
+                open={openDeleteModal}
+                onOk={handleConfirmDelete}
+                onCancel={() => setOpenDeleteModal(false)}
+                okText="Xoá"
+                okType="danger"
+                cancelText="Huỷ"
+            >
+                <p>Bạn có chắc chắn muốn xoá danh mục này? Hành động này không thể hoàn tác.</p>
+            </Modal>
         </>
     )
 }

@@ -34,14 +34,14 @@ export const useCreateProduct = () => {
         startLoading();
         try {
             const response = await Promise.all([
-                locationService.getListLocation(),
+                locationService.getListLocations({ inventory_management: true, status: ELocationStatus.ACTIVE }),
                 productService.getProductTypeList(),
                 productService.getVendorList(),
                 productService.getTagsList(),
                 collectionService.getCollections(),
                 channelService.getPublications(),
             ])
-            setLocations(response[0] || [])
+            setLocations(response[0].locations || [])
             setProductTypes(response[1] || [])
             setVendors(response[2] || [])
             setTags(response[3] || [])

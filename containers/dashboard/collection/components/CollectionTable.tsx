@@ -65,17 +65,25 @@ export const CollectionTable: React.FC<Props> = ({
         },
         {
             title: 'Số sản phẩm',
-            key: 'available',
+            key: 'products_count',
             width: 120,
             align: 'center',
-            render: () => <span>0</span>,
+            render: (_, record) => <span>{record.products_count ?? 0}</span>,
         },
         {
             title: 'Loại',
             dataIndex: 'type',
             key: 'type',
             width: 150,
-            render: (_, record) => <span>{record.type || '-'}</span>,
+            render: (_, record) => {
+                let label = '-'
+                if (record.type === 'manual') {
+                    label = 'Thủ công'
+                } else if (record.type === 'smart') {
+                    label = 'Tự động'
+                }
+                return <span>{label}</span>
+            },
         },
         {
             title: 'Ngày tạo',

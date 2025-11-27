@@ -17,6 +17,7 @@ import sourceService from '@/services/source'
 import { Source } from '@/types/response/source'
 import locationService from '@/services/location'
 import { Location } from '@/types/response/locations'
+import { EFulfillmentStatus, ELocationStatus } from '@/types/enums/enum'
 
 // Interface for internal state (arrays)
 interface InternalFilters {
@@ -291,14 +292,14 @@ export const useOrderList = () => {
                     variantService.getListVariants({ limit: 1000 }),
                     paymentService.getListPaymentMethods({ limit: 1000 }),
                     sourceService.getListSources(),
-                    locationService.getListLocation(),
+                    locationService.getListLocations({ inventory_management: true, status: ELocationStatus.ACTIVE }),
                 ])
                 setChannels(channelsRes || [])
                 setCustomers(customersRes.customers || [])
                 setVariants(variantsRes.variants || [])
                 setPaymentMethods(paymentMethodsRes || [])
                 setSources(sourcesRes || [])
-                setLocations(locationsRes || [])
+                setLocations(locationsRes.locations || [])
 
             } catch (error) {
                 console.error('Error loading filter options:', error)

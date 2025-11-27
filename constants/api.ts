@@ -29,6 +29,8 @@ export const API = {
     COLLECTION: {
         GET_COLLECTIONS: '/admin/collections',
         GET_COLLECTION_DETAIL: (id: number) => `/admin/collections/detail/${id}`,
+        UPDATE_COLLECTION: '/admin/collections',
+        DELETE_COLLECTION: (id: number) => `/admin/collections/${id}`,
     },
     LOCATION: {
         LIST: '/admin/locations',
@@ -60,6 +62,9 @@ export const API = {
     },
     VARIANT: {
         GET_VARIANTS: '/admin/variants',
+        GET_VARIANT_DETAIL: (variantId: number) => `/admin/variants/detail/${variantId}`,
+        UPDATE_VARIANT: (variantId: number) => `/admin/variants/${variantId}`,
+        DELETE_VARIANT: (variantId: number) => `/admin/variants/${variantId}`,
     },
     PAYMENT_METHOD: {
         GET_PAYMENT_METHODS: '/admin/payment-methods',
@@ -87,5 +92,9 @@ export const API = {
     },
     EVENT: {
         GET_EVENTS: '/admin/events',
+    },
+    INVENTORY_LEVEL: {
+        GET_LIST: '/admin/inventory-levels',
+        UPDATE: '/admin/inventory-levels',
     },
 };

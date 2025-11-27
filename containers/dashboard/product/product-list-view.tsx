@@ -26,6 +26,7 @@ const ProductListView: React.FC = () => {
         handleApplyAdvancedFilter,
         handleClearFilters,
         vendors,
+        collections,
     } = useProductList()
 
     const activeFiltersCount = Object.keys(filters).filter(key =>
@@ -182,10 +183,10 @@ const ProductListView: React.FC = () => {
     return (
         <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto">
             {/* Header - Fixed */}
-            <div className="flex-shrink-0 px-6 pt-6 pb-4">
+            <div className=" px-6 pt-6 pb-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl !font-semibold">Danh sách sản phẩm</h1>
+                        <h1 className="text-2xl">Danh sách sản phẩm</h1>
                     </div>
                     <Space>
                         <Dropdown.Button
@@ -264,6 +265,17 @@ const ProductListView: React.FC = () => {
                                 allowClear
                             />
 
+                            <Select
+                                placeholder="Danh mục"
+                                mode="multiple"
+                                maxTagCount="responsive"
+                                className="min-w-[220px]"
+                                value={filters.collection_ids}
+                                onChange={(value) => handleFilterChange('collection_ids', value)}
+                                options={collections.map(c => ({ label: c.name, value: c.id }))}
+                                allowClear
+                            />
+
                             <Button
                                 icon={<Filter size={16} />}
                                 onClick={handleAdvancedFilter}
@@ -319,6 +331,19 @@ const ProductListView: React.FC = () => {
                                 {filters.tags && filters.tags?.length > 0 && (
                                     <Tag closable color='blue' onClose={() => handleFilterChange('tags', [])}>
                                         Tag: {filters.tags.join(', ')}
+                                    </Tag>
+                                )}
+                                {filters.collection_ids && filters.collection_ids?.length > 0 && (
+                                    <Tag
+                                        closable
+                                        color='blue'
+                                        onClose={() => handleFilterChange('collection_ids', [])}
+                                    >
+                                        Danh mục:{' '}
+                                        {filters.collection_ids
+                                            .map(id => collections.find(c => c.id === id)?.name)
+                                            .filter(Boolean)
+                                            .join(', ')}
                                     </Tag>
                                 )}
                                 {filters.min_price !== undefined && (
