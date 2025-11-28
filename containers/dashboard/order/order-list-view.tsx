@@ -170,8 +170,7 @@ const OrderListView: React.FC = () => {
             key: 'processing_status',
             width: 150,
             render: (status) => {
-                const processingStatus = !status || status === 'unfulfilled' ? EFulfillmentOrderStatus.PENDING : EFulfillmentOrderStatus.FULFILLED
-                return <StatusChip status={processingStatus} type="processing" />
+                return <StatusChip status={status} type="processing" />
             },
         },
         delivery_status: {
@@ -357,7 +356,7 @@ const OrderListView: React.FC = () => {
         : null
 
     return (
-        <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto">
+        <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto max-w-[1600px]">
             {/* Header - Fixed */}
             <div className=" px-6 pt-6 pb-4">
                 <div className="flex items-center justify-between">

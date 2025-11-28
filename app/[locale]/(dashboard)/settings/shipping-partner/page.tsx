@@ -1,9 +1,7 @@
-import React from 'react'
+import ShippingPartnerView from '@/containers/dashboard/setting/shipping-partner/shipping-partner-view'
 
-function ShippingPartner() {
-    return (
-        <div>ShippingPartner</div>
-    )
+const ShippingPartnerPage = () => {
+    return <ShippingPartnerView />
 }
 
-export default ShippingPartner
+export default ShippingPartnerPage

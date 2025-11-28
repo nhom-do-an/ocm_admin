@@ -89,6 +89,7 @@ export const API = {
     DELIVERY_PROVIDER: {
         GET_LIST: '/admin/delivery-providers',
         CREATE: '/admin/delivery-providers',
+        UPDATE: (id: number) => `/admin/delivery-providers/${id}`,
     },
     EVENT: {
         GET_EVENTS: '/admin/events',
@@ -96,5 +97,8 @@ export const API = {
     INVENTORY_LEVEL: {
         GET_LIST: '/admin/inventory-levels',
         UPDATE: '/admin/inventory-levels',
+    },
+    INVENTORY_ADJUSTMENT: {
+        GET_LIST: '/admin/inventory-adjustments',
     },
 };

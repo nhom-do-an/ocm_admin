@@ -1,23 +1,40 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Form, Input, Radio, Button } from 'antd'
 import { CreateDeliveryProviderRequest } from '@/types/request/delivery-provider'
-import { DeliveryProviderType, DeliveryProviderStatus, EFreightPayerType } from '@/types/enums/enum'
+import { DeliveryProviderType, DeliveryProviderStatus } from '@/types/enums/enum'
 
 interface AddDeliveryProviderModalProps {
     open: boolean
     onCancel: () => void
     onSave: (data: CreateDeliveryProviderRequest) => Promise<void>
+    initialValues?: Partial<CreateDeliveryProviderRequest>
 }
 
 const AddDeliveryProviderModal: React.FC<AddDeliveryProviderModalProps> = ({
     open,
     onCancel,
     onSave,
+    initialValues,
 }) => {
-    const [form] = Form.useForm<CreateDeliveryProviderRequest & { freight_payer: EFreightPayerType }>()
+    const [form] = Form.useForm<CreateDeliveryProviderRequest>()
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (open) {
+            form.setFieldsValue({
+                name: initialValues?.name || '',
+                phone: initialValues?.phone || '',
+                email: initialValues?.email || '',
+                address: initialValues?.address || '',
+                note: initialValues?.note || '',
+                status: initialValues?.status || DeliveryProviderStatus.Active,
+            })
+        } else {
+            form.resetFields()
+        }
+    }, [open, form, initialValues])
 
     const handleSubmit = async () => {
         try {
@@ -29,12 +46,12 @@ const AddDeliveryProviderModal: React.FC<AddDeliveryProviderModalProps> = ({
                 email: values.email || '',
                 address: values.address || '',
                 note: values.note || '',
-                type: DeliveryProviderType.ExternalShipper,
-                status: DeliveryProviderStatus.Active,
+                type: values.type || DeliveryProviderType.ExternalShipper,
+                status: values.status || DeliveryProviderStatus.Active,
             })
             form.resetFields()
         } catch (error) {
-            console.error('Error creating delivery provider:', error)
+            console.error('Error saving delivery provider:', error)
         } finally {
             setLoading(false)
         }
@@ -47,7 +64,7 @@ const AddDeliveryProviderModal: React.FC<AddDeliveryProviderModalProps> = ({
 
     return (
         <Modal
-            title="Thêm mới đối tác tự liên hệ"
+            title={initialValues ? 'Cập nhật đối tác tự liên hệ' : 'Thêm mới đối tác tự liên hệ'}
             open={open}
             onCancel={handleCancel}
             footer={[
@@ -60,7 +77,15 @@ const AddDeliveryProviderModal: React.FC<AddDeliveryProviderModalProps> = ({
             ]}
             width={600}
         >
-            <Form form={form} layout="vertical" className="mt-4">
+            <Form
+                form={form}
+                layout="vertical"
+                className="mt-4"
+                initialValues={{
+                    status: DeliveryProviderStatus.Active,
+                    type: DeliveryProviderType.ExternalShipper,
+                }}
+            >
                 <Form.Item
                     label="Tên đối tác"
                     name="name"
@@ -98,13 +123,12 @@ const AddDeliveryProviderModal: React.FC<AddDeliveryProviderModalProps> = ({
                 </Form.Item>
 
                 <Form.Item
-                    label="Người trả phí"
-                    name="freight_payer"
-                    initialValue={EFreightPayerType.Seller}
+                    label="Trạng thái"
+                    name="status"
                 >
                     <Radio.Group>
-                        <Radio value={EFreightPayerType.Seller}>Shop trả</Radio>
-                        <Radio value={EFreightPayerType.Buyer}>Khách trả</Radio>
+                        <Radio value={DeliveryProviderStatus.Active}>Đang hoạt động</Radio>
+                        <Radio value={DeliveryProviderStatus.Inactive}>Ngưng hoạt động</Radio>
                     </Radio.Group>
                 </Form.Item>
             </Form>
@@ -113,12 +137,3 @@ const AddDeliveryProviderModal: React.FC<AddDeliveryProviderModalProps> = ({
 }
 
 export default AddDeliveryProviderModal
-
-
-
-
-
-
-
-
-

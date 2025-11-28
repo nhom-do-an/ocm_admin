@@ -17,3 +17,13 @@ export interface CreateDeliveryProviderRequest {
     status: DeliveryProviderStatus;
     type: DeliveryProviderType;
 }
+
+export interface UpdateDeliveryProviderRequest {
+    address?: string;
+    email?: string;
+    name?: string;
+    note?: string;
+    phone?: string;
+    status?: DeliveryProviderStatus;
+    type?: DeliveryProviderType;
+}

@@ -2,7 +2,7 @@ import { TApiResponse } from "@/types/response/response";
 import Axios from "./axios";
 import { API } from "@/constants/api";
 import { GetListDeliveryProvidersResponse } from "@/types/response/delivery-serrvice";
-import { CreateDeliveryProviderRequest, GetListDeliveryProvidersRequest } from "@/types/request/delivery-provider";
+import { CreateDeliveryProviderRequest, GetListDeliveryProvidersRequest, UpdateDeliveryProviderRequest } from "@/types/request/delivery-provider";
 import { DeliveryProvider } from "@/types/request/order";
 
 const deliveryProviderService = {
@@ -12,6 +12,10 @@ const deliveryProviderService = {
     },
     createDeliveryProvider: async (data: CreateDeliveryProviderRequest): Promise<DeliveryProvider> => {
         const res = await Axios.post<TApiResponse<DeliveryProvider>>(API.DELIVERY_PROVIDER.CREATE, data);
+        return res.data.data as DeliveryProvider;
+    },
+    updateDeliveryProvider: async (id: number, data: UpdateDeliveryProviderRequest): Promise<DeliveryProvider> => {
+        const res = await Axios.put<TApiResponse<DeliveryProvider>>(API.DELIVERY_PROVIDER.UPDATE(id), data);
         return res.data.data as DeliveryProvider;
     },
 };

@@ -54,8 +54,6 @@ const StatusChip: React.FC<StatusChipProps> = ({ status, type, className = '' })
                 [EFulfillmentShipmentStatus.WAIT_TO_CONFIRM]: { text: 'Chờ xác nhận hoàn hàng', bgColor: '#fffbe6', textColor: '#faad14' },
                 [EFulfillmentShipmentStatus.RETURNED]: { text: 'Đã trả hàng', bgColor: '#fff1f0', textColor: '#ff4d4f' },
                 [EFulfillmentShipmentStatus.CANCELLED]: { text: 'Đã hủy', bgColor: '#fff1f0', textColor: '#ff4d4f' },
-                in_transit: { text: 'Đang vận chuyển', bgColor: '#e6f7ff', textColor: '#1890ff' },
-                deliveried: { text: 'Đã giao hàng', bgColor: '#f6ffed', textColor: '#52c41a' },
             },
             print: {
                 'printed': { text: 'Đã in', bgColor: '#fafafa', textColor: '#8c8c8c' },

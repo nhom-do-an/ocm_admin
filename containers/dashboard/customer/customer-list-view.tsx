@@ -112,7 +112,7 @@ const CustomerListView: React.FC = () => {
             width: 100,
             align: 'center',
             render: (_, record, index) => {
-                return <span>{record.orders_count?.toLocaleString('vi-VN') || 0}đ</span>
+                return <span>{record.orders_count?.toLocaleString('vi-VN') || 0}</span>
             },
         },
         {
@@ -130,7 +130,7 @@ const CustomerListView: React.FC = () => {
             width: 150,
             align: 'right',
             render: (_, record, index) => {
-                return <span>{record.total_spent?.toLocaleString('vi-VN') || 0}</span>
+                return <span>{record.total_spent?.toLocaleString('vi-VN') || 0}đ</span>
             },
         },
         {
@@ -161,7 +161,7 @@ const CustomerListView: React.FC = () => {
     ]
 
     return (
-        <div className="flex flex-col h-fit overflow-hidden">
+        <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto max-w-[1600px]">
             <div className="flex-1 flex items-start justify-center px-2 py-6">
                 <div className="w-full max-w-[1400px] flex flex-col h-full">
                     {/* Header - Fixed */}

@@ -5,6 +5,8 @@ import { GetListInventoryLevelsResponse } from "@/types/response/inventory-level
 
 interface GetListInventoryLevelsRequest {
     variant_id?: number;
+    location_ids?: number[];
+    default_location?: boolean;
     page?: number;
     size?: number;
 }

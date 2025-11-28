@@ -21,6 +21,7 @@ import type { ColumnsType } from 'antd/es/table'
 import { ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useVariantDetail } from './hooks/use-variant-detail'
 import { ProductVariant } from '@/types/response/product'
 import { InventoryLevel } from '@/types/response/inventory-level'
@@ -496,9 +497,19 @@ const VariantDetailView: React.FC = () => {
                                         </div>
 
                                         <div>
-                                            <h3 className="font-semibold mb-2">
-                                                Bảng phân bổ tồn kho
-                                            </h3>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <h3 className="font-semibold">
+                                                    Bảng phân bổ tồn kho
+                                                </h3>
+                                                {variant?.id && (
+                                                    <Link
+                                                        href={`/inventory/history?variant_id=${variant.id}`}
+                                                        className="text-sm text-blue-600 hover:text-blue-700"
+                                                    >
+                                                        Xem lịch sử thay đổi kho
+                                                    </Link>
+                                                )}
+                                            </div>
                                             <Table<InventoryLevel>
                                                 size="small"
                                                 dataSource={inventoryLevels}

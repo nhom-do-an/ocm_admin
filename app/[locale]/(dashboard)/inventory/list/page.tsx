@@ -1,9 +1,7 @@
-import React from 'react'
+import InventoryListView from '@/containers/dashboard/inventory/inventory-list-view'
 
-const InventoryList = () => {
-    return (
-        <div>InventoryList</div>
-    )
+const InventoryListPage = () => {
+    return <InventoryListView />
 }
 
-export default InventoryList
+export default InventoryListPage

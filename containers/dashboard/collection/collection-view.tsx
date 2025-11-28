@@ -130,7 +130,7 @@ const CollectionListView: React.FC = () => {
     ]
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden max-ư-[1000px] overflow-x-scroll">
+        <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto max-w-[1600px]">
             {/* Header - Fixed */}
             <div className="flex-shrink-0 px-6 pt-6 pb-4">
                 <div className="flex items-center justify-between">

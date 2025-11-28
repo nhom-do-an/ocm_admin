@@ -118,7 +118,7 @@ const CreateCollectionView: React.FC = () => {
             await updateCollection(collectionData)
             setIsChanged(false)
         } else {
-            await createCollection(collectionData)
+        await createCollection(collectionData)
         }
     }
 
