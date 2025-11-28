@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Modal, Select, Checkbox } from 'antd'
-import { UpdateLocationRequest } from '@/types/request/location'
+import { CreateLocationRequest, UpdateLocationRequest } from '@/types/request/location'
 import { LocationDetail } from '@/types/response/location'
 import { ELocationStatus } from '@/types/enums/enum'
 import regionService from '@/services/region'
@@ -15,11 +15,12 @@ type Props = {
     loading: boolean
     location?: LocationDetail | null
     onCancel: () => void
-    onSubmit: (values: UpdateLocationRequest) => Promise<void> | void
+    onSubmit: (values: CreateLocationRequest | UpdateLocationRequest) => Promise<void> | void
 }
 
-const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCancel, onSubmit }) => {
-    const [form] = Form.useForm<UpdateLocationRequest>()
+const LocationModal: React.FC<Props> = ({ open, loading, location, onCancel, onSubmit }) => {
+    const isEditMode = !!location
+    const [form] = Form.useForm<CreateLocationRequest | UpdateLocationRequest>()
     const [provinces, setProvinces] = useState<TRegionResponse[]>([])
     const [districts, setDistricts] = useState<OldRegion[]>([])
     const [wards, setWards] = useState<OldRegion[]>([])
@@ -28,6 +29,20 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
     const [loadingWards, setLoadingWards] = useState(false)
     const [selectedProvinceCode, setSelectedProvinceCode] = useState<string>()
     const [selectedDistrictCode, setSelectedDistrictCode] = useState<string>()
+
+    // Phone validation for Vietnamese phone numbers
+    const validatePhone = (_: unknown, value?: string) => {
+        if (!value) {
+            return Promise.resolve()
+        }
+        // Vietnamese phone: 10 digits starting with 0[35789], or 11 digits starting with 84[35789]
+        const cleanedValue = value.replace(/\s/g, '')
+        const phoneRegex = /^(0[35789][0-9]{8})$|^(84[35789][0-9]{8})$/
+        if (phoneRegex.test(cleanedValue)) {
+            return Promise.resolve()
+        }
+        return Promise.reject(new Error('Số điện thoại không hợp lệ'))
+    }
 
     useEffect(() => {
         if (open && location) {
@@ -59,6 +74,12 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
             }
         } else if (open) {
             form.resetFields()
+            form.setFieldsValue({
+                status: ELocationStatus.ACTIVE,
+                inventory_management: false,
+                fulfill_order: false,
+                default_location: false,
+            })
             setSelectedProvinceCode(undefined)
             setSelectedDistrictCode(undefined)
             setDistricts([])
@@ -136,14 +157,26 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
         }
     }
 
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/\D/g, '') // Chỉ giữ lại số
+        form.setFieldValue('phone', value)
+    }
+
+    const handlePhoneKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Chỉ cho phép nhập số (0-9)
+        if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
+            e.preventDefault()
+        }
+    }
+
     const handleOk = async () => {
         try {
             const values = await form.validateFields()
-            if (!location?.id) {
-                console.error('Location ID is missing')
-                return
+            if (isEditMode && location?.id) {
+                await onSubmit({ ...values, id: location.id } as UpdateLocationRequest)
+            } else {
+                await onSubmit(values as CreateLocationRequest)
             }
-            await onSubmit({ ...values, id: location.id })
             form.resetFields()
         } catch {
             // validation handled by form
@@ -152,7 +185,7 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
 
     return (
         <Modal
-            title="Chi tiết chi nhánh"
+            title={isEditMode ? 'Chi tiết chi nhánh' : 'Thêm mới chi nhánh'}
             open={open}
             onCancel={onCancel}
             onOk={handleOk}
@@ -160,6 +193,7 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
             destroyOnClose
             width={600}
             style={{ top: 20 }}
+            bodyStyle={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}
         >
             <Form form={form} layout="vertical" className="[&_.ant-form-item]:mb-4!">
                 <div className="grid grid-cols-2 gap-2">
@@ -173,8 +207,17 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
                     <Form.Item label="Mã chi nhánh" name="code">
                         <Input placeholder="Nhập mã chi nhánh" />
                     </Form.Item>
-                    <Form.Item label="Số điện thoại" name="phone">
-                        <Input placeholder="Nhập số điện thoại" />
+                    <Form.Item
+                        label="Số điện thoại"
+                        name="phone"
+                        rules={[{ validator: validatePhone }]}
+                    >
+                        <Input
+                            placeholder="Nhập số điện thoại"
+                            onChange={handlePhoneChange}
+                            onKeyPress={handlePhoneKeyPress}
+                            maxLength={11}
+                        />
                     </Form.Item>
                     <Form.Item label="Email" name="email" rules={[{ type: 'email', message: 'Email không hợp lệ' }]}>
                         <Input placeholder="Nhập email" />
@@ -198,6 +241,7 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
                     <Form.Item
                         label="Quận/Huyện"
                         name="district_code"
+                        rules={[{ required: true, message: 'Vui lòng chọn quận/huyện' }]}
                     >
                         <Select
                             placeholder="Chọn quận huyện"
@@ -256,11 +300,10 @@ const LocationDetailModal: React.FC<Props> = ({ open, loading, location, onCance
                         <Checkbox>Thiết lập làm chi nhánh quản lý kho</Checkbox>
                     </Form.Item>
                 </div>
-
             </Form>
         </Modal>
     )
 }
 
-export default LocationDetailModal
+export default LocationModal
 

@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: '*.backblazeb2.com',
+                hostname: '*',
             },
         ],
     },

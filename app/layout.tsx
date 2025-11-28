@@ -1,4 +1,5 @@
-
+// Suppress warnings early
+import '@/lib/suppress-warnings'
 import './globals.css'
 import type { Metadata } from 'next'
 

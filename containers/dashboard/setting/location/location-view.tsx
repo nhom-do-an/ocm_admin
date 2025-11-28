@@ -5,8 +5,7 @@ import { Button, Card, Empty, Skeleton, Tag } from 'antd'
 import { MapPin, Plus } from 'lucide-react'
 import useLocationManagement from './hooks/use-location-management'
 import Loader from '@/components/Loader'
-import CreateLocationModal from './components/CreateLocationModal'
-import LocationDetailModal from './components/LocationDetailModal'
+import LocationModal from './components/LocationModal'
 import { CreateLocationRequest, UpdateLocationRequest } from '@/types/request/location'
 import { LocationDetail } from '@/types/response/location'
 import locationService from '@/services/location'
@@ -14,22 +13,16 @@ import { ELocationStatus } from '@/types/enums/enum'
 
 const LocationManagementView: React.FC = () => {
     const { locations, loading, createLoading, updateLoading, createLocation, updateLocation } = useLocationManagement()
-    const [isCreateModalOpen, setCreateModalOpen] = useState(false)
-    const [isDetailModalOpen, setDetailModalOpen] = useState(false)
+    const [isModalOpen, setModalOpen] = useState(false)
     const [selectedLocation, setSelectedLocation] = useState<LocationDetail | null>(null)
     const [loadingDetail, setLoadingDetail] = useState(false)
-
-    const handleCreateLocation = async (values: CreateLocationRequest) => {
-        await createLocation(values)
-        setCreateModalOpen(false)
-    }
 
     const handleLocationClick = async (locationId: number) => {
         setLoadingDetail(true)
         try {
             const detail = await locationService.getLocationDetail(locationId)
             setSelectedLocation(detail)
-            setDetailModalOpen(true)
+            setModalOpen(true)
         } catch (error) {
             console.error('Failed to fetch location detail', error)
         } finally {
@@ -37,10 +30,17 @@ const LocationManagementView: React.FC = () => {
         }
     }
 
-    const handleUpdateLocation = async (values: UpdateLocationRequest) => {
-        await updateLocation(values.id, values)
-        setDetailModalOpen(false)
-        setSelectedLocation(null)
+    const handleSubmit = async (values: CreateLocationRequest | UpdateLocationRequest) => {
+        if ('id' in values) {
+            // Update mode
+            await updateLocation(values.id, values)
+            setModalOpen(false)
+            setSelectedLocation(null)
+        } else {
+            // Create mode
+            await createLocation(values)
+            setModalOpen(false)
+        }
     }
 
     const getStatusTag = (status: ELocationStatus) => {
@@ -72,7 +72,10 @@ const LocationManagementView: React.FC = () => {
                         <p className="text-base font-semibold text-gray-900">Danh sách chi nhánh</p>
                         <p className="text-sm text-gray-500">Quản lý các chi nhánh trong cửa hàng của bạn</p>
                     </div>
-                    <Button type="primary" icon={<Plus size={16} />} onClick={() => setCreateModalOpen(true)}>
+                    <Button type="primary" icon={<Plus size={16} />} onClick={() => {
+                        setSelectedLocation(null)
+                        setModalOpen(true)
+                    }}>
                         Thêm mới chi nhánh
                     </Button>
                 </div>
@@ -122,22 +125,15 @@ const LocationManagementView: React.FC = () => {
                 </div>
             </Card>
 
-            <CreateLocationModal
-                open={isCreateModalOpen}
-                loading={createLoading}
-                onCancel={() => setCreateModalOpen(false)}
-                onSubmit={handleCreateLocation}
-            />
-
-            <LocationDetailModal
-                open={isDetailModalOpen}
-                loading={updateLoading || loadingDetail}
+            <LocationModal
+                open={isModalOpen}
+                loading={createLoading || updateLoading || loadingDetail}
                 location={selectedLocation}
                 onCancel={() => {
-                    setDetailModalOpen(false)
+                    setModalOpen(false)
                     setSelectedLocation(null)
                 }}
-                onSubmit={handleUpdateLocation}
+                onSubmit={handleSubmit}
             />
         </div>
     )

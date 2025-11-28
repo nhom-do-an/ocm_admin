@@ -68,6 +68,17 @@ export const API = {
     },
     PAYMENT_METHOD: {
         GET_PAYMENT_METHODS: '/admin/payment-methods',
+        GET_DETAIL: (id: number) => `/admin/payment-methods/${id}`,
+        CREATE: '/admin/payment-methods',
+        UPDATE: '/admin/payment-methods',
+        GET_PROVIDERS: '/admin/payment-methods/providers/list',
+    },
+    BENEFICIARY_ACCOUNT: {
+        GET_LIST: '/admin/beneficiary-accounts',
+        GET_DETAIL: (id: number) => `/admin/beneficiary-accounts/${id}`,
+        CREATE: '/admin/beneficiary-accounts',
+        UPDATE: '/admin/beneficiary-accounts',
+        GET_BANKS: '/admin/beneficiary-accounts/banks',
     },
     CUSTOMER_ORDER: {
         GET_CUSTOMER_ORDERS: '/orders',

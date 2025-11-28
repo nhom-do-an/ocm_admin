@@ -1,9 +1,8 @@
+import PaymentMethodView from '@/containers/dashboard/setting/payment-method/payment-method-view'
 import React from 'react'
 
 function PaymentMethod() {
-    return (
-        <div>PaymentMethod</div>
-    )
+    return <PaymentMethodView />
 }
 
 export default PaymentMethod
