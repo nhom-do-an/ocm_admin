@@ -1,12 +1,14 @@
 'use client'
 import { Avatar, Button, Input, Dropdown, Tabs, Empty } from 'antd'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, Bell, Menu, User, LogOut, Package, ShoppingCart, Users } from "lucide-react"
 import { useGlobalContext } from '@/hooks/useGlobalContext'
 import storage from '@/storages/storage'
 import { useRouter } from 'next/navigation'
 import { STORAGE_KEYS } from '@/storages/storage-key'
 import { SCREEN } from '@/constants/constant'
+import NotificationDropdown from './NotificationDropdown'
+import notificationUserService from '@/services/notification-user'
 
 function Header() {
     const { setOpenSidebar } = useGlobalContext()
@@ -15,6 +17,23 @@ function Header() {
     const [activeTab, setActiveTab] = useState('products')
     const router = useRouter();
     const { setUser, user } = useGlobalContext();
+    const [unreadCount, setUnreadCount] = useState(0)
+
+    const fetchUnreadCount = async () => {
+        try {
+            const count = await notificationUserService.getUnreadCount()
+            setUnreadCount(count)
+        } catch (error) {
+            console.error('Failed to fetch unread count:', error)
+        }
+    }
+
+    useEffect(() => {
+        fetchUnreadCount()
+        // Refresh count every 30 seconds
+        const interval = setInterval(fetchUnreadCount, 30000)
+        return () => clearInterval(interval)
+    }, [])
 
     // Dữ liệu mẫu - thay thế bằng dữ liệu thực từ API
     const [searchResults] = useState({
@@ -216,8 +235,8 @@ function Header() {
                 </Dropdown>
             </div>
 
-            <div className="flex gap-1 items-center">
-                <Button type="text"><Bell size={19} /></Button>
+            <div className="flex gap-4 items-center">
+                <NotificationDropdown unreadCount={unreadCount} onRefreshCount={fetchUnreadCount} />
                 <Dropdown
                     menu={{ items: avatarMenuItems }}
                     placement="bottomRight"
