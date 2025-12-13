@@ -1,9 +1,5 @@
-import React from 'react'
+import ShipmentListView from '@/containers/dashboard/shipment/shipment-list-view'
 
-const ShipmentList = () => {
-    return (
-        <div>ShipmentList</div>
-    )
+export default function ShipmentListPage() {
+    return <ShipmentListView />
 }
-
-export default ShipmentList
