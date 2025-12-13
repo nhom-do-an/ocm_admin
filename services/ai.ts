@@ -10,9 +10,13 @@ const aiService = {
         });
         return res.data.data as TrendingResponse;
     },
-    async getTrendingPredictions(limit: number = 20): Promise<TrendingPredictionsResponse> {
+    async getTrendingPredictions(limit: number = 20, date?: string): Promise<TrendingPredictionsResponse> {
+        const params: any = { limit };
+        if (date) {
+            params.date = date;
+        }
         const res = await Axios.get<TApiResponse<TrendingPredictionsResponse>>(API.AI.GET_TRENDING_PREDICTIONS, {
-            params: { limit },
+            params,
         });
         return res.data.data as TrendingPredictionsResponse;
     },

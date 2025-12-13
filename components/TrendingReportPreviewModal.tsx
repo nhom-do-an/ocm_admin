@@ -12,6 +12,7 @@ interface TrendingReportPreviewModalProps {
     predictions: TrendingPrediction[]
     totalPredictedSales: number
     totalPredictedRevenue: number
+    selectedDate?: string
     onCancel: () => void
     onDownload: () => void
 }
@@ -22,6 +23,7 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
     predictions,
     totalPredictedSales,
     totalPredictedRevenue,
+    selectedDate,
     onCancel,
     onDownload
 }) => {
@@ -50,7 +52,8 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
                 trending,
                 predictions,
                 totalPredictedSales,
-                totalPredictedRevenue
+                totalPredictedRevenue,
+                selectedDate
             })
 
             // Create a hidden iframe to render HTML in complete isolation
@@ -123,7 +126,8 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
                 trending,
                 predictions,
                 totalPredictedSales,
-                totalPredictedRevenue
+                totalPredictedRevenue,
+                selectedDate
             })
 
             // Create a hidden iframe to render HTML in complete isolation

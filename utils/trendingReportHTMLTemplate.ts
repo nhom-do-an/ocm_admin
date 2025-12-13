@@ -5,6 +5,7 @@ interface TrendingReportData {
     predictions: TrendingPrediction[]
     totalPredictedSales: number
     totalPredictedRevenue: number
+    selectedDate?: string
 }
 
 const formatNumber = (num: number): string => {
@@ -19,7 +20,7 @@ const formatCurrency = (num: number): string => {
 }
 
 export const generateTrendingReportHTML = (data: TrendingReportData): string => {
-    const { trending, predictions, totalPredictedSales, totalPredictedRevenue } = data
+    const { trending, predictions, totalPredictedSales, totalPredictedRevenue, selectedDate } = data
     const currentDate = new Date().toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: 'long',
@@ -27,6 +28,15 @@ export const generateTrendingReportHTML = (data: TrendingReportData): string => 
         hour: '2-digit',
         minute: '2-digit'
     })
+    
+    // Format selected date for report
+    const reportDate = selectedDate 
+        ? new Date(selectedDate).toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
+        : 'Mới nhất'
 
     const html = `
 <!DOCTYPE html>
@@ -196,6 +206,7 @@ export const generateTrendingReportHTML = (data: TrendingReportData): string => 
 <body>
     <div class="header">
         <h1>BÁO CÁO TRENDING SẢN PHẨM</h1>
+        <div class="date">Thời gian báo cáo: ${reportDate}</div>
         <div class="date">Ngày xuất báo cáo: ${currentDate}</div>
     </div>
 
@@ -210,49 +221,12 @@ export const generateTrendingReportHTML = (data: TrendingReportData): string => 
                 <td>Tổng dự báo doanh thu (VND)</td>
                 <td>${formatCurrency(totalPredictedRevenue)}</td>
             </tr>
-            <tr>
-                <td>Số sản phẩm trending</td>
-                <td>${trending.length}</td>
-            </tr>
         </table>
     </div>
-
-    ${trending.length > 0 ? `
-    <div class="section">
-        <div class="section-title">II. SẢN PHẨM ĐANG TRENDING</div>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th style="width: 6%;" class="text-center">STT</th>
-                    <th style="width: 38%;">Tên sản phẩm</th>
-                    <th style="width: 14%;" class="text-right">Dự báo bán</th>
-                    <th style="width: 16%;" class="text-right">Giá bán</th>
-                    <th style="width: 13%;" class="text-right">Tăng trưởng</th>
-                    <th style="width: 13%;" class="text-right">Trend Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${trending.map((item, index) => {
-                    const growthColor = item.growth_rate > 0 ? '#10b981' : item.growth_rate < 0 ? '#ef4444' : '#6b7280'
-                    return `
-                <tr>
-                    <td class="text-center highlight">${index + 1}</td>
-                    <td><strong>${item.product_name || `Sản phẩm #${item.item_id}`}</strong></td>
-                    <td class="text-right highlight">${formatNumber(item.predicted_sales)}</td>
-                    <td class="text-right">${item.price ? formatCurrency(item.price) : '-'}</td>
-                    <td class="text-right" style="color: ${growthColor}; font-weight: 600;">${item.growth_rate > 0 ? '+' : ''}${item.growth_rate.toFixed(1)}%</td>
-                    <td class="text-right highlight">${item.trend_score.toFixed(2)}</td>
-                </tr>
-                `
-                }).join('')}
-            </tbody>
-        </table>
-    </div>
-    ` : ''}
 
     ${predictions.length > 0 ? `
     <div class="section">
-        <div class="section-title">III. DỰ BÁO DOANH SỐ CHI TIẾT</div>
+        <div class="section-title">II. DỰ BÁO DOANH SỐ CHI TIẾT</div>
         <table class="data-table">
             <thead>
                 <tr>
