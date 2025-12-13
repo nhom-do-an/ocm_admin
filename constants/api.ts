@@ -7,6 +7,9 @@ export const API = {
     },
     STORE: {
         CHECK_STORE: '/admin/store/check',
+        GET_DETAIL: (storeId: number) => `/admin/store/${storeId}`,
+        UPDATE: '/admin/store',
+        UPLOAD_LOGO: (storeId: number) => `/admin/store/${storeId}/logo`,
     },
     REGION: {
         GET_REGIONS: '/region/list',
@@ -59,6 +62,8 @@ export const API = {
         UPDATE_ORDER: (id: number) => `/admin/orders/${id}`,
         UPDATE_ORDER_ITEMS: (id: number) => `/admin/orders/${id}/items`,
         CREATE_ORDER_PAYMENTS: (id: number) => `/admin/orders/${id}/payments`,
+        GET_ORDER_PRINT: (id: number) => `/admin/orders/${id}/print`,
+        CANCEL_ORDER: (id: number) => `/admin/orders/${id}/cancel`,
     },
     VARIANT: {
         GET_VARIANTS: '/admin/variants',
@@ -94,6 +99,12 @@ export const API = {
         UPDATE_STAFF: (id: number) => `/admin/users/staffs/${id}`,
         GET_USER_SUMMARY: '/admin/users/summary',
     },
+    NOTIFICATION_USER: {
+        GET_LIST: '/admin/notifications/list',
+        READ: (id: number) => `/admin/notifications/read/${id}`,
+        GET_UNREAD_COUNT: '/admin/notifications/unread/count',
+        MARK_AS_READ_ALL: '/admin/notifications/mark-as-read-all',
+    },
     SHIPPING_RATE: {
         GET_LIST: '/admin/shipping/rates',
     },
@@ -111,5 +122,21 @@ export const API = {
     },
     INVENTORY_ADJUSTMENT: {
         GET_LIST: '/admin/inventory-adjustments',
+    },
+    FULFILLMENT: {
+        CREATE: '/admin/fulfillments',
+        GET_LINE_ITEMS: (id: number) => `/admin/fulfillments/${id}/line-items`,
+    },
+    SHIPMENT: {
+        GET_LIST: '/admin/shipments',
+        GET_DETAIL: (id: number) => `/admin/shipments/${id}`,
+        UPDATE_STATUS: (id: number) => `/admin/shipments/${id}/status`,
+        MARK_AS_DELIVERED: (id: number) => `/admin/shipments/${id}/mark-as-delivered`,
+        PRINT: (id: number) => `/admin/shipments/${id}/print`,
+    },
+    NOTIFICATION: {
+        GET_TEMPLATES: '/admin/notifications/templates',
+        GET_TEMPLATE_BY_ID: (id: number) => `/admin/notifications/templates/${id}`,
+        UPDATE_TEMPLATE: '/admin/notifications/templates',
     },
 };

@@ -1,9 +1,5 @@
-import React from 'react'
+import NotificationView from '@/containers/dashboard/setting/notification/notification-view'
 
-function Notification() {
-    return (
-        <div>Notifiction</div>
-    )
+export default function NotificationPage() {
+    return <NotificationView />
 }
-
-export default Notification
