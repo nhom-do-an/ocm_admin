@@ -18,7 +18,7 @@ export const useShippingPartner = () => {
         total: 0,
     })
     const [filters, setFilters] = useState<Filters>({
-        status: DeliveryProviderStatus.Active,
+        status: undefined,
         key: undefined,
     })
     const notification = useGlobalNotification()
@@ -116,7 +116,7 @@ export const useShippingPartner = () => {
     const handleSearch = (value?: string) => {
         setFilters(prev => ({
             ...prev,
-            key: value,
+            key: value || undefined,
         }))
         setPagination(prev => ({ ...prev, current: 1 }))
     }
