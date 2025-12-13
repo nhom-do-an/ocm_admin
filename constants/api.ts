@@ -112,4 +112,8 @@ export const API = {
     INVENTORY_ADJUSTMENT: {
         GET_LIST: '/admin/inventory-adjustments',
     },
+    AI: {
+        GET_TRENDING: '/ai/trending',
+        GET_TRENDING_PREDICTIONS: '/admin/ai/trending/predictions',
+    },
 };
