@@ -1,6 +1,5 @@
 import { EDeliveryMethod, EFreightPayerType, EFulfillmentShipmentStatus, EShippingRequirement, ETransactionStatus, ShippingLineType } from "../enums/enum";
 import { AddressDetail } from "../response/customer";
-import { Location } from "../response/locations";
 
 
 export interface GetListOrdersRequest {
@@ -115,14 +114,19 @@ export interface CreateOrderRequest {
     transactions: CreateTransactionRequest[];
 }
 
+export interface CreateFulfillmentLineItemRequest {
+    id: number;
+    quantity: number;
+}
+
 export interface CreateFulfillmentRequest {
     delivery_method: EDeliveryMethod;
     delivery_status: EFulfillmentShipmentStatus;
     order_id?: number;
+    fulfillment_line_items?: CreateFulfillmentLineItemRequest[];
     send_notification?: boolean;
     shipping_info?: CreateShippingInfoRequest;
     tracking_info?: CreateTrackingInfoRequest;
-    pickup_address?: Location;
     note: string;
 }
 
@@ -162,4 +166,28 @@ export interface UpdateLineItemAndShippingLineRequest {
 
 export interface CreateOrderPaymentRequest {
     transactions?: CreateTransactionRequest[];
+}
+
+export interface CancelOrderRequest {
+    cancel_reason: string;
+}
+
+export interface UpdateOrderItemsRequest {
+    line_items: UpdateOrderLineItemRequestV2[];
+    shipping_lines: UpdateShippingLineRequestV2[];
+    send_email: boolean;
+}
+
+export interface UpdateOrderLineItemRequestV2 {
+    id?: number | null; // null để thêm mới, có giá trị để cập nhật/xóa
+    variant_id?: number | null; // Bắt buộc khi thêm mới
+    quantity?: number | null; // null để xóa item (khi ID có giá trị), bắt buộc khi thêm/sửa
+    note?: string | null;
+}
+
+export interface UpdateShippingLineRequestV2 {
+    id?: number | null; // null để thêm mới, có giá trị để cập nhật/xóa
+    title?: string | null; // Bắt buộc khi thêm mới, có thể cập nhật khi sửa
+    price?: number | null; // null để xóa (khi ID có giá trị), bắt buộc khi thêm/sửa
+    type?: ShippingLineType | null; // Bắt buộc khi thêm mới
 }
