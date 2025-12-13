@@ -1,9 +1,6 @@
-import React from 'react'
+import GeneralConfigView from '@/containers/dashboard/setting/general-config/general-config-view'
 
-function Settings() {
-    return (
-        <div>Settings</div>
-    )
+export default function GeneralConfigPage() {
+    return <GeneralConfigView />
 }
 
-export default Settings
