@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import orderService from '@/services/order'
+import shipmentService from '@/services/shipment'
+import { ShipmentDetail } from '@/types/response/shipment'
 import { OrderDetail } from '@/types/response/order'
 import { Event } from '@/types/response/event'
 import { Transaction } from '@/types/response/transation'
@@ -17,6 +19,8 @@ interface UseOrderDetailResult {
     eventsLoading: boolean
     hasMoreEvents: boolean
     transactions: Transaction[]
+    shipments: ShipmentDetail[]
+    shipmentsLoading: boolean
     handleLoadMoreEvents: () => void
     refreshOrder: () => Promise<void>
     updateLineItemNote: (lineItemId: number, note: string, quantity?: number) => Promise<void>
@@ -36,6 +40,8 @@ const useOrderDetail = (orderId: number | null): UseOrderDetailResult => {
     const [eventsLoading, setEventsLoading] = useState(false)
     const [hasMoreEvents, setHasMoreEvents] = useState(false)
     const [transactions, setTransactions] = useState<Transaction[]>([])
+    const [shipments, setShipments] = useState<ShipmentDetail[]>([])
+    const [shipmentsLoading, setShipmentsLoading] = useState(false)
 
     const fetchOrderDetail = useCallback(async () => {
         if (!orderId) return
@@ -89,6 +95,23 @@ const useOrderDetail = (orderId: number | null): UseOrderDetailResult => {
         }
     }, [orderId])
 
+    const fetchShipments = useCallback(async () => {
+        if (!orderId) return
+        setShipmentsLoading(true)
+        try {
+            const data = await shipmentService.getListShipments({
+                order_id: orderId,
+                page: 1,
+                size: 100,
+            })
+            setShipments(data.shipments || [])
+        } catch (error) {
+            console.error('Error fetching shipments:', error)
+        } finally {
+            setShipmentsLoading(false)
+        }
+    }, [orderId])
+
     const handleLoadMoreEvents = useCallback(() => {
         fetchEvents(eventsPage + 1, false)
     }, [eventsPage, fetchEvents])
@@ -98,7 +121,8 @@ const useOrderDetail = (orderId: number | null): UseOrderDetailResult => {
         await fetchOrderDetail()
         await fetchEvents(1, true)
         await fetchTransactions()
-    }, [orderId, fetchOrderDetail, fetchEvents, fetchTransactions])
+        await fetchShipments()
+    }, [orderId, fetchOrderDetail, fetchEvents, fetchTransactions, fetchShipments])
 
     const updateLineItemNote = async (lineItemId: number, note: string, quantity?: number) => {
         if (!orderId) return
@@ -188,7 +212,8 @@ const useOrderDetail = (orderId: number | null): UseOrderDetailResult => {
         fetchOrderDetail()
         fetchEvents(1, true)
         fetchTransactions()
-    }, [orderId, fetchOrderDetail, fetchEvents, fetchTransactions])
+        fetchShipments()
+    }, [orderId, fetchOrderDetail, fetchEvents, fetchTransactions, fetchShipments])
 
     return {
         order,
@@ -197,6 +222,8 @@ const useOrderDetail = (orderId: number | null): UseOrderDetailResult => {
         eventsLoading,
         hasMoreEvents,
         transactions,
+        shipments,
+        shipmentsLoading,
         handleLoadMoreEvents,
         refreshOrder,
         updateLineItemNote,

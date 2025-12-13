@@ -77,6 +77,7 @@ export interface LineItemDetail {
     price?: number;
     product_name?: string;
     variant_title?: string;
+    requires_shipping?: boolean;
 }
 
 export interface PaymentMethodLine {
