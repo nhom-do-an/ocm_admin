@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Home, BadgePercent, ClipboardList, Package, Truck, User, Warehouse } from 'lucide-react'
+import { Home, ClipboardList, Package, Truck, User, Warehouse } from 'lucide-react'
 import { SCREEN } from './constant'
 
 export interface AppMenuItem {
@@ -25,10 +25,7 @@ export const menuItems: AppMenuItem[] = [
                 key: SCREEN.ORDER_LIST.PATH,
                 label: SCREEN.ORDER_LIST.LABEL,
             },
-            {
-                key: SCREEN.RETURN_ORDER_LIST.PATH,
-                label: SCREEN.RETURN_ORDER_LIST.LABEL,
-            },
+
         ],
     },
     {
@@ -56,10 +53,6 @@ export const menuItems: AppMenuItem[] = [
                 key: SCREEN.COLLECTION_LIST.PATH,
                 label: SCREEN.COLLECTION_LIST.LABEL,
             },
-            {
-                key: SCREEN.CATALOG_LIST.PATH,
-                label: SCREEN.CATALOG_LIST.LABEL,
-            },
         ],
     },
     {
@@ -70,11 +63,6 @@ export const menuItems: AppMenuItem[] = [
             {
                 key: SCREEN.INVENTORY_MANAGEMENT.PATH,
                 label: SCREEN.INVENTORY_MANAGEMENT.LABEL,
-            },
-
-            {
-                key: SCREEN.SUPPLIER_LIST.PATH,
-                label: SCREEN.SUPPLIER_LIST.LABEL,
             },
         ],
     },
@@ -88,15 +76,8 @@ export const menuItems: AppMenuItem[] = [
                 label: SCREEN.CUSTOMER_LIST.LABEL,
             },
 
-            {
-                key: SCREEN.CUSTOMER_GROUP_LIST.PATH,
-                label: SCREEN.CUSTOMER_GROUP_LIST.LABEL,
-            }
+
         ],
     },
-    {
-        key: SCREEN.DISCOUNT_LIST.PATH,
-        label: SCREEN.DISCOUNT_LIST.LABEL,
-        icon: <BadgePercent size={20} />,
-    },
+
 ]
