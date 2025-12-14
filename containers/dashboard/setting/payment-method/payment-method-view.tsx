@@ -1,23 +1,16 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { Button, Card, Empty, Skeleton, Tag } from 'antd'
-import { CreditCard, Plus, Settings } from 'lucide-react'
+import { Button, Card, Empty, Skeleton, Table, Tag } from 'antd'
+import { CreditCard, FileText, Plus } from 'lucide-react'
+import type { ColumnsType } from 'antd/es/table'
 import { useRouter } from 'next/navigation'
 import usePaymentMethodManagement from './hooks/use-payment-method-management'
 import Loader from '@/components/Loader'
 import PaymentMethodModal from './components/PaymentMethodModal'
 import { CreatePaymentMethodRequest, UpdatePaymentMethodRequest } from '@/types/request/payment-method'
-import { PaymentMethodDetail } from '@/types/response/payment-method'
+import { PaymentMethodDetail, PaymentMethod } from '@/types/response/payment-method'
 import paymentMethodService from '@/services/payment-method'
-
-const providerLabels: Record<string, string> = {
-    bank: 'Chuyển khoản',
-    cash: 'Tiền mặt',
-    cod: 'Thanh toán khi nhận hàng',
-}
-
-const providerOrder = ['bank', 'cash', 'cod']
 
 const PaymentMethodView: React.FC = () => {
     const router = useRouter()
@@ -26,42 +19,20 @@ const PaymentMethodView: React.FC = () => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethodDetail | null>(null)
     const [loadingDetail, setLoadingDetail] = useState(false)
 
-    const groupedPaymentMethods = useMemo(() => {
-        const grouped: Record<string, typeof paymentMethods> = {}
+    const { bankMethods, otherMethods } = useMemo(() => {
+        const bank: PaymentMethod[] = []
+        const other: PaymentMethod[] = []
 
         paymentMethods.forEach(method => {
-            const providerName = method.provider?.name || 'other'
-            if (!grouped[providerName]) {
-                grouped[providerName] = []
-            }
-            grouped[providerName].push(method)
-        })
-
-        // Sort by provider order
-        const sorted: Array<{ providerName: string; methods: typeof paymentMethods; label: string }> = []
-
-        providerOrder.forEach(name => {
-            if (grouped[name]) {
-                sorted.push({
-                    providerName: name,
-                    methods: grouped[name],
-                    label: providerLabels[name] || name,
-                })
+            const providerName = method.provider?.name || ''
+            if (providerName === 'bank') {
+                bank.push(method)
+            } else {
+                other.push(method)
             }
         })
 
-        // Add any remaining providers
-        Object.keys(grouped).forEach(name => {
-            if (!providerOrder.includes(name)) {
-                sorted.push({
-                    providerName: name,
-                    methods: grouped[name],
-                    label: providerLabels[name] || name,
-                })
-            }
-        })
-
-        return sorted
+        return { bankMethods: bank, otherMethods: other }
     }, [paymentMethods])
 
     const handlePaymentMethodClick = async (paymentMethodId: number) => {
@@ -92,11 +63,66 @@ const PaymentMethodView: React.FC = () => {
 
     const getStatusTag = (status?: string) => {
         return status === 'active' ? (
-            <Tag color="success">Đang hoạt động</Tag>
+            <Tag color="green">Đang sử dụng</Tag>
         ) : (
             <Tag>Tạm tắt</Tag>
         )
     }
+
+    const getBeneficiaryAccountDisplay = (method: PaymentMethod) => {
+        const providerName = method.provider?.name || ''
+
+        // Nếu là cash hoặc cod thì hiển thị "Không áp dụng"
+        if (providerName === 'cash' || providerName === 'cod') {
+            return 'Không áp dụng'
+        }
+
+        // Nếu có beneficiary_account thì hiển thị thông tin
+        if (method.beneficiary_account) {
+            const account = method.beneficiary_account
+            if (account.account_name && account.account_number) {
+                return `${account.account_name} - ${account.account_number}`
+            }
+            if (account.account_name) {
+                return account.account_name
+            }
+            if (account.account_number) {
+                return account.account_number
+            }
+        }
+
+        // Mặc định hiển thị "---"
+        return '---'
+    }
+
+    const createColumns = (): ColumnsType<PaymentMethod> => [
+        {
+            title: 'Tên phương thức',
+            key: 'name',
+            width: 200,
+            render: (_, record) => (
+                <button
+                    onClick={() => handlePaymentMethodClick(record.id!)}
+                    className="text-blue-400 hover:text-blue-800 font-medium cursor-pointer text-left"
+                >
+                    <span className="text-blue-400 hover:text-blue-800 font-medium cursor-pointer text-left">{record.name || 'N/A'}</span>
+                </button>
+            ),
+        },
+        {
+            title: 'Trạng thái',
+            key: 'status',
+            width: 150,
+            render: (_, record) => getStatusTag(record.status),
+        },
+        {
+            title: 'Tài khoản thụ hưởng',
+            key: 'beneficiary_account',
+            render: (_, record) => (
+                <span className="text-gray-600">{getBeneficiaryAccountDisplay(record)}</span>
+            ),
+        },
+    ]
 
     if (loading) {
         return (
@@ -108,80 +134,78 @@ const PaymentMethodView: React.FC = () => {
 
     return (
         <div className="max-w-[1000px] mx-auto px-5 pb-10">
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-900">Quản lý phương thức thanh toán</h1>
-                <p className="text-sm text-gray-500 mt-1">Theo dõi và quản lý các phương thức thanh toán trong cửa hàng</p>
+            <div className="mb-6 flex items-center justify-between">
+                <h1 className="text-2xl font-semibold text-gray-900">Phương thức thanh toán</h1>
+
+            </div>
+            <div className="flex items-center gap-3 justify-end mb-2">
+                <button
+                    onClick={() => router.push('/settings/beneficiary-account')}
+                    className="!text-blue-500 hover:text-blue-800 font-medium hover:underline cursor-pointer"
+                >
+                    Quản lý tài khoản ngân hàng
+                </button>
+                <Button
+                    type="primary"
+                    icon={<Plus size={16} />}
+                    onClick={() => {
+                        setSelectedPaymentMethod(null)
+                        setModalOpen(true)
+                    }}
+                >
+                    Thêm phương thức
+                </Button>
             </div>
 
-            <Card>
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
-                    <div>
-                        <p className="text-base font-semibold text-gray-900">Danh sách phương thức thanh toán</p>
-                        <p className="text-sm text-gray-500">Quản lý các phương thức thanh toán trong cửa hàng của bạn</p>
+            <div className="space-y-6">
+                {/* Section 1: Chuyển khoản */}
+                <Card className="bg-gray-50">
+                    <div className="flex items-center gap-2 mb-2">
+                        <CreditCard className="w-5 h-5 text-gray-600" />
+                        <span className="text-lg font-semibold text-gray-900">Chuyển khoản</span>
                     </div>
-                    <Button
-                        type="primary"
-                        icon={<Plus size={16} />}
-                        onClick={() => {
-                            setSelectedPaymentMethod(null)
-                            setModalOpen(true)
-                        }}
-                    >
-                        Thêm phương thức thanh toán
-                    </Button>
-                </div>
-
-                <div>
+                    <p className="text-sm text-gray-600 mb-4">
+                        Cập nhật thông tin tài khoản để thanh toán bằng mã VietQR động dễ dàng hơn.
+                    </p>
                     {loading ? (
-                        <div className="py-10">
-                            <Skeleton active />
-                        </div>
-                    ) : groupedPaymentMethods.length > 0 ? (
-                        <div className="space-y-6">
-                            {groupedPaymentMethods.map(({ providerName, methods, label }) => (
-                                <div key={providerName}>
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h3 className="text-lg font-semibold text-gray-900">{label}</h3>
-                                        {providerName === 'bank' && (
-                                            <Button
-                                                type="default"
-                                                icon={<Settings size={16} />}
-                                                onClick={() => router.push('/settings/beneficiary-account')}
-                                            >
-                                                Quản lý danh sách thụ hưởng
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <div className="space-y-3">
-                                        {methods.map(method => (
-                                            <div
-                                                key={method.id}
-                                                className="flex flex-col gap-2 rounded border border-gray-100 px-4 py-3 md:flex-row md:items-center md:justify-between hover:bg-gray-50 cursor-pointer transition-colors"
-                                                onClick={() => handlePaymentMethodClick(method.id!)}
-                                            >
-                                                <div className="flex items-start gap-3 flex-1">
-                                                    <CreditCard className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
-                                                    <div className="flex-1">
-                                                        <div className="flex items-center gap-2 mb-1">
-                                                            <p className="font-semibold text-gray-900">{method.name || 'N/A'}</p>
-                                                            {getStatusTag(method.status)}
-                                                        </div>
-                                                        {method.description && (
-                                                            <p className="text-sm text-gray-600 line-clamp-2">{method.description}</p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        <Skeleton active />
+                    ) : bankMethods.length > 0 ? (
+                        <Table
+                            columns={createColumns()}
+                            dataSource={bankMethods}
+                            rowKey="id"
+                            pagination={false}
+                            className="bg-white"
+                        />
                     ) : (
-                        <Empty description="Cửa hàng của bạn chưa có phương thức thanh toán nào" className="py-10" />
+                        <Empty description="Chưa có phương thức chuyển khoản" className="py-6" />
                     )}
-                </div>
-            </Card>
+                </Card>
+
+                {/* Section 2: Phương thức khác */}
+                <Card className="bg-gray-50">
+                    <div className="flex items-center gap-2 mb-2">
+                        <FileText className="w-5 h-5 text-gray-600" />
+                        <span className="text-lg font-semibold text-gray-900">Phương thức khác</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                        Cập nhật phương thức thanh toán để theo dõi sổ quỹ tiền mặt và tài khoản ngân hàng.
+                    </p>
+                    {loading ? (
+                        <Skeleton active />
+                    ) : otherMethods.length > 0 ? (
+                        <Table
+                            columns={createColumns()}
+                            dataSource={otherMethods}
+                            rowKey="id"
+                            pagination={false}
+                            className="bg-white"
+                        />
+                    ) : (
+                        <Empty description="Chưa có phương thức thanh toán khác" className="py-6" />
+                    )}
+                </Card>
+            </div>
 
             <PaymentMethodModal
                 open={isModalOpen}

@@ -311,7 +311,7 @@ const CreateOrder: React.FC = () => {
             render: (_, record, index) => (
                 <div className="flex items-center gap-3">
                     {/* Image */}
-                    <div className="w-12 h-12 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                    <div className="w-12 h-12 shrink-0 bg-gray-100 rounded-md overflow-hidden">
                         {record.image_url ? (
                             <Image
                                 src={record.image_url}
@@ -439,6 +439,7 @@ const CreateOrder: React.FC = () => {
     }, [deliveryType, finalAmount, codAmount])
 
     const handleSubmit = async (values: FormValues) => {
+        console.log('=== SUBMIT CREATE ORDER ===')
         // Validate required fields
         if (!values.location_id) {
             console.error('Vui lòng chọn chi nhánh')
@@ -484,8 +485,7 @@ const CreateOrder: React.FC = () => {
         let fulfillment: CreateFulfillmentRequest | undefined = undefined
 
         if (deliveryType === 'self' || deliveryType === 'delivered') {
-            const pickupLocation = locations.find(loc => loc.id === pickupLocationId)
-
+            console.log('=== TẠO FULFILLMENT CHO ĐƠN HÀNG ===')
             const shippingInfo: CreateShippingInfoRequest = {
                 cod_amount: codAmount,
                 freight_payer: freightPayer,
@@ -498,7 +498,7 @@ const CreateOrder: React.FC = () => {
                 width: shippingWidth,
             }
 
-            const trackingInfo: CreateTrackingInfoRequest | undefined = selectedDeliveryProviderId && trackingNumber
+            const trackingInfo: CreateTrackingInfoRequest | undefined = selectedDeliveryProviderId
                 ? {
                     delivery_provider_id: selectedDeliveryProviderId,
                     tracking_number: trackingNumber,
@@ -510,7 +510,6 @@ const CreateOrder: React.FC = () => {
                 delivery_status: deliveryType === 'self' ? EFulfillmentShipmentStatus.PENDING : EFulfillmentShipmentStatus.DELIVERED,
                 shipping_info: shippingInfo,
                 tracking_info: trackingInfo,
-                pickup_address: pickupLocation,
                 note: deliveryNote || '',
             }
         }
@@ -546,6 +545,7 @@ const CreateOrder: React.FC = () => {
             return
         }
 
+        console.log("Shipping Address:", shippingAddress)
         const orderData: CreateOrderRequest = {
             assignee_id: values.assignee_id!,
             customer_id: customerId,
@@ -553,13 +553,13 @@ const CreateOrder: React.FC = () => {
             line_items: line_items,
             location_id: values.location_id,
             note: values.note || '',
-            shipping_address: shippingAddress,
             shipping_lines: shipping_lines,
             source_id: values.source_id,
             transactions: transactions,
+            shipping_address: shippingAddress,
         }
 
-        console.log('=== THÔNG TIN ĐƠN HÀNG ===')
+        console.log('=== THÔNG TIN ĐƠN HÀNG** ===')
         console.log('CreateOrderRequest:', JSON.stringify(orderData, null, 2))
         console.log('==========================')
 
@@ -697,6 +697,7 @@ const CreateOrder: React.FC = () => {
 
     const handleSaveShippingAddress = (address: AddressDetail | null) => {
         const sanitized = sanitizeAddress(address)
+        console.log('Sanitized shipping address:', sanitized)
         setShippingAddress(sanitized)
         if (!billingAddress) {
             setBillingAddress(sanitized ? { ...sanitized } : null)
@@ -803,7 +804,7 @@ const CreateOrder: React.FC = () => {
             {loading ? <></> : (
                 <div className="min-h-screen">
                     {/* Header */}
-                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? '!w-[calc(100%-80px)] left-20' : '!w-[calc(100%-256px)] left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
+                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
                         <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
                             <div className="flex gap-1 items-center">
                                 <Button

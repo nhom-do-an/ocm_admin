@@ -1,7 +1,7 @@
 import Axios from "./axios";
 import { TApiResponse } from "@/types/response/response";
 import { API } from "@/constants/api";
-import { CreateOrderPaymentRequest, CreateOrderRequest, GetListOrdersRequest, UpdateOrderRequest } from "@/types/request/order";
+import { CreateOrderPaymentRequest, CreateOrderRequest, GetListOrdersRequest, UpdateOrderItemsRequest, UpdateOrderRequest } from "@/types/request/order";
 import { GetListOrdersResponse, OrderDetail } from "@/types/response/order";
 import { GetEventsRequest } from "@/types/request/event";
 import { GetListEventsResponse } from "@/types/response/event";
@@ -62,6 +62,29 @@ const orderService = {
         const res = await Axios.post<TApiResponse<OrderDetail>>(API.ORDER.CREATE_ORDER_PAYMENTS(id), data);
         return res.data.data as OrderDetail;
     },
+    async GetOrderPrint(
+        id: number
+    ): Promise<string> {
+        const res = await Axios.get<TApiResponse<string>>(API.ORDER.GET_ORDER_PRINT(id));
+        return res.data.data as string;
+    },
+
+    async updateOrderItems(
+        id: number,
+
+        data: UpdateOrderItemsRequest
+    ): Promise<OrderDetail> {
+        const res = await Axios.put<TApiResponse<OrderDetail>>(API.ORDER.UPDATE_ORDER_ITEMS(id), data);
+        return res.data.data as OrderDetail;
+    },
+
+    async cancelOrder(
+        id: number,
+        data: import('@/types/request/order').CancelOrderRequest
+    ): Promise<OrderDetail> {
+        const res = await Axios.put<TApiResponse<OrderDetail>>(API.ORDER.CANCEL_ORDER(id), data);
+        return res.data.data as OrderDetail;
+    }
 }
 
 export default orderService;

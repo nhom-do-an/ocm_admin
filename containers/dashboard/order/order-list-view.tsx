@@ -105,18 +105,21 @@ const OrderListView: React.FC = () => {
             key: 'order_name',
             width: 140,
             fixed: 'left' as const,
-            render: (orderNumber: unknown, record: OrderDetail) => (
-                <Space>
-                    <button onClick={() => router.push(`/order/${record.id}`)} className='cursor-pointer'>
-                        <span className="text-blue-600 hover:text-blue-800 font-medium">#{(orderNumber as number) || record.id}</span>
-                    </button>
-                    {record.note && (
-                        <Tooltip title={record.note} placement="top" styles={{ root: { maxWidth: '400px' } }}>
-                            <FileText size={16} className="text-gray-400 hover:text-gray-600 cursor-help" />
-                        </Tooltip>
-                    )}
-                </Space>
-            ),
+            render: (orderNumber: unknown, record: OrderDetail) => {
+                const isCancelled = record.status === EOrderStatus.CANCELLED
+                return (
+                    <Space>
+                        <button onClick={() => router.push(`/order/${record.id}`)} className='cursor-pointer'>
+                            <span className={`${isCancelled ? 'text-black' : 'text-blue-600 hover:text-blue-800'} font-medium`}>#{(orderNumber as number) || record.id}</span>
+                        </button>
+                        {record.note && (
+                            <Tooltip title={record.note} placement="top" styles={{ root: { maxWidth: '400px' } }}>
+                                <FileText size={16} className="text-gray-400 hover:text-gray-600 cursor-help" />
+                            </Tooltip>
+                        )}
+                    </Space>
+                )
+            },
         },
         customer: {
             title: 'Khách hàng',
@@ -124,13 +127,14 @@ const OrderListView: React.FC = () => {
             width: 200,
             render: (_, record) => {
                 const customerName = record.customer?.email || '---'
+                const isCancelled = record.status === EOrderStatus.CANCELLED
                 if (record.customer?.id) {
                     return (
                         <button
                             onClick={() => router.push(`/customer/${record.customer?.id}`)}
                             className='cursor-pointer'
                         >
-                            <span className="text-blue-600 hover:text-blue-800">
+                            <span className={isCancelled ? 'text-black' : 'text-blue-600 hover:text-blue-800'}>
                                 {customerName}
                             </span>
                         </button>
@@ -232,13 +236,15 @@ const OrderListView: React.FC = () => {
             width: 200,
             render: (_, record) => {
                 const userName = record.user ? `${record.user.first_name} ${record.user.last_name}` : '---'
+                const isCancelled = record.status === EOrderStatus.CANCELLED
                 if (record.user?.id) {
+                    const userId = record.user.id
                     return (
                         <button
-                            onClick={() => router.push(`/employee/${record.user.id}`)}
+                            onClick={() => router.push(`/employee/${userId}`)}
                             className='cursor-pointer'
                         >
-                            <span className="text-blue-600 hover:text-blue-800">
+                            <span className={isCancelled ? 'text-black' : 'text-blue-600 hover:text-blue-800'}>
                                 {userName}
                             </span>
                         </button>
@@ -337,20 +343,6 @@ const OrderListView: React.FC = () => {
         router.push('/order/create')
     }
 
-    const handleDateRangeChange = (dates: [dayjs.Dayjs, dayjs.Dayjs] | null) => {
-        if (dates && dates[0] && dates[1]) {
-            handleMultipleFilterChange({
-                min_created_at: dates[0].format('DD/MM/YYYY'),
-                max_created_at: dates[1].format('DD/MM/YYYY'),
-            })
-        } else {
-            handleMultipleFilterChange({
-                min_created_at: undefined,
-                max_created_at: undefined,
-            })
-        }
-    }
-
     const dateRangeValue: [dayjs.Dayjs, dayjs.Dayjs] | null = filters.min_created_at && filters.max_created_at
         ? [dayjs(filters.min_created_at, 'DD/MM/YYYY'), dayjs(filters.max_created_at, 'DD/MM/YYYY')]
         : null
@@ -425,7 +417,19 @@ const OrderListView: React.FC = () => {
                                 format="DD/MM/YYYY"
                                 className="min-w-[250px]"
                                 value={dateRangeValue}
-                                onChange={handleDateRangeChange}
+                                onChange={(dates) => {
+                                    if (dates && dates[0] && dates[1]) {
+                                        handleMultipleFilterChange({
+                                            min_created_at: dates[0].format('DD/MM/YYYY'),
+                                            max_created_at: dates[1].format('DD/MM/YYYY'),
+                                        })
+                                    } else {
+                                        handleMultipleFilterChange({
+                                            min_created_at: undefined,
+                                            max_created_at: undefined,
+                                        })
+                                    }
+                                }}
                             />
 
                             <Button
@@ -496,7 +500,8 @@ const OrderListView: React.FC = () => {
                             dataSource={orders}
                             loading={loading}
                             rowKey="id"
-                            className="[&_.ant-table-tbody>tr>td]:py-2"
+                            className="[&_.ant-table-tbody>tr>td]:py-2 [&_.ant-table-tbody>tr.order-cancelled-row>td]:line-through [&_.ant-table-tbody>tr.order-cancelled-row>td>*]:line-through"
+                            rowClassName={(record) => record.status === EOrderStatus.CANCELLED ? 'order-cancelled-row' : ''}
                             pagination={{
                                 ...pagination,
                                 showSizeChanger: true,

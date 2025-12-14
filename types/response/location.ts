@@ -19,6 +19,7 @@ export interface Location {
 
 export interface LocationDetail extends Location {
     province_name?: string
+    district_name?: string
     ward_name?: string
     province_code?: string
     district_code?: string

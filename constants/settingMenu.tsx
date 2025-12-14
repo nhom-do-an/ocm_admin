@@ -1,5 +1,5 @@
 
-import { Bell, CreditCard, History, IdCard, MapPinned, ShoppingBag, SquarePercent, Store, Truck, TruckElectric, TvMinimalPlay } from 'lucide-react'
+import { Bell, CreditCard, History, IdCard, MapPinned, Store, Truck, TruckElectric, TvMinimalPlay } from 'lucide-react'
 import { SCREEN } from './constant'
 import { AppMenuItem } from './menu'
 
@@ -19,16 +19,6 @@ export const settingMenuItems: AppMenuItem[] = [
         key: SCREEN.PAYMENT_METHOD_MANAGEMENT.PATH,
         label: SCREEN.PAYMENT_METHOD_MANAGEMENT.LABEL,
         icon: <CreditCard size={20} />
-    },
-    {
-        key: SCREEN.CHECKOUT_MANAGEMENT.PATH,
-        label: SCREEN.CHECKOUT_MANAGEMENT.LABEL,
-        icon: <ShoppingBag size={20} />
-    },
-    {
-        key: SCREEN.TAX_MANAGEMENT.PATH,
-        label: SCREEN.TAX_MANAGEMENT.LABEL,
-        icon: <SquarePercent size={20} />,
     },
     {
         key: SCREEN.SHIPPING_PARTNER.PATH,

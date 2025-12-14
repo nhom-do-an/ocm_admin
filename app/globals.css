@@ -30,10 +30,10 @@
   }
 
   .primary-button {
-    @apply bg-[var(--primary)] !text-white px-4 py-2 rounded;
+    @apply bg-[var(--primary)] !text-white px-4 py-2 rounded cursor-pointer;
   }
   .secondary-button {
-    @apply !text-[var(--primary)] font-semibold px-4 py-2 rounded border !border-[var(--primary)];
+    @apply !text-[var(--primary)] font-semibold px-4 py-2 rounded border !border-[var(--primary)] cursor-pointer;
   }
   .custom-input input::placeholder {
     @apply !text-[var(--input-placeholder)] font-normal px-1;
@@ -115,3 +115,9 @@ body {
   background: #ff884c;
   border-radius: 6px;
 } */
+
+.ant-modal {
+  top: 50% !important;
+  transform: translateY(-50%);
+  margin: 0 auto;
+}

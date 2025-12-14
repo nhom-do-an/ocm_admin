@@ -29,7 +29,7 @@ export enum EOrderStatus {
     ORDERED = 'open', // Đặt hàng
     CONFIRMED = 'confirmed', // Đang giao dịch
     COMPLETED = 'completed', // Đã hoàn thành
-    CANCELLED = 'cancelled', // Đã hủy
+    CANCELLED = 'canceled', // Đã hủy
 }
 
 // Trạng thái xử lý
@@ -48,6 +48,7 @@ export enum EFulfillmentShipmentStatus {
     RETURNING = 'returning', // Đang trả hàng
     WAIT_TO_CONFIRM = 'wait_to_confirm', // Chờ xác nhận hoàn hàng
     DELIVERED = 'delivered', // Đã giao hàng
+    DELIVERIED = 'deliveried', // Đã giao hàng
     RETURNED = 'returned', // Đã trả hàng
     CANCELLED = 'cancelled', // Đã hủy
 }
@@ -82,6 +83,7 @@ export enum EDeliveryStatus {
     RETURNING = 'returning',  // Đang trả hàng
     WAIT_TO_CONFIRM = 'wait_to_confirm',  // Chờ xác nhận hoàn hàng
     DELIVERED = 'delivered',  // Đã giao hàng
+    DELIVERIED = 'deliveried',  // Đã giao hàng
     RETURNED = 'returned',  // Đã trả hàng
     CANCELLED = 'cancelled',  // Đã hủy
 }

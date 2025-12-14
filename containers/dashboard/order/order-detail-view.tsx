@@ -2,15 +2,13 @@
 
 import React, { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Button, Card, Tag, Table, Row, Col } from 'antd'
+import { Button, Card, Tag, Row, Col } from 'antd'
 import { ArrowLeft, Edit, Printer, X, Pencil } from 'lucide-react'
-import type { ColumnsType } from 'antd/es/table'
 import { OrderDetail, LineItemDetail } from '@/types/response/order'
 import { useGlobalContext } from '@/hooks/useGlobalContext'
-import { EFinancialStatus, EFulfillmentOrderStatus, EAuthorType } from '@/types/enums/enum'
+import { EFinancialStatus, EFulfillmentOrderStatus, EAuthorType, EOrderStatus } from '@/types/enums/enum'
 import Image from 'next/image'
 import { Source } from '@/types/response/source'
-import Link from 'next/link'
 import ReceivePaymentModal from './components/ReceivePaymentModal'
 import LineItemNoteModal from './components/LineItemNoteModal'
 import EditShippingAddressModal from './components/EditShippingAddressModal'
@@ -19,8 +17,13 @@ import UpdateOrderNoteModal from './components/UpdateOrderNoteModal'
 import UpdateExpectedDeliveryModal from './components/UpdateExpectedDeliveryModal'
 import useOrderDetail from './hooks/use-order-detail'
 import type { Event } from '@/types/response/event'
-import DefaultProductImage from '@/resources/icons/default_img.svg'
 import { AddressDetail } from '@/types/response/customer'
+import InvoiceViewer from './components/InvoiceViewer'
+import OrderLineItemsView from './components/OrderLineItemsView'
+import CancelOrderModal from './components/CancelOrderModal'
+import StatusChip from './components/StatusChip'
+import orderService from '@/services/order'
+import { message } from 'antd'
 
 const OrderDetailView: React.FC = () => {
     const params = useParams()
@@ -37,6 +40,8 @@ const OrderDetailView: React.FC = () => {
         eventsLoading,
         hasMoreEvents,
         transactions,
+        shipments,
+        shipmentsLoading,
         handleLoadMoreEvents,
         refreshOrder,
         updateLineItemNote,
@@ -52,6 +57,10 @@ const OrderDetailView: React.FC = () => {
     const [assigneeModalOpen, setAssigneeModalOpen] = useState(false)
     const [orderNoteModalOpen, setOrderNoteModalOpen] = useState(false)
     const [deliveryModalOpen, setDeliveryModalOpen] = useState(false)
+    const [invoiceViewerOpen, setInvoiceViewerOpen] = useState(false)
+    const [printingOrder, setPrintingOrder] = useState(false)
+    const [cancelOrderModalOpen, setCancelOrderModalOpen] = useState(false)
+    const [cancellingOrder, setCancellingOrder] = useState(false)
 
     const openLineItemNoteModal = (lineItem: LineItemDetail) => {
         setNoteModal({
@@ -76,6 +85,7 @@ const OrderDetailView: React.FC = () => {
     const handleCloseShippingModal = () => setShippingModalOpen(false)
 
     const handleSaveShippingAddress = async (address: AddressDetail | null) => {
+        console.log('Saving shipping address:', address)
         await updateShippingAddress(address)
         handleCloseShippingModal()
     }
@@ -185,6 +195,68 @@ const OrderDetailView: React.FC = () => {
             .join(', ')
     }
 
+    const handlePrintOrder = async () => {
+        if (!orderId) return
+
+        try {
+            setPrintingOrder(true)
+            const htmlContent = await orderService.GetOrderPrint(orderId)
+
+            // Tạo iframe ẩn để in
+            const iframe = document.createElement('iframe')
+            iframe.style.position = 'fixed'
+            iframe.style.right = '0'
+            iframe.style.bottom = '0'
+            iframe.style.width = '0'
+            iframe.style.height = '0'
+            iframe.style.border = '0'
+            document.body.appendChild(iframe)
+
+            // Ghi HTML vào iframe
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
+            if (iframeDoc) {
+                iframeDoc.open()
+                iframeDoc.write(htmlContent)
+                iframeDoc.close()
+
+                // Đợi một chút để đảm bảo nội dung đã load
+                setTimeout(() => {
+                    iframe.contentWindow?.focus()
+                    iframe.contentWindow?.print()
+
+                    // Xóa iframe sau khi in
+                    setTimeout(() => {
+                        document.body.removeChild(iframe)
+                    }, 1000)
+                }, 250)
+            }
+        } catch (error) {
+            console.error('Error printing order:', error)
+            message.error('Không thể in đơn hàng')
+        } finally {
+            setPrintingOrder(false)
+        }
+    }
+
+    const handleCancelOrder = async (data: { cancel_reason: string; restore_inventory?: boolean; send_email?: boolean }) => {
+        if (!orderId) return
+
+        try {
+            setCancellingOrder(true)
+            await orderService.cancelOrder(orderId, {
+                cancel_reason: data.cancel_reason,
+            })
+            message.success('Hủy đơn hàng thành công')
+            setCancelOrderModalOpen(false)
+            await refreshOrder()
+        } catch (error) {
+            console.error('Error cancelling order:', error)
+            message.error('Không thể hủy đơn hàng')
+        } finally {
+            setCancellingOrder(false)
+        }
+    }
+
     const renderSourceOption = (source?: Source) => (
         <div className="flex items-center gap-2 py-1">
             <div className="w-7 h-7 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center text-xs text-gray-500">
@@ -204,64 +276,6 @@ const OrderDetailView: React.FC = () => {
         </div>
     )
 
-    const lineItemColumns: ColumnsType<LineItemDetail> = [
-        {
-            title: 'Sản phẩm',
-            key: 'product',
-            width: 250,
-            render: (_, record) => (
-                <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
-                        <Image
-                            src={record.image_url || DefaultProductImage}
-                            alt={record.product_name || 'Sản phẩm'}
-                            width={48}
-                            height={48}
-                            className="object-cover w-full h-full"
-                        />
-                    </div>
-                    <div className='flex-flex-col'>
-                        <Link href={`/product/${record.product_id}`} className="font-medium block">{record.product_name || 'Sản phẩm'}</Link>
-                        {record.variant_title && (
-                            <p className="text-xs text-gray-500">{record.variant_title}</p>
-                        )}
-                        {record.note && (
-                            <div className="text-xs text-gray-600 mt-1">{record.note}</div>
-                        )}
-                        <button
-                            type="button"
-                            className="text-xs text-blue-600 mt-1"
-                            onClick={() => openLineItemNoteModal(record)}
-                        >
-                            {record.note ? 'Sửa ghi chú' : 'Thêm ghi chú'}
-                        </button>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            title: 'Số lượng',
-            dataIndex: 'quantity',
-            key: 'quantity',
-            width: 80,
-            align: 'center',
-        },
-        {
-            title: 'Đơn giá',
-            dataIndex: 'price',
-            key: 'price',
-            width: 150,
-            align: 'right',
-            render: (price) => formatCurrency(price),
-        },
-        {
-            title: 'Thành tiền',
-            key: 'total',
-            width: 150,
-            align: 'right',
-            render: (_, record) => formatCurrency((record.price || 0) * (record.quantity || 0)),
-        },
-    ]
 
     if (loading) {
         return <div>Đang tải...</div>
@@ -302,12 +316,31 @@ const OrderDetailView: React.FC = () => {
                                 <h2 className="text-xl font-semibold ml-3 text-center max-md:hidden">Chi tiết đơn hàng</h2>
                             </div>
                             <div className='flex gap-2 overflow-wrap'>
-                                {!isFulfilled && (
-                                    <Button icon={<Edit size={16} />}>Sửa đơn</Button>
+                                {!isFulfilled && order.status !== EOrderStatus.CANCELLED && (
+                                    <Button
+                                        icon={<Edit size={16} />}
+                                        onClick={() => router.push(`/order/${orderId}/edit`)}
+                                    >
+                                        Sửa đơn
+                                    </Button>
                                 )}
-                                <Button icon={<Printer size={16} />}>In đơn hàng</Button>
+                                <Button
+                                    icon={<Printer size={16} />}
+                                    onClick={handlePrintOrder}
+                                    loading={printingOrder}
+                                >
+                                    In đơn hàng
+                                </Button>
 
-                                <Button danger icon={<X size={16} />}>Hủy đơn hàng</Button>
+                                {order.status !== EOrderStatus.CANCELLED && (
+                                    <Button
+                                        danger
+                                        icon={<X size={16} />}
+                                        onClick={() => setCancelOrderModalOpen(true)}
+                                    >
+                                        Hủy đơn hàng
+                                    </Button>
+                                )}
 
                             </div>
                         </div>
@@ -318,9 +351,12 @@ const OrderDetailView: React.FC = () => {
                         <div className="mb-3">
                             <div className="flex items-center gap-2 mb-4 h-[60px]">
                                 <span className="text-2xl font-medium">{order.name || order.order_number}</span>
-                                <div className="flex">
+                                <div className="flex gap-2">
                                     <Tag color={financialStatus.color}>{financialStatus.text}</Tag>
                                     <Tag color={fulfillmentStatus.color}>{fulfillmentStatus.text}</Tag>
+                                    {order.status === EOrderStatus.CANCELLED && (
+                                        <StatusChip status={EOrderStatus.CANCELLED} type="order" />
+                                    )}
                                 </div>
 
                             </div>
@@ -331,34 +367,18 @@ const OrderDetailView: React.FC = () => {
                             {/* Left Column */}
                             <Col xs={24} lg={16}>
                                 {/* Sản phẩm */}
-                                <Card className="!mb-4">
-                                    <Tag color={fulfillmentStatus.color}>{fulfillmentStatus.text}</Tag>
-                                    <p className="text-sm text-gray-500 font-semibold">Chi nhánh: {order.location?.name}</p>
-                                    <div className="flex items-center justify-between">
-                                        <h2 className="text-lg font-semibold mt-2">Sản phẩm</h2>
-                                    </div>
-
-                                    {order.line_items && order.line_items.length > 0 ? (
-                                        <Table
-                                            dataSource={order.line_items}
-                                            scroll={{ x: 'max-content' }}
-                                            columns={lineItemColumns}
-                                            pagination={false}
-                                            rowKey="id"
-                                        />
-                                    ) : (
-                                        <div className="text-center py-12 text-gray-400">
-                                            Chưa có sản phẩm
-                                        </div>
-                                    )}
-
-                                    {order.fulfillment_status === 'pending' && (
-                                        <div className="flex gap-3 mt-4 justify-end">
-                                            <Button type="default">Đẩy vận chuyển</Button>
-                                            <Button type="primary">Xác nhận giao hàng</Button>
-                                        </div>
-                                    )}
-                                </Card>
+                                <OrderLineItemsView
+                                    order={order}
+                                    shipments={shipments}
+                                    shipmentsLoading={shipmentsLoading}
+                                    fulfillmentStatus={fulfillmentStatus}
+                                    onOpenLineItemNoteModal={openLineItemNoteModal}
+                                    formatCurrency={formatCurrency}
+                                    formatDate={formatDate}
+                                    onRefreshShipments={refreshOrder}
+                                    onRefreshOrder={refreshOrder}
+                                    isOrderCancelled={order.status === EOrderStatus.CANCELLED}
+                                />
 
                                 {/* Thanh toán */}
                                 <Card className="!mb-4">
@@ -394,7 +414,7 @@ const OrderDetailView: React.FC = () => {
                                             </div>
                                         )}
 
-                                        {(financialStatusValue === EFinancialStatus.UNPAID || (financialStatusValue === EFinancialStatus.PARTIALLY_PAID && remainingAmount > 0)) && (
+                                        {(financialStatusValue === EFinancialStatus.UNPAID || (financialStatusValue === EFinancialStatus.PARTIALLY_PAID && remainingAmount > 0)) && order.status !== EOrderStatus.CANCELLED && (
                                             <div className="flex gap-3 mt-4 justify-end">
                                                 <Button type="default">Lấy mã QR</Button>
                                                 <Button type="primary" onClick={() => setReceivePaymentModalOpen(true)}>
@@ -636,6 +656,18 @@ const OrderDetailView: React.FC = () => {
                 onCancel={() => setDeliveryModalOpen(false)}
                 onSave={handleSaveExpectedDelivery}
             />
+            <InvoiceViewer
+                open={invoiceViewerOpen}
+                orderId={orderId || 0}
+                onCancel={() => setInvoiceViewerOpen(false)}
+            />
+            <CancelOrderModal
+                open={cancelOrderModalOpen}
+                onCancel={() => setCancelOrderModalOpen(false)}
+                onConfirm={handleCancelOrder}
+                loading={cancellingOrder}
+            />
+
         </>
     )
 }
