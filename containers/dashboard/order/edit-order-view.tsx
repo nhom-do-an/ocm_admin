@@ -516,7 +516,7 @@ const EditOrderView: React.FC = () => {
         try {
             await orderService.updateOrderItems(orderId, updateData)
             notification.success({ message: 'Cập nhật đơn hàng thành công' })
-            router.push(`/order/${orderId}`)
+            router.push(`/admin/order/${orderId}`)
         } catch (error) {
             console.error('Error updating order:', error)
             notification.error({ message: 'Cập nhật đơn hàng thất bại. Vui lòng thử lại.' })

@@ -82,9 +82,8 @@ const InventoryHistoryView: React.FC<InventoryHistoryViewProps> = ({
             <div className="flex flex-col items-center">
                 {deltaText && (
                     <span
-                        className={`font-medium ${
-                            delta > 0 ? 'text-green-600' : delta < 0 ? 'text-red-500' : 'text-gray-700'
-                        }`}
+                        className={`font-medium ${delta > 0 ? 'text-green-600' : delta < 0 ? 'text-red-500' : 'text-gray-700'
+                            }`}
                     >
                         {deltaText}
                     </span>
@@ -112,9 +111,9 @@ const InventoryHistoryView: React.FC<InventoryHistoryViewProps> = ({
             if (!record.reference_document_id || !record.reference_document_type) return null
             switch (record.reference_document_type) {
                 case 'product':
-                    return `/product/${record.reference_document_id}`
+                    return `/admin/product/${record.reference_document_id}`
                 case 'order':
-                    return `/order/${record.reference_document_id}`
+                    return `/admin/order/${record.reference_document_id}`
                 default:
                     return null
             }

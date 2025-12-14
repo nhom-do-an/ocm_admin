@@ -94,14 +94,14 @@ export const useCreateCustomer = () => {
     const fetchCustomerDetail = async () => {
         const customerId = typeof id === 'string' ? id : id
         if (!customerId) return
-        
+
         setLoading(true)
         startLoading();
         try {
             const response = await customerService.getCustomerDetail(Number(customerId))
             setCustomer(response)
             setEditMode(true)
-            
+
             // Load districts and wards if address exists
             if (response.default_address) {
                 const address = response.default_address
@@ -118,7 +118,7 @@ export const useCreateCustomer = () => {
                 message: 'Lỗi',
                 description: error?.response?.data?.message || 'Không thể tải thông tin khách hàng'
             })
-            router.push('/customer/list')
+            router.push('/admin/customer/list')
         } finally {
             setLoading(false)
             stopLoading();
@@ -144,7 +144,7 @@ export const useCreateCustomer = () => {
                     description: 'Tạo khách hàng thành công'
                 })
             }
-            router.push('/customer/list')
+            router.push('/admin/customer/list')
         } catch (error: any) {
             console.error('Error saving customer:', error)
             notification.error({

@@ -140,7 +140,7 @@ const PaymentMethodView: React.FC = () => {
             </div>
             <div className="flex items-center gap-3 justify-end mb-2">
                 <button
-                    onClick={() => router.push('/settings/beneficiary-account')}
+                    onClick={() => router.push('/admin/settings/beneficiary-account')}
                     className="!text-blue-500 hover:text-blue-800 font-medium hover:underline cursor-pointer"
                 >
                     Quản lý tài khoản ngân hàng

@@ -82,7 +82,7 @@ const CustomerListView: React.FC = () => {
                         </div>
                         <div>
                             <button
-                                onClick={() => router.push(`/customer/${record.id}`)}
+                                onClick={() => router.push(`/admin/customer/${record.id}`)}
                                 className="!text-blue-500 hover:text-blue-800 font-medium cursor-pointer"
                             >
                                 {name}
@@ -121,7 +121,7 @@ const CustomerListView: React.FC = () => {
             width: 150,
             align: 'center',
             render: (_, record, index) => {
-                return <Link href={`/order/${record.last_order_id}`}>{record.last_order_name}</Link>
+                return <Link href={`/admin/order/${record.last_order_id}`}>{record.last_order_name}</Link>
             },
         },
         {
@@ -175,7 +175,7 @@ const CustomerListView: React.FC = () => {
                                     type="primary"
                                     size="large"
                                     icon={<Plus size={16} className="inline mr-1" />}
-                                    onClick={() => router.push('/customer/create')}
+                                    onClick={() => router.push('/admin/customer/create')}
                                 >
                                     Thêm khách hàng
                                 </Button>

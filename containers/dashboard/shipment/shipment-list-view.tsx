@@ -63,7 +63,7 @@ const ShipmentListView: React.FC = () => {
                 if (!name) return '-'
                 return (
                     <button
-                        onClick={() => router.push(`/shipment/${record.id}`)}
+                        onClick={() => router.push(`/admin/shipment/${record.id}`)}
                         className='cursor-pointer'
                     >
                         <span className="text-blue-600 hover:text-blue-800 font-medium">{name}</span>
@@ -80,7 +80,7 @@ const ShipmentListView: React.FC = () => {
                 if (!trackingNumber) return '-'
                 return (
                     <button
-                        onClick={() => router.push(`/shipment/${record.id}`)}
+                        onClick={() => router.push(`/admin/shipment/${record.id}`)}
                         className='cursor-pointer'
                     >
                         <span className="text-blue-600 hover:text-blue-800">{trackingNumber}</span>
@@ -97,7 +97,7 @@ const ShipmentListView: React.FC = () => {
                 if (!orderId) return '-'
                 return (
                     <button
-                        onClick={() => router.push(`/order/${orderId}`)}
+                        onClick={() => router.push(`/admin/order/${orderId}`)}
                         className='cursor-pointer'
                     >
                         <span className="text-blue-600 hover:text-blue-800 font-medium">#{orderId}</span>
@@ -353,7 +353,7 @@ const ShipmentListView: React.FC = () => {
                                         title="Không tìm thấy dữ liệu phù hợp với kết quả tìm kiếm"
                                         description="Thử thay đổi điều kiện lọc hoặc từ khóa tìm kiếm để hiển thị danh sách vận đơn."
                                         actionLabel="Xem tất cả vận đơn"
-                                        actionHref="/shipment/list"
+                                        actionHref="/admin/shipment/list"
                                     />
                                 )
                             }}

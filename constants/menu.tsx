@@ -17,7 +17,7 @@ export const menuItems: AppMenuItem[] = [
         icon: <Home size={20} />,
     },
     {
-        key: "/order",
+        key: "/admin/order",
         label: 'order.label',
         icon: <ClipboardList size={20} />,
         children: [
@@ -29,7 +29,7 @@ export const menuItems: AppMenuItem[] = [
         ],
     },
     {
-        key: "/shipment",
+        key: "/admin/shipment",
         label: 'shipment.label',
         icon: <Truck size={20} />,
         children: [
@@ -40,7 +40,7 @@ export const menuItems: AppMenuItem[] = [
         ],
     },
     {
-        key: "/product",
+        key: "/admin/product",
         label: 'product.label',
         icon: <Package size={20} />,
         children: [
@@ -56,7 +56,7 @@ export const menuItems: AppMenuItem[] = [
         ],
     },
     {
-        key: "inventory",
+        key: "/admin/inventory",
         label: 'inventory.label',
         icon: <Warehouse size={20} />,
         children: [
@@ -67,7 +67,7 @@ export const menuItems: AppMenuItem[] = [
         ],
     },
     {
-        key: "/customer",
+        key: "/admin/customer",
         label: 'customer.label',
         icon: <User size={20} />,
         children: [

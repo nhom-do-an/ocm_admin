@@ -52,7 +52,7 @@ export const CollectionTable: React.FC<Props> = ({
                             preview={false}
                         />
                         <button
-                            onClick={() => router.push(`/collection/${record.id}`)}
+                            onClick={() => router.push(`/admin/collection/${record.id}`)}
                             className="cursor-pointer"
                         >
                             <span className="text-blue-600 hover:text-blue-800 font-medium">

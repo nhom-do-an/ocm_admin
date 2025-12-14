@@ -109,7 +109,7 @@ const OrderListView: React.FC = () => {
                 const isCancelled = record.status === EOrderStatus.CANCELLED
                 return (
                     <Space>
-                        <button onClick={() => router.push(`/order/${record.id}`)} className='cursor-pointer'>
+                        <button onClick={() => router.push(`/admin/order/${record.id}`)} className='cursor-pointer'>
                             <span className={`${isCancelled ? 'text-black' : 'text-blue-600 hover:text-blue-800'} font-medium`}>#{(orderNumber as number) || record.id}</span>
                         </button>
                         {record.note && (
@@ -131,7 +131,7 @@ const OrderListView: React.FC = () => {
                 if (record.customer?.id) {
                     return (
                         <button
-                            onClick={() => router.push(`/customer/${record.customer?.id}`)}
+                            onClick={() => router.push(`/admin/customer/${record.customer?.id}`)}
                             className='cursor-pointer'
                         >
                             <span className={isCancelled ? 'text-black' : 'text-blue-600 hover:text-blue-800'}>
@@ -340,7 +340,7 @@ const OrderListView: React.FC = () => {
     }
 
     const handleCreateOrder = () => {
-        router.push('/order/create')
+        router.push('/admin/order/create')
     }
 
     const dateRangeValue: [dayjs.Dayjs, dayjs.Dayjs] | null = filters.min_created_at && filters.max_created_at
@@ -523,7 +523,7 @@ const OrderListView: React.FC = () => {
                                         title="Không tìm thấy dữ liệu phù hợp với kết quả tìm kiếm"
                                         description="Thử thay đổi điều kiện lọc hoặc từ khóa tìm kiếm để hiển thị danh sách đơn hàng."
                                         actionLabel="Xem tất cả đơn hàng"
-                                        actionHref="/order/list"
+                                        actionHref="/admin/order/list"
                                     />
                                 )
                             }}

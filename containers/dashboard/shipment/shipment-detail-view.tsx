@@ -155,7 +155,7 @@ const ShipmentDetailView: React.FC = () => {
                         />
                     </div>
                     <div className='flex-flex-col'>
-                        <Link href={`/product/${record.product_id}`} className="font-medium block">{record.product_name || 'Sản phẩm'}</Link>
+                        <Link href={`/admin/product/${record.product_id}`} className="font-medium block">{record.product_name || 'Sản phẩm'}</Link>
                         {record.variant_title && (
                             <p className="text-xs text-gray-500">{record.variant_title}</p>
                         )}
@@ -310,7 +310,7 @@ const ShipmentDetailView: React.FC = () => {
                                         <div className="flex !items-center gap-2">
                                             <label className="text-sm text-gray-600">Đơn hàng: </label>
                                             <button
-                                                onClick={() => router.push(`/order/${shipment.order_id}`)}
+                                                onClick={() => router.push(`/admin/order/${shipment.order_id}`)}
                                                 className="!text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
                                             >
                                                 #{shipment.order_id}

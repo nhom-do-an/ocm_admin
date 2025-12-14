@@ -319,7 +319,7 @@ const OrderDetailView: React.FC = () => {
                                 {!isFulfilled && order.status !== EOrderStatus.CANCELLED && (
                                     <Button
                                         icon={<Edit size={16} />}
-                                        onClick={() => router.push(`/order/${orderId}/edit`)}
+                                        onClick={() => router.push(`/admin/order/${orderId}/edit`)}
                                     >
                                         Sửa đơn
                                     </Button>
@@ -508,7 +508,7 @@ const OrderDetailView: React.FC = () => {
                                                         <button
                                                             type="button"
                                                             className="text-xs text-blue-600"
-                                                            onClick={() => order.customer?.last_order_id && router.push(`/order/${order.customer.last_order_id}`)}
+                                                            onClick={() => order.customer?.last_order_id && router.push(`/admin/order/${order.customer.last_order_id}`)}
                                                         >
                                                             Đơn gần nhất: {order.customer.last_order_name}
                                                         </button>

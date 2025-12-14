@@ -28,7 +28,7 @@ export default function Header() {
     return (
         <header className="border-b">
             <div className="container py-4 flex items-center justify-between">
-                <Link href={`/${currentLocale}`} className="font-semibold">Next Base</Link>
+                <Link href={`/${currentLocale}/admin`} className="font-semibold">Next Base</Link>
                 <Dropdown menu={{ items }} trigger={['click']}>
                     <button className="px-3 py-2 rounded-2xl border">{currentLocale.toUpperCase()}</button>
                 </Dropdown>

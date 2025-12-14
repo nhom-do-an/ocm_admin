@@ -73,7 +73,7 @@ const CollectionListView: React.FC = () => {
                         />}
 
                         <div>
-                            <button onClick={() => router.push(`/collection/${record.id}`)} className='cursor-pointer'>
+                            <button onClick={() => router.push(`/admin/collection/${record.id}`)} className='cursor-pointer'>
                                 <span className="text-blue-600 hover:text-blue-800 font-medium">{record.name}</span>
                             </button>
                         </div>
@@ -140,7 +140,7 @@ const CollectionListView: React.FC = () => {
                     <Button
                         type="primary"
                         size="large"
-                        onClick={() => router.push('/collection/create')}
+                        onClick={() => router.push('/admin/collection/create')}
                     >
                         <Plus size={16} className="inline mr-1" />
                         Thêm danh mục

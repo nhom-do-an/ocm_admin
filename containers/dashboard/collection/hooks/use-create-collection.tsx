@@ -62,7 +62,7 @@ export const useCreateCollection = () => {
         try {
             const newCollection = await collectionService.createCollection(data)
 
-            router.push(`/collection/${newCollection.id}`)
+            router.push(`/admin/collection/${newCollection.id}`)
             notification.success({ message: "Tạo bộ sưu tập thành công" });
         } catch (error) {
             console.error('Error creating collection:', error)
@@ -95,7 +95,7 @@ export const useCreateCollection = () => {
         try {
             await collectionService.deleteCollection(collectionId)
             notification.success({ message: "Xoá danh mục thành công" });
-            router.push('/collection')
+            router.push('/admin/collection')
         } catch (error) {
             console.error('Error deleting collection:', error)
             throw error

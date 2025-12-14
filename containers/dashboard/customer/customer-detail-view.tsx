@@ -73,7 +73,7 @@ const CustomerDetailView: React.FC = () => {
                     title="Không tìm thấy khách hàng"
                     description="Có thể khách hàng đã bị xóa hoặc không tồn tại. Vui lòng quay lại danh sách khách hàng."
                     actionLabel="Quay lại danh sách"
-                    actionHref="/customer/list"
+                    actionHref="/admin/customer/list"
                 />
             </div>
         )
@@ -102,13 +102,13 @@ const CustomerDetailView: React.FC = () => {
                             <Space wrap>
                                 <Button
                                     icon={<ShoppingBag size={16} />}
-                                    onClick={() => router.push(`/order/create?customer_id=${customer.id}`)}
+                                    onClick={() => router.push(`/admin/order/create?customer_id=${customer.id}`)}
                                 >
                                     Tạo đơn hàng
                                 </Button>
                                 <Button
                                     icon={<Pencil size={16} />}
-                                    onClick={() => router.push(`/customer/create?id=${customer.id}`)}
+                                    onClick={() => router.push(`/admin/customer/create?id=${customer.id}`)}
                                 >
                                     Chỉnh sửa thông tin
                                 </Button>
@@ -149,7 +149,7 @@ const CustomerDetailView: React.FC = () => {
                                         <Button
                                             type="link"
                                             className="!px-0"
-                                            onClick={() => router.push(`/order/list?customer_ids=${customer.id}`)}
+                                            onClick={() => router.push(`/admin/order/list?customer_ids=${customer.id}`)}
                                         >
                                             Xem tất cả
                                         </Button>
@@ -172,7 +172,7 @@ const CustomerDetailView: React.FC = () => {
                                         title="Chưa có đơn hàng nào"
                                         description="Khách hàng này chưa phát sinh đơn hàng. Bạn có thể tạo đơn ngay bây giờ."
                                         actionLabel="Tạo đơn hàng"
-                                        onActionClick={() => router.push(`/order/create?customer_id=${customer.id}`)}
+                                        onActionClick={() => router.push(`/admin/order/create?customer_id=${customer.id}`)}
                                     />
                                 )}
                             </Card>

@@ -118,7 +118,7 @@ const CreateCollectionView: React.FC = () => {
             await updateCollection(collectionData)
             setIsChanged(false)
         } else {
-        await createCollection(collectionData)
+            await createCollection(collectionData)
         }
     }
 
@@ -174,7 +174,7 @@ const CreateCollectionView: React.FC = () => {
             limit: '20',
             collection_ids: String(collection.id),
         })
-        router.push(`/product/list?${params.toString()}`)
+        router.push(`/admin/product/list?${params.toString()}`)
     }
 
     const productColumns: ColumnsType<Product> = [
@@ -212,7 +212,7 @@ const CreateCollectionView: React.FC = () => {
 
                         <div>
                             <button
-                                onClick={() => router.push(`/product/${record.id}`)}
+                                onClick={() => router.push(`/admin/product/${record.id}`)}
                                 className="cursor-pointer"
                             >
                                 <span className="text-blue-600 hover:text-blue-800 font-medium">

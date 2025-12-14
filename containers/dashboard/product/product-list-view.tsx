@@ -71,7 +71,7 @@ const ProductListView: React.FC = () => {
                         />}
 
                         <div>
-                            <button onClick={() => router.push(`/product/${record.id}`)} className='cursor-pointer'>
+                            <button onClick={() => router.push(`/admin/product/${record.id}`)} className='cursor-pointer'>
                                 <span className="text-blue-600 hover:text-blue-800 font-medium">{record.name}</span>
                             </button>
                             {variantCount > 0 && (
@@ -169,13 +169,13 @@ const ProductListView: React.FC = () => {
     const handleAddProduct = (type: 'normal' | 'combo' | 'packsize') => {
         switch (type) {
             case 'normal':
-                router.push('/product/create')
+                router.push('/admin/product/create')
                 break
             case 'combo':
-                router.push('/product/create?type=combo')
+                router.push('/admin/product/create?type=combo')
                 break
             case 'packsize':
-                router.push('/product/create?type=packsize')
+                router.push('/admin/product/create?type=packsize')
                 break
         }
     }

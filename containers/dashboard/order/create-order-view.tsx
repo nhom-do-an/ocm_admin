@@ -569,7 +569,7 @@ const CreateOrder: React.FC = () => {
             const createdOrder = await orderService.createOrder(orderData)
             notification.success({ message: 'Tạo đơn hàng thành công' })
             // Điều hướng đến màn chi tiết đơn hàng
-            router.push(`/order/${createdOrder.id}`)
+            router.push(`/admin/order/${createdOrder.id}`)
         } catch (error) {
             console.error('Error creating order:', error)
             notification.error({ message: 'Tạo đơn hàng thất bại. Vui lòng thử lại.' })
@@ -795,7 +795,7 @@ const CreateOrder: React.FC = () => {
 
     const handleViewLastOrder = () => {
         if (selectedCustomer?.last_order_id) {
-            router.push(`/order/${selectedCustomer.last_order_id}`)
+            router.push(`/admin/order/${selectedCustomer.last_order_id}`)
         }
     }
 

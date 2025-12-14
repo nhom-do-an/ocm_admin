@@ -66,7 +66,7 @@ export const useVariantDetail = () => {
     const goBackToProduct = () => {
         const pid = productId || variant?.product_id
         if (pid) {
-            router.push(`/product/${pid}`)
+            router.push(`/admin/product/${pid}`)
         } else {
             router.back()
         }
@@ -75,7 +75,7 @@ export const useVariantDetail = () => {
     const openAnotherVariant = (targetVariantId: number) => {
         const pid = productId || variant?.product_id
         if (!pid) return
-        router.push(`/product/${pid}/variant/${targetVariantId}`)
+        router.push(`/admin/product/${pid}/variant/${targetVariantId}`)
     }
 
     const handleUpdateVariant = async (payload: UpdateVariantPayload) => {

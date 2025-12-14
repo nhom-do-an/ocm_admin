@@ -218,7 +218,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
                         />
                     </div>
                     <div className='flex-flex-col'>
-                        <Link href={`/product/${record.product_id}`} className="font-medium block">{record.product_name || 'Sản phẩm'}</Link>
+                        <Link href={`/admin/product/${record.product_id}`} className="font-medium block">{record.product_name || 'Sản phẩm'}</Link>
                         {record.variant_title && (
                             <p className="text-xs text-gray-500">{record.variant_title}</p>
                         )}
@@ -429,7 +429,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
                                     <span className="text-sm text-gray-600">Phiếu giao hàng:</span>
                                     {shipment.name && shipment.id && (
                                         <Link
-                                            href={`/shipment/${shipment.id}`}
+                                            href={`/admin/shipment/${shipment.id}`}
                                             className="text-sm text-blue-600 hover:underline"
                                         >
                                             {shipment.name}

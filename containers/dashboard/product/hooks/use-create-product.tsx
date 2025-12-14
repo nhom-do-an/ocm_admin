@@ -93,7 +93,7 @@ export const useCreateProduct = () => {
         try {
             const newProduct = await productService.createProduct(data)
 
-            router.push(`/product/${newProduct.id}`)
+            router.push(`/admin/product/${newProduct.id}`)
             notification.success({ message: "Tạo sản phẩm thành công" });
         } catch (error) {
             console.error('Error creating product:', error)

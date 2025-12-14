@@ -28,7 +28,7 @@ export const useCustomerDetail = (customerId?: number) => {
                 message: 'Lỗi',
                 description: error?.response?.data?.message || 'Không thể tải thông tin khách hàng',
             })
-            router.push('/customer/list')
+            router.push('/admin/customer/list')
         } finally {
             setLoadingCustomer(false)
         }

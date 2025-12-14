@@ -240,7 +240,7 @@ const CreateProduct: React.FC = () => {
                                 const pid = product?.id || record.product_id
                                 const vid = record.id
                                 if (pid && vid) {
-                                    router.push(`/product/${pid}/variant/${vid}`)
+                                    router.push(`/admin/product/${pid}/variant/${vid}`)
                                 }
                             }
                         }}

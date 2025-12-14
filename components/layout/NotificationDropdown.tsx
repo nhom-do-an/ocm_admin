@@ -97,10 +97,10 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ unreadCount
 
             // Navigate based on metadata
             if (notification.metadata?.order_id) {
-                router.push(`/order/${notification.metadata.order_id}`)
+                router.push(`/admin/order/${notification.metadata.order_id}`)
                 setOpen(false)
             } else if (notification.metadata?.shipment_id) {
-                router.push(`/shipment/${notification.metadata.shipment_id}`)
+                router.push(`/admin/shipment/${notification.metadata.shipment_id}`)
                 setOpen(false)
             }
         } catch (error) {

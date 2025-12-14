@@ -30,7 +30,7 @@ const CustomerOrderCard: React.FC<CustomerOrderCardProps> = ({ order }) => {
             <div className="flex items-start justify-between gap-3">
                 <div>
                     <Link
-                        href={`/order/${order.id}`}
+                        href={`/admin/order/${order.id}`}
                         className="text-base font-semibold text-blue-600 hover:text-blue-800"
                     >
                         {orderDisplayName}
