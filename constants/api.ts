@@ -138,5 +138,9 @@ export const API = {
         GET_TEMPLATES: '/admin/notifications/templates',
         GET_TEMPLATE_BY_ID: (id: number) => `/admin/notifications/templates/${id}`,
         UPDATE_TEMPLATE: '/admin/notifications/templates',
-    },
+        AI: {
+            GET_TRENDING: '/ai/trending',
+            GET_TRENDING_PREDICTIONS: '/admin/ai/trending/predictions',
+        },
+    }
 };
