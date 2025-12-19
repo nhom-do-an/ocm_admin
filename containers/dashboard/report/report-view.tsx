@@ -142,7 +142,7 @@ export const ReportView: React.FC = () => {
         <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto max-w-[1600px]">
             {/* Header */}
             <div className="px-6 pt-6 pb-4">
-                <span className="text-2xl font-semibold mb-4">Tổng quan báo cáo</span>
+                <span className="text-2xl font-semibold mb-8">Tổng quan báo cáo</span>
 
                 {/* Date and Comparison Selectors */}
                 <div className="flex items-center gap-4 flex-wrap">
@@ -315,14 +315,14 @@ export const ReportView: React.FC = () => {
                             ...item,
                             current:
                                 item.total_orders > 0
-                                    ? item.current / item.total_orders
+                                    ? Math.round((item.current / item.total_orders))
                                     : 0,
                             previous:
                                 item.previous_orders && item.previous_orders > 0
-                                    ? (item.previous || 0) / item.previous_orders
+                                    ? Math.round(((item.previous || 0) / item.previous_orders))
                                     : undefined,
                         }))}
-                        totalValue={summary.averageOrderValue.current}
+                        totalValue={Math.round(summary.averageOrderValue.current)}
                         percentage={summary.averageOrderValue.percentage}
                         onClick={() => handleNavigateToDetail('average-order-value')}
                         currentLabel={

@@ -452,11 +452,11 @@ export const ReportDetailView: React.FC = () => {
                     <div className="flex items-center gap-4">
                         <button
                             onClick={() => router.back()}
-                            className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                            className="p-2 rounded  hover:bg-gray-100 transition-colors border border-black hover:cursor-pointer"
                         >
                             <ArrowLeft size={20} className="text-gray-600" />
                         </button>
-                        <h1 className="text-2xl font-semibold">{reportTitle}</h1>
+                        <span className="text-2xl font-semibold">{reportTitle}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Button
@@ -480,7 +480,7 @@ export const ReportDetailView: React.FC = () => {
                             className="min-w-[280px]"
                             dropdownRender={() => (
                                 <div className="bg-white rounded-lg shadow-lg p-4" onClick={(e) => e.stopPropagation()}>
-                                    <div className="space-y-2 mb-4 max-h-[300px] overflow-y-auto">
+                                    <div className="space-y-2 mb-4 max-h-[300px] overflow-y-auto grid grid-cols-2">
                                         <Button
                                             type="text"
                                             block
@@ -562,7 +562,7 @@ export const ReportDetailView: React.FC = () => {
                                             Năm nay
                                         </Button>
                                     </div>
-                                    <div className="border-t pt-4">
+                                    <div className="border-t border-gray-200 pt-4">
                                         <RangePicker
                                             value={getDateRangeValue()}
                                             onChange={handleDateRangeChange}
@@ -573,7 +573,7 @@ export const ReportDetailView: React.FC = () => {
                                         <Button
                                             type="primary"
                                             block
-                                            className="mt-2"
+                                            className="mt-2!"
                                             onClick={() => setDatePickerOpen(false)}
                                         >
                                             Lọc
@@ -602,12 +602,12 @@ export const ReportDetailView: React.FC = () => {
 
                     {/* Chart Type Selector - Hide for top products */}
                     {reportType !== 'top-products' && (
-                        <div className="flex items-center gap-2 border rounded-lg p-1">
+                        <div className="flex items-center gap-2 border rounded-lg p-1 ">
                             <button
                                 onClick={() => setChartType('line')}
-                                className={`px-3 py-1 rounded flex items-center gap-2 transition-colors ${chartType === 'line'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                className={`cursor-pointer px-3 py-1 rounded flex items-center gap-2 transition-colors ${chartType === 'line'
+                                    ? 'bg-blue-500 text-white!'
+                                    : 'text-gray-600 hover:bg-gray-200'
                                     }`}
                             >
                                 <TrendingUp size={16} />
@@ -615,9 +615,9 @@ export const ReportDetailView: React.FC = () => {
                             </button>
                             <button
                                 onClick={() => setChartType('bar')}
-                                className={`px-3 py-1 rounded flex items-center gap-2 transition-colors ${chartType === 'bar'
-                                    ? 'bg-blue-500 text-white'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                className={`cursor-pointer px-3 py-1 rounded flex items-center gap-2 transition-colors ${chartType === 'bar'
+                                    ? 'bg-blue-500 text-white!'
+                                    : 'text-gray-600 hover:bg-gray-200'
                                     }`}
                             >
                                 <BarChart3 size={16} />
