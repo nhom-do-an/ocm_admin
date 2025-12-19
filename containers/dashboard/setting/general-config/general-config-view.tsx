@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Card, Form, Input, Button, Select, Upload, message, UploadFile } from 'antd'
+import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
 import { Upload as UploadIcon, Plus } from 'lucide-react'
 import useGeneralConfig from './hooks/use-general-config'
 import { UpdateStoreRequest, UploadStoreLogoRequest } from '@/types/request/store'
@@ -121,7 +122,7 @@ const GeneralConfigView: React.FC = () => {
         }
     }
 
-    const handleUpload = async (options: any) => {
+    const handleUpload = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options
         try {
             const formData = new FormData()

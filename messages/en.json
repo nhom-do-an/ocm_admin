@@ -97,5 +97,8 @@
   },
   "event_management": {
     "label": "Activity Log"
+  },
+  "report": {
+    "label": "Reports"
   }
 }

@@ -1,7 +1,7 @@
 export interface NotificationMetadata {
     order_id?: number;
     shipment_id?: number;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export interface Notification {

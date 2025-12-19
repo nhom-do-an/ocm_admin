@@ -7,7 +7,7 @@ const shipmentService = {
     async getListShipments(
         params: GetListShipmentsRequest
     ): Promise<GetListShipmentsResponse> {
-        const queryParams: any = {
+        const queryParams: Record<string, string | number> = {
             page: params.page || 1,
             size: params.size || 100,
         };

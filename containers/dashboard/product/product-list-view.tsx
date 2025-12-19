@@ -34,7 +34,7 @@ const ProductListView: React.FC = () => {
         filters[key as keyof typeof filters] !== undefined &&
         filters[key as keyof typeof filters] !== '' &&
         (Array.isArray(filters[key as keyof typeof filters])
-            ? (filters[key as keyof typeof filters] as any[]).length > 0
+            ? (filters[key as keyof typeof filters] as unknown[]).length > 0
             : true)
     ).length
 
@@ -221,7 +221,7 @@ const ProductListView: React.FC = () => {
             <div className="flex-1 overflow-hidden px-6 pb-6">
                 <div className="bg-white shadow-sm rounded-lg h-full flex flex-col">
                     {/* Filters Bar - Fixed */}
-                    <div className="flex-shrink-0 p-4">
+                    <div className="shrink-0 p-4">
                         <div className="flex items-center gap-3 flex-wrap">
                             <Input
                                 placeholder="Tìm theo mã, tên sản phẩm..."

@@ -145,7 +145,7 @@ const ShipmentDetailView: React.FC = () => {
             width: '60%',
             render: (_, record) => (
                 <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                    <div className="w-12 h-12 shrink-0 bg-gray-100 rounded-md overflow-hidden">
                         <Image
                             src={record.image_url || DefaultProductImage}
                             alt={record.product_name || 'Sản phẩm'}
@@ -251,7 +251,7 @@ const ShipmentDetailView: React.FC = () => {
             {loading ? <></> : (
                 <div className="min-h-screen">
                     {/* Header */}
-                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? '!w-[calc(100%-80px)] left-20' : '!w-[calc(100%-256px)] left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
+                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
                         <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
                             <div className="flex gap-1 items-center">
                                 <Button

@@ -177,7 +177,7 @@ const NotificationDropdown: React.FC<NotificationDropdownProps> = ({ unreadCount
                 activeKey={activeTab}
                 onChange={handleTabChange}
                 items={tabItems}
-                className="!px-4"
+                className="px-4!"
             />
 
             <div className="max-h-[400px] overflow-y-auto">

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useLoader } from '@/hooks/useGlobalLoader'
 import { Collection } from '@/types/response/collection'
 import collectionService from '@/services/collection'
+import type { TablePaginationConfig } from 'antd/es/table'
 
 interface InternalFilters {
     store_id?: number;
@@ -55,7 +56,7 @@ export const useCollectionList = () => {
     }, [searchParams])
 
 
-    const updateURLParams = (newFilters: InternalFilters, newPagination?: any) => {
+    const updateURLParams = (newFilters: InternalFilters, newPagination?: TablePaginationConfig) => {
         const params = new URLSearchParams()
 
         // Add pagination
@@ -90,7 +91,7 @@ export const useCollectionList = () => {
     }
 
 
-    const handleTableChange = (newPagination: any) => {
+    const handleTableChange = (newPagination: TablePaginationConfig) => {
         const updatedPagination = {
             ...pagination,
             current: newPagination.current,
@@ -100,7 +101,7 @@ export const useCollectionList = () => {
         updateURLParams(filters, updatedPagination)
     }
 
-    const handleFilterChange = (key: keyof InternalFilters, value: any) => {
+    const handleFilterChange = (key: keyof InternalFilters, value: string | undefined) => {
         const newFilters = { ...filters, [key]: value }
         setFilters(newFilters)
         const newPagination = { current: 1, pageSize: pagination.pageSize }

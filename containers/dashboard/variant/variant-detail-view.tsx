@@ -16,8 +16,10 @@ import {
     Modal,
     Upload,
     Select,
+    UploadFile,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
+import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
 import { ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
@@ -204,7 +206,7 @@ const VariantDetailView: React.FC = () => {
         setSelectedImage(variant.image || null)
     }, [variant, form])
 
-    const handleUpload = async (options: any) => {
+    const handleUpload = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options
         setUploading(true)
         try {
@@ -222,7 +224,7 @@ const VariantDetailView: React.FC = () => {
         }
     }
 
-    const onSubmit = async (values: any) => {
+    const onSubmit = async (values: Record<string, unknown>) => {
         if (!variant) return
         setSaving(true)
         try {
@@ -258,11 +260,11 @@ const VariantDetailView: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? '!w-[calc(100%-80px)] left-20' : '!w-[calc(100%-256px)] left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
+            <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
                 <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
                     <div className="flex items-center gap-2">
                         <Button
-                            className="!border !border-gray-200"
+                            className="border! border-gray-200!"
                             type="text"
                             icon={<ArrowLeft size={20} />}
                             onClick={goBackToProduct}

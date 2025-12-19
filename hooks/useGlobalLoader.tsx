@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, useRef, createContext, useContext } from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
@@ -15,6 +15,15 @@ const LoaderContext = createContext<LoaderContextType | null>(null);
 export const LoaderProvider = ({ children }: { children: React.ReactNode }) => {
     const [activeRequests, setActiveRequests] = useState(0);
     const [isRouting, setIsRouting] = useState(false);
+    const isMountedRef = useRef(false);
+
+    // Đảm bảo không gọi setState sau khi component đã unmount
+    useEffect(() => {
+        isMountedRef.current = true;
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
 
     // 👉 Khi router chuyển trang
     useEffect(() => {
@@ -41,8 +50,15 @@ export const LoaderProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [isRouting, activeRequests]);
 
-    const startLoading = () => setActiveRequests((prev) => prev + 1);
-    const stopLoading = () => setActiveRequests((prev) => Math.max(prev - 1, 0));
+    const startLoading = () => {
+        if (!isMountedRef.current) return;
+        setActiveRequests((prev) => prev + 1);
+    };
+
+    const stopLoading = () => {
+        if (!isMountedRef.current) return;
+        setActiveRequests((prev) => Math.max(prev - 1, 0));
+    };
 
     return (
         <LoaderContext.Provider value={{ startLoading, stopLoading }}>

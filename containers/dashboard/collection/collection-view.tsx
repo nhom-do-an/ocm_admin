@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Input, Space, Image, Tooltip } from 'antd'
 import { Search, Plus, X } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
@@ -23,16 +23,20 @@ const CollectionListView: React.FC = () => {
 
     const [searchKey, setSearchKey] = useState<string>(filters.key || '')
     const debouncedKey = useDebounce(searchKey, 500)
+    const prevDebouncedKeyRef = useRef<string | undefined>(debouncedKey)
 
     // Đồng bộ khi filters.key thay đổi từ URL
     useEffect(() => {
         setSearchKey(filters.key || '')
+        prevDebouncedKeyRef.current = filters.key
     }, [filters.key])
 
     // Áp dụng debounce để gọi API / cập nhật URL
     useEffect(() => {
-        if (debouncedKey === filters.key) return
+        if (debouncedKey === prevDebouncedKeyRef.current) return
+        prevDebouncedKeyRef.current = debouncedKey
         handleFilterChange('key', debouncedKey || undefined)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedKey])
 
     const activeFiltersCount = Object.keys(filters).filter(key =>
@@ -132,10 +136,10 @@ const CollectionListView: React.FC = () => {
     return (
         <div className="flex flex-col w-full h-fit overflow-hidden max-md:max-w-[1000px] overflow-x-scroll mx-auto max-w-[1600px]">
             {/* Header - Fixed */}
-            <div className="flex-shrink-0 px-6 pt-6 pb-4">
+            <div className="shrink-0 px-6 pt-6 pb-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl !font-semibold">Danh sách danh mục</h1>
+                        <h1 className="text-2xl font-semibold!">Danh sách danh mục</h1>
                     </div>
                     <Button
                         type="primary"
@@ -153,7 +157,7 @@ const CollectionListView: React.FC = () => {
             <div className="flex-1 overflow-hidden px-6 pb-6">
                 <div className="bg-white shadow-sm rounded-lg h-fit flex flex-col">
                     {/* Filters Bar - Fixed */}
-                    <div className="flex-shrink-0 p-4">
+                    <div className="shrink-0 p-4">
                         <div className="flex items-center gap-3 flex-wrap">
                             <Input
                                 placeholder="Tìm tên danh mục.."

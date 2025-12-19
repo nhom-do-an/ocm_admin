@@ -13,7 +13,7 @@ export interface TrendingItem {
 export interface TrendingResponse {
     store_id: number;
     trending: TrendingItem[];
-    products: any[];
+    products: TrendingItem[];
     count: number;
     strategy: 'ai_model' | 'cold_start';
 }

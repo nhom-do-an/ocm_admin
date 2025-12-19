@@ -21,7 +21,13 @@ const formatCurrency = (num: number): string => {
 }
 
 // Helper to add text with proper encoding
-const addText = (doc: jsPDF, text: string, x: number, y: number, options?: any) => {
+interface TextOptions {
+    maxWidth?: number;
+    lineHeight?: number;
+    align?: 'left' | 'center' | 'right';
+}
+
+const addText = (doc: jsPDF, text: string, x: number, y: number, options?: TextOptions) => {
     // Use splitTextToSize to handle long text
     const lines = doc.splitTextToSize(text, options?.maxWidth || 200)
     doc.text(lines, x, y, options)
@@ -81,17 +87,17 @@ export const generateTrendingReportPDF = (data: TrendingReportData): jsPDF => {
         head: [summaryData[0]],
         body: summaryData.slice(1),
         theme: 'plain',
-        headStyles: { 
-            fillColor: [240, 240, 240], 
-            textColor: [0, 0, 0], 
+        headStyles: {
+            fillColor: [240, 240, 240],
+            textColor: [0, 0, 0],
             fontStyle: 'bold',
             lineWidth: 0.5
         },
-        bodyStyles: { 
+        bodyStyles: {
             textColor: [0, 0, 0],
             lineWidth: 0.5
         },
-        styles: { 
+        styles: {
             fontSize: 9,
             cellPadding: 3,
             lineColor: [0, 0, 0],
@@ -105,7 +111,10 @@ export const generateTrendingReportPDF = (data: TrendingReportData): jsPDF => {
         tableWidth: 'wrap'
     })
 
-    yPosition = (doc as any).lastAutoTable.finalY + 10
+    const lastTable = (doc as unknown as { lastAutoTable?: { finalY?: number } }).lastAutoTable
+    if (lastTable?.finalY !== undefined) {
+        yPosition = lastTable.finalY + 10
+    }
 
     // Trending Products Section
     if (trending.length > 0) {
@@ -134,20 +143,20 @@ export const generateTrendingReportPDF = (data: TrendingReportData): jsPDF => {
             head: [['STT', 'Ten san pham', 'Du bao ban', 'Gia', 'Tang truong', 'Trend Score']],
             body: trendingTableData,
             theme: 'plain',
-            headStyles: { 
-                fillColor: [240, 240, 240], 
-                textColor: [0, 0, 0], 
+            headStyles: {
+                fillColor: [240, 240, 240],
+                textColor: [0, 0, 0],
                 fontStyle: 'bold',
                 lineWidth: 0.5
             },
-            bodyStyles: { 
+            bodyStyles: {
                 textColor: [0, 0, 0],
                 lineWidth: 0.5
             },
             alternateRowStyles: {
                 fillColor: [250, 250, 250]
             },
-            styles: { 
+            styles: {
                 fontSize: 8,
                 cellPadding: 2.5,
                 lineColor: [0, 0, 0],
@@ -165,7 +174,10 @@ export const generateTrendingReportPDF = (data: TrendingReportData): jsPDF => {
             pageBreak: 'auto'
         })
 
-        yPosition = (doc as any).lastAutoTable.finalY + 10
+        const lastTable = (doc as unknown as { lastAutoTable?: { finalY?: number } }).lastAutoTable
+        if (lastTable?.finalY !== undefined) {
+            yPosition = lastTable.finalY + 10
+        }
     }
 
     // Predictions Table Section
@@ -182,10 +194,10 @@ export const generateTrendingReportPDF = (data: TrendingReportData): jsPDF => {
         yPosition += 8
 
         const predictionsTableData = predictions.map((pred) => {
-            const difference = pred.actual_sales !== undefined 
-                ? pred.actual_sales - pred.predicted_sales 
+            const difference = pred.actual_sales !== undefined
+                ? pred.actual_sales - pred.predicted_sales
                 : null
-            const differenceText = difference !== null 
+            const differenceText = difference !== null
                 ? `${difference > 0 ? '+' : ''}${formatNumber(difference)}`
                 : '-'
 
@@ -205,20 +217,20 @@ export const generateTrendingReportPDF = (data: TrendingReportData): jsPDF => {
             head: [['San pham', 'Variant', 'Du bao ban', 'Thuc te', 'Chenh lech', 'Du bao doanh thu', 'Gia']],
             body: predictionsTableData,
             theme: 'plain',
-            headStyles: { 
-                fillColor: [240, 240, 240], 
-                textColor: [0, 0, 0], 
+            headStyles: {
+                fillColor: [240, 240, 240],
+                textColor: [0, 0, 0],
                 fontStyle: 'bold',
                 lineWidth: 0.5
             },
-            bodyStyles: { 
+            bodyStyles: {
                 textColor: [0, 0, 0],
                 lineWidth: 0.5
             },
             alternateRowStyles: {
                 fillColor: [250, 250, 250]
             },
-            styles: { 
+            styles: {
                 fontSize: 7,
                 cellPadding: 2,
                 lineColor: [0, 0, 0],

@@ -5,6 +5,7 @@ import customerService from '@/services/customer'
 import { GetListCustomersRequest } from '@/types/request/customer'
 import { Customer } from '@/types/response/customer'
 import { useLoader } from '@/hooks/useGlobalLoader'
+import type { TablePaginationConfig } from 'antd/es/table'
 
 // Interface for internal state
 interface InternalFilters {
@@ -70,7 +71,7 @@ export const useCustomerList = () => {
         return apiParams
     }
 
-    const updateURLParams = (newFilters: InternalFilters, newPagination?: any) => {
+    const updateURLParams = (newFilters: InternalFilters, newPagination?: TablePaginationConfig) => {
         const params = new URLSearchParams()
 
         // Add pagination
@@ -112,7 +113,7 @@ export const useCustomerList = () => {
     }
 
     // Khi đổi trang hoặc kích thước bảng
-    const handleTableChange = (newPagination: any) => {
+    const handleTableChange = (newPagination: TablePaginationConfig) => {
         const updatedPagination = {
             ...pagination,
             current: newPagination.current,
@@ -122,7 +123,7 @@ export const useCustomerList = () => {
         updateURLParams(filters, updatedPagination)
     }
 
-    const handleFilterChange = (key: keyof InternalFilters, value: any) => {
+    const handleFilterChange = (key: keyof InternalFilters, value: string | number | 'enabled' | 'disabled' | 'asc' | 'desc' | undefined) => {
         const newFilters = { ...filters, [key]: value }
         setFilters(newFilters)
         const newPagination = { current: 1, pageSize: pagination.pageSize }

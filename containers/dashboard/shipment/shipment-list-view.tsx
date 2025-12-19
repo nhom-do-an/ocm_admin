@@ -180,7 +180,7 @@ const ShipmentListView: React.FC = () => {
             <div className=" px-6 pt-6 pb-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl !font-semibold">Danh sách vận đơn</h1>
+                        <h1 className="text-2xl font-semibold!">Danh sách vận đơn</h1>
                     </div>
                 </div>
             </div>
@@ -206,7 +206,7 @@ const ShipmentListView: React.FC = () => {
                         />
                     </div>
                     {/* Filters Bar - Fixed */}
-                    <div className="flex-shrink-0 p-4">
+                    <div className="shrink-0 p-4">
                         <div className="flex items-center gap-3 flex-wrap">
                             <Input
                                 placeholder="Tìm kiếm theo mã đơn hàng, mã vận đơn, mã giao hàng"

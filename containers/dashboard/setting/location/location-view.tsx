@@ -93,7 +93,7 @@ const LocationManagementView: React.FC = () => {
                                     onClick={() => handleLocationClick(location.id)}
                                 >
                                     <div className="flex items-start gap-3 flex-1">
-                                        <MapPin className="w-5 h-5 text-gray-400 mt-1 flex-shrink-0" />
+                                        <MapPin className="w-5 h-5 text-gray-400 mt-1 shrink-0" />
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
                                                 <p className="font-semibold text-gray-900">{location.name}</p>
@@ -104,7 +104,7 @@ const LocationManagementView: React.FC = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="flex gap-2 flex-shrink-0">
+                                    <div className="flex gap-2 shrink-0">
                                         {location.default_location && (
                                             <Button size="small" type="default">
                                                 Mặc định

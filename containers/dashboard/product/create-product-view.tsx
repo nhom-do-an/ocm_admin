@@ -18,6 +18,7 @@ import {
     Col,
     UploadFile,
 } from 'antd'
+import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
 import { Plus, Trash2, Info, ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
 import TinyEditor from '@/components/TinyEditor'
@@ -213,7 +214,7 @@ const CreateProduct: React.FC = () => {
         setImageSelectModalVisible(true)
     }
 
-    const variantColumns: ColumnsType<any> = editMode
+    const variantColumns: ColumnsType<ProductVariant> = editMode
         ? [
             {
                 title: 'Hình ảnh',
@@ -232,7 +233,7 @@ const CreateProduct: React.FC = () => {
             {
                 title: 'Phiên bản',
                 key: 'variant',
-                render: (_: any, record: any) => (
+                render: (_: unknown, record: ProductVariant) => (
                     <button
                         className="font-medium text-blue-600 hover:text-blue-800"
                         onClick={() => {
@@ -257,7 +258,7 @@ const CreateProduct: React.FC = () => {
             {
                 title: 'Có thể bán',
                 key: 'variant',
-                render: (_: any, record: any) =>
+                render: (_: unknown, record: ProductVariant) =>
                     `${record.inventory_quantity ?? 0}`,
             },
         ]
@@ -271,7 +272,7 @@ const CreateProduct: React.FC = () => {
                 title: 'Hình ảnh',
                 key: 'image',
                 width: 80,
-                render: (_: any, record: any, index: number) => (
+                render: (_: unknown, record: ProductVariant, index: number) => (
                     <div
                         className="w-12 h-12 border rounded cursor-pointer hover:border-blue-500 flex items-center justify-center overflow-hidden"
                         onClick={() => handleSelectImageForVariant(index)}
@@ -287,7 +288,7 @@ const CreateProduct: React.FC = () => {
             {
                 title: 'Phiên bản',
                 key: 'variant',
-                render: (_: any, record: any, index: number) => (
+                render: (_: unknown, record: ProductVariant, index: number) => (
                     <div>
                         <div className="font-medium">{record.title}</div>
                         <Space size="small">
@@ -324,12 +325,12 @@ const CreateProduct: React.FC = () => {
             {
                 title: 'Có thể bán',
                 key: 'variant',
-                render: (_: any, record: any) =>
+                render: (_: unknown, record: ProductVariant) =>
                     `${inventoryQuantity.map(iq => iq.available).reduce((a, b) => a + b, 0)} tại ${locations.length} kho`,
             },
         ]
 
-    const handleSaveVariant = (values: any) => {
+    const handleSaveVariant = (values: Record<string, unknown>) => {
         if (editingVariantIndex !== null) {
             const newVariants = [...variants]
             newVariants[editingVariantIndex] = {
@@ -565,7 +566,7 @@ const CreateProduct: React.FC = () => {
         }
     }
 
-    const handleSelectPublication = (e: any, pub: TPublicationResponse) => {
+    const handleSelectPublication = (e: React.ChangeEvent<HTMLInputElement>, pub: TPublicationResponse) => {
         if (e.target.checked) {
             setSelectedPublications(prev => [...prev, pub])
         } else {
@@ -593,7 +594,7 @@ const CreateProduct: React.FC = () => {
         })))
     }
 
-    const handleUpload = async (options: any) => {
+    const handleUpload = async (options: RcCustomRequestOptions) => {
         console.log("upload::", options);
         const { file, onSuccess, onError } = options;
         try {
@@ -606,7 +607,7 @@ const CreateProduct: React.FC = () => {
             // ✅ Cập nhật URL hiển thị trong fileList
             setFileList((prev) =>
                 prev.map((f) =>
-                    f.uid === (file as any).uid ? { ...f, status: 'done', url: Array.isArray(uploaded) ? uploaded[0].url : uploaded.url } : f
+                    f.uid === (file as UploadFile).uid ? { ...f, status: 'done', url: Array.isArray(uploaded) ? uploaded[0].url : uploaded.url } : f
                 )
             );
 
@@ -692,11 +693,11 @@ const CreateProduct: React.FC = () => {
     return (
         <>{loading ? <></> : <div className="min-h-screen bg-gray-50">
             {/* Header */}
-            <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? '!w-[calc(100%-80px)] left-20' : '!w-[calc(100%-256px)] left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
+            <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
                 <div className="bg-white h-full  flex items-center justify-between shadow-lg w-full px-5">
                     <div className="flex gap-1 items-center">
                         <Button
-                            className='!border !border-gray-200'
+                            className='border! border-gray-200!'
                             type="text"
                             icon={<ArrowLeft size={20} />}
                             onClick={onBack}
@@ -720,7 +721,7 @@ const CreateProduct: React.FC = () => {
                         {/* Left Column */}
                         <Col xs={24} lg={16}>
                             {/* Thông tin sản phẩm */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <h2 className="text-lg font-semibold mb-4">Thông tin sản phẩm</h2>
                                 <Form.Item
                                     label="Tên sản phẩm"
@@ -762,7 +763,7 @@ const CreateProduct: React.FC = () => {
                             </Card>
 
                             {/* Thông tin giá */}
-                            {(!editMode || hasDefaultVariant) && <Card className="!mb-2">
+                            {(!editMode || hasDefaultVariant) && <Card className="mb-2!">
                                 <h2 className="text-lg font-semibold mb-4">Thông tin giá</h2>
                                 <Row gutter={16}>
                                     <Col span={12}>
@@ -815,7 +816,7 @@ const CreateProduct: React.FC = () => {
                             </Card>}
 
                             {/* Thông tin kho */}
-                            {!editMode && <Card className="!mb-2">
+                            {!editMode && <Card className="mb-2!">
                                 <h2 className="text-lg font-semibold mb-4">Thông tin kho</h2>
                                 <Form.Item label="Lưu kho tại" name="location_id" initialValue={1}>
                                     <Select placeholder="Cửa hàng chính">
@@ -898,7 +899,7 @@ const CreateProduct: React.FC = () => {
                             </Card>}
 
                             {/* Vận chuyển */}
-                            {(!editMode || hasDefaultVariant) && <Card className="!mb-2">
+                            {(!editMode || hasDefaultVariant) && <Card className="mb-2!">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold mb-4">Vận chuyển</h2>
                                     <Form.Item name="requires_shipping" valuePropName="checked" initialValue={true}>
@@ -922,7 +923,7 @@ const CreateProduct: React.FC = () => {
                             </Card>}
 
                             {/* Thuộc tính */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <div className="flex items-start justify-between mb-4">
                                     <h2 className="text-lg font-semibold flex items-center gap-2">
                                         Thuộc tính
@@ -997,7 +998,7 @@ const CreateProduct: React.FC = () => {
                             </Card>
 
                             {/* Phiên bản */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <div className='w-full flex items-center justify-between '>
                                     <h2 className="text-lg font-semibold mb-4">
 
@@ -1038,7 +1039,7 @@ const CreateProduct: React.FC = () => {
                             </Card>
 
                             {/* Tối ưu SEO */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <div className="flex items-start justify-between">
                                     <h2 className="text-lg font-semibold mb-4">Tối ưu SEO</h2>
 
@@ -1069,7 +1070,7 @@ const CreateProduct: React.FC = () => {
                         {/* Right Column */}
                         <Col xs={24} lg={8}>
                             {/* Ảnh sản phẩm */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <div className="flex items-start justify-between mb-4">
                                     <h2 className="text-lg font-semibold">Ảnh sản phẩm</h2>
                                 </div>
@@ -1082,7 +1083,7 @@ const CreateProduct: React.FC = () => {
                                     accept="image/*"
                                     onRemove={handleRemove}
                                 >
-                                    <div className="text-center !mb-2">
+                                    <div className="text-center mb-2!">
                                         <UploadIcon size={32} className="mx-auto text-gray-400 mb-2" />
                                         <p className="text-sm">Kéo thả hoặc chọn file</p>
                                     </div>
@@ -1091,7 +1092,7 @@ const CreateProduct: React.FC = () => {
                             </Card>
 
                             {/* Kênh bán hàng */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-lg font-semibold">Kênh bán hàng</h2>
                                 </div>
@@ -1110,7 +1111,7 @@ const CreateProduct: React.FC = () => {
                             </Card>
 
                             {/* Danh mục */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <Form.Item label={
                                     <span className="flex items-center gap-1">
                                         Danh mục
@@ -1124,7 +1125,7 @@ const CreateProduct: React.FC = () => {
                             </Card>
 
                             {/* Nhãn hiệu */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
                                 <Form.Item label="Nhãn hiệu" name="vendor">
                                     <Select
                                         mode="tags"
@@ -1145,7 +1146,7 @@ const CreateProduct: React.FC = () => {
 
 
                             {/* Loại sản phẩm */}
-                            <Card className="!mb-2">
+                            <Card className="mb-2!">
 
                                 <Form.Item label="Loại sản phẩm" name="product_type">
                                     <Select

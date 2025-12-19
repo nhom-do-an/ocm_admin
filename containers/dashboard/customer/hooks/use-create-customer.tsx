@@ -112,11 +112,14 @@ export const useCreateCustomer = () => {
                     }
                 }
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error fetching customer detail:', error)
+            const errorMessage = error && typeof error === 'object' && 'response' in error
+                ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message
+                : undefined
             notification.error({
                 message: 'Lỗi',
-                description: error?.response?.data?.message || 'Không thể tải thông tin khách hàng'
+                description: errorMessage || 'Không thể tải thông tin khách hàng'
             })
             router.push('/admin/customer/list')
         } finally {
@@ -145,7 +148,7 @@ export const useCreateCustomer = () => {
                 })
             }
             router.push('/admin/customer/list')
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error saving customer:', error)
             notification.error({
                 message: 'Lỗi',

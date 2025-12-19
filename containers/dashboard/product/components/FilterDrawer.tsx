@@ -54,7 +54,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                     dayjs(initialFilters.min_created_at, 'DD/MM/YYYY'),
                     dayjs(initialFilters.max_created_at, 'DD/MM/YYYY')
                 ]
-                parsedFilters.dateRange = dateRange as any
+                parsedFilters.dateRange = dateRange as [dayjs.Dayjs, dayjs.Dayjs] | null
             }
 
             setFilters(parsedFilters)
@@ -69,10 +69,11 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
         const processedFilters: InternalFilters = { ...filters }
 
         // Convert date range to DD/MM/YYYY strings
-        if ((filters as any).dateRange?.[0] && (filters as any).dateRange?.[1]) {
-            processedFilters.min_created_at = (filters as any).dateRange[0].format('DD/MM/YYYY')
-            processedFilters.max_created_at = (filters as any).dateRange[1].format('DD/MM/YYYY')
-            delete (processedFilters as any).dateRange
+        const dateRange = (filters as { dateRange?: [dayjs.Dayjs, dayjs.Dayjs] | null }).dateRange
+        if (dateRange?.[0] && dateRange?.[1]) {
+            processedFilters.min_created_at = dateRange[0].format('DD/MM/YYYY')
+            processedFilters.max_created_at = dateRange[1].format('DD/MM/YYYY')
+            delete (processedFilters as { dateRange?: unknown }).dateRange
         }
 
         onApplyFilter(processedFilters)
@@ -190,8 +191,8 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                     className="w-full"
                     placeholder={['Từ ngày', 'Đến ngày']}
                     format="DD/MM/YYYY"
-                    value={(filters as any).dateRange}
-                    onChange={(dates) => setFilters({ ...filters, dateRange: dates as any })}
+                    value={(filters as { dateRange?: [dayjs.Dayjs, dayjs.Dayjs] | null }).dateRange}
+                    onChange={(dates) => setFilters({ ...filters, dateRange: dates as [dayjs.Dayjs, dayjs.Dayjs] | null })}
                 />
             ),
         },

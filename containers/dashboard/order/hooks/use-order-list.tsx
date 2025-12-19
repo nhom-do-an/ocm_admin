@@ -18,6 +18,7 @@ import { Source } from '@/types/response/source'
 import locationService from '@/services/location'
 import { Location } from '@/types/response/locations'
 import { EFulfillmentStatus, ELocationStatus } from '@/types/enums/enum'
+import type { TablePaginationConfig } from 'antd/es/table'
 
 // Interface for internal state (arrays)
 interface InternalFilters {
@@ -190,7 +191,7 @@ export const useOrderList = () => {
         return apiParams
     }
 
-    const updateURLParams = (newFilters: InternalFilters, newPagination?: any) => {
+    const updateURLParams = (newFilters: InternalFilters, newPagination?: TablePaginationConfig) => {
         const params = new URLSearchParams()
 
         // Add pagination
@@ -249,7 +250,7 @@ export const useOrderList = () => {
     }
 
     // 📌 Khi đổi trang hoặc kích thước bảng
-    const handleTableChange = (newPagination: any) => {
+    const handleTableChange = (newPagination: TablePaginationConfig) => {
         const updatedPagination = {
             ...pagination,
             current: newPagination.current,
@@ -259,7 +260,7 @@ export const useOrderList = () => {
         updateURLParams(filters, updatedPagination)
     }
 
-    const handleFilterChange = (key: keyof InternalFilters, value: any) => {
+    const handleFilterChange = (key: keyof InternalFilters, value: string | number | string[] | undefined) => {
         const newFilters = { ...filters, [key]: value }
         setFilters(newFilters)
         const newPagination = { current: 1, pageSize: pagination.pageSize }

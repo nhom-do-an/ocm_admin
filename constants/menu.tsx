@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Home, ClipboardList, Package, Truck, User, Warehouse } from 'lucide-react'
+import { Home, ClipboardList, Package, Truck, User, Warehouse, ChartNoAxesCombined } from 'lucide-react'
 import { SCREEN } from './constant'
 
 export interface AppMenuItem {
@@ -79,5 +79,11 @@ export const menuItems: AppMenuItem[] = [
 
         ],
     },
+    {
+        key: "/admin/report",
+        label: 'report.label',
+        icon: <ChartNoAxesCombined size={20} />,
+    },
+
 
 ]
