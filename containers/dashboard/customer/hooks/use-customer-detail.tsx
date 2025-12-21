@@ -23,10 +23,13 @@ export const useCustomerDetail = (customerId?: number) => {
         try {
             const data = await customerService.getCustomerDetail(customerId)
             setCustomer(data)
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const errorMessage = error && typeof error === 'object' && 'response' in error
+                ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message
+                : undefined
             notification.error({
                 message: 'Lỗi',
-                description: error?.response?.data?.message || 'Không thể tải thông tin khách hàng',
+                description: errorMessage || 'Không thể tải thông tin khách hàng',
             })
             router.push('/admin/customer/list')
         } finally {
@@ -47,10 +50,13 @@ export const useCustomerDetail = (customerId?: number) => {
             }
             const response = await orderService.getListOrders(params)
             setOrders(response.orders || [])
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const errorMessage = error && typeof error === 'object' && 'response' in error
+                ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message
+                : undefined
             notification.error({
                 message: 'Lỗi',
-                description: error?.response?.data?.message || 'Không thể tải danh sách đơn hàng',
+                description: errorMessage || 'Không thể tải danh sách đơn hàng',
             })
         } finally {
             setLoadingOrders(false)

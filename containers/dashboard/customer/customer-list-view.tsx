@@ -83,7 +83,7 @@ const CustomerListView: React.FC = () => {
                         <div>
                             <button
                                 onClick={() => router.push(`/admin/customer/${record.id}`)}
-                                className="!text-blue-500 hover:text-blue-800 font-medium cursor-pointer"
+                                className="text-blue-500! hover:text-blue-800 font-medium cursor-pointer"
                             >
                                 {name}
                             </button>
@@ -165,10 +165,10 @@ const CustomerListView: React.FC = () => {
             <div className="flex-1 flex items-start justify-center px-2 py-6">
                 <div className="w-full max-w-[1400px] flex flex-col h-full">
                     {/* Header - Fixed */}
-                    <div className="flex-shrink-0 pb-4">
+                    <div className="shrink-0 pb-4">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1 className="text-2xl !font-semibold">Khách hàng</h1>
+                                <h1 className="text-2xl font-semibold!">Khách hàng</h1>
                             </div>
                             <Space>
                                 <Button
@@ -187,7 +187,7 @@ const CustomerListView: React.FC = () => {
                     <div className="flex-1 overflow-hidden flex flex-col min-h-0">
                         <div className="bg-white shadow-sm rounded-lg flex-1 flex flex-col min-h-0">
                             {/* Filters Bar - Fixed */}
-                            <div className="flex-shrink-0 p-4 ">
+                            <div className="shrink-0 p-4 ">
                                 <div className="flex items-center gap-3 flex-wrap">
                                     <Input
                                         placeholder="Tìm kiếm khách hàng"

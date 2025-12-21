@@ -75,7 +75,7 @@ const NotificationView: React.FC = () => {
                                                     <p className="text-sm text-gray-600">{template.description}</p>
                                                 )}
                                             </div>
-                                            <div className="ml-4 flex-shrink-0">
+                                            <div className="ml-4 shrink-0">
                                                 <Switch
                                                     checked={template.active}
                                                     onChange={(checked) => handleActiveChange(template, checked)}

@@ -208,7 +208,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
             width: '60%',
             render: (_, record) => (
                 <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                    <div className="w-12 h-12 shrink-0 bg-gray-100 rounded-md overflow-hidden">
                         <Image
                             src={record.image_url || DefaultProductImage}
                             alt={record.product_name || 'Sản phẩm'}
@@ -363,7 +363,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
 
     if (shipmentsLoading) {
         return (
-            <Card className="!mb-4">
+            <Card className="mb-4!">
                 <div className="text-center py-12 text-gray-400">Đang tải...</div>
             </Card>
         )
@@ -373,7 +373,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
 
     if (lineItemGroups.length === 0) {
         return (
-            <Card className="!mb-4">
+            <Card className="mb-4!">
                 <div className="text-center py-12 text-gray-400">
                     Chưa có sản phẩm
                 </div>

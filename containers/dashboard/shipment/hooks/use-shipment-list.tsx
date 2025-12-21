@@ -8,6 +8,7 @@ import { useLoader } from '@/hooks/useGlobalLoader'
 import locationService from '@/services/location'
 import { Location } from '@/types/response/locations'
 import { ELocationStatus } from '@/types/enums/enum'
+import type { TablePaginationConfig } from 'antd/es/table'
 
 interface InternalFilters {
     key?: string;
@@ -157,7 +158,7 @@ export const useShipmentList = () => {
         router.push(`?${params.toString()}`, { scroll: false })
     }
 
-    const handleTableChange = (newPagination: any) => {
+    const handleTableChange = (newPagination: TablePaginationConfig) => {
         setPagination({
             current: newPagination.current,
             pageSize: newPagination.pageSize,
@@ -169,7 +170,7 @@ export const useShipmentList = () => {
         router.push(`?${params.toString()}`, { scroll: false })
     }
 
-    const handleFilterChange = (key: keyof InternalFilters, value: any) => {
+    const handleFilterChange = (key: keyof InternalFilters, value: string | number | undefined) => {
         const newFilters = { ...filters, [key]: value }
         setFilters(newFilters)
         setPagination(prev => ({ ...prev, current: 1 }))

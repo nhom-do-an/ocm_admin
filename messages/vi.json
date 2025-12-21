@@ -143,5 +143,8 @@
     "register_title": "Đăng ký",
     "login_success": "Đăng nhập thành công",
     "register_success": "Đăng ký thành công"
+  },
+  "report": {
+    "label": "Báo cáo"
   }
 }

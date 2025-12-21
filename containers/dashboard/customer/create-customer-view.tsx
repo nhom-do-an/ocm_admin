@@ -245,7 +245,7 @@ const CreateCustomerView: React.FC = () => {
             <div className="flex-1 flex items-start justify-center px-2 py-6 overflow-hidden">
                 <div className="w-full max-w-[1400px] flex flex-col h-full min-h-0">
                     {/* Header */}
-                    <div className="flex-shrink-0 pb-4">
+                    <div className="shrink-0 pb-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <Button
@@ -253,7 +253,7 @@ const CreateCustomerView: React.FC = () => {
                                     icon={<ArrowLeft size={20} />}
                                     onClick={() => router.back()}
                                 />
-                                <h1 className="text-2xl !font-semibold">
+                                <h1 className="text-2xl font-semibold!">
                                     {editMode ? 'Chi tiết khách hàng' : 'Thêm mới khách hàng'}
                                 </h1>
                             </div>
@@ -462,7 +462,7 @@ const CreateCustomerView: React.FC = () => {
                     </div>
 
                     {/* Bottom Save Button */}
-                    <div className="flex-shrink-0 pt-4 border-t flex justify-end">
+                    <div className="shrink-0 pt-4 border-t flex justify-end">
                         <Button
                             type="primary"
                             size="large"

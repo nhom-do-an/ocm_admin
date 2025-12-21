@@ -1,7 +1,8 @@
 'use client'
-import { Avatar, Button, Input, Dropdown, Tabs, Empty } from 'antd'
+import { Avatar, Input, Dropdown, Tabs, Empty } from 'antd'
+import type { MenuProps } from 'antd'
 import React, { useState, useEffect } from 'react'
-import { Search, Bell, Menu, User, LogOut, Package, ShoppingCart, Users } from "lucide-react"
+import { Search, Menu, User, LogOut, Package, ShoppingCart, Users } from "lucide-react"
 import { useGlobalContext } from '@/hooks/useGlobalContext'
 import storage from '@/storages/storage'
 import { useRouter } from 'next/navigation'
@@ -56,7 +57,7 @@ function Header() {
 
     }
 
-    const avatarMenuItems = [
+    const avatarMenuItems: MenuProps['items'] = [
         {
             key: 'info',
             label: (
@@ -67,7 +68,7 @@ function Header() {
             ),
         },
         {
-            type: 'divider',
+            type: 'divider' as const,
         },
         {
             key: 'account',
@@ -78,7 +79,7 @@ function Header() {
             }
         },
         {
-            type: 'divider',
+            type: 'divider' as const,
         },
         {
             key: 'logout',
@@ -89,7 +90,7 @@ function Header() {
         },
     ]
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value)
         setOpenSearch(e.target.value.length > 0)
     }
@@ -145,16 +146,7 @@ function Header() {
         }
         return (
             <div className="max-h-[300px] overflow-y-auto">
-                {searchResults.customers.map(customer => (
-                    <div
-                        key={customer.id}
-                        className="px-3 py-2 hover:bg-gray-50 cursor-pointer"
-                        onClick={() => console.log('Chọn khách hàng:', customer.id)}
-                    >
-                        <div className="font-medium">{customer.name}</div>
-                        <div className="text-sm text-gray-500">{customer.phone}</div>
-                    </div>
-                ))}
+                Hello
             </div>
         )
     }
@@ -210,7 +202,7 @@ function Header() {
     )
 
     return (
-        <div className='h-[55px] border-b drop-shadow-sm w-full bg-[var(--header)] border-[var(--header-border)] flex items-center px-5 font-medium text-lg justify-between'
+        <div className='h-[55px] border-b drop-shadow-sm w-full bg-(--header) border-(--header-border) flex items-center px-5 font-medium text-lg justify-between'
         >
             <div className='flex gap-1 items-center'>
                 <div className="sm:hidden" onClick={() => setOpenSidebar(true)}>
@@ -226,7 +218,7 @@ function Header() {
                     <Input
                         size="large"
                         placeholder="Tìm kiếm"
-                        prefix={<Search className="text-[var(--input-placeholder)]" size={18} />}
+                        prefix={<Search className="text-(--input-placeholder)" size={18} />}
                         className="w-[400px] max-w-[500px] max-sm:max-w-[180px] custom-input"
                         value={searchValue}
                         onChange={handleSearchChange}
@@ -246,7 +238,7 @@ function Header() {
                         style={{ color: "MenuText", cursor: "pointer" }}
                         size="large"
                         gap={4}
-                        className='!bg-blue-300'
+                        className='bg-blue-300!'
                     >
                         C
                     </Avatar>

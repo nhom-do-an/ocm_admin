@@ -18,7 +18,7 @@ const VariantCard: React.FC<VariantCardProps> = ({ variant, onClick }) => {
             <div className="flex justify-between item-center w-full">
                 <div className="flex items-center gap-4">
                     {/* Image */}
-                    <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                    <div className="w-16 h-16 shrink-0 bg-gray-100 rounded-md overflow-hidden">
                         {variant.image?.url ? (
                             <Image
                                 src={variant.image.url}

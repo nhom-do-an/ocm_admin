@@ -11,7 +11,7 @@ const aiService = {
         return res.data.data as TrendingResponse;
     },
     async getTrendingPredictions(limit: number = 20, date?: string): Promise<TrendingPredictionsResponse> {
-        const params: any = { limit };
+        const params: Record<string, string | number> = { limit };
         if (date) {
             params.date = date;
         }

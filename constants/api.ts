@@ -142,5 +142,12 @@ export const API = {
             GET_TRENDING: '/ai/trending',
             GET_TRENDING_PREDICTIONS: '/admin/ai/trending/predictions',
         },
-    }
+    },
+    REPORT: {
+        GET_REVENUE_BY_DATE: '/admin/revenue/by-date',
+        GET_REVENUE_BY_LOCATION: '/admin/revenue/by-location',
+        GET_REVENUE_BY_SOURCE: '/admin/revenue/by-source',
+        GET_REVENUE_BY_CUSTOMER: '/admin/revenue/by-customer',
+        GET_TOP_SELLING_PRODUCTS: '/admin/revenue/top-selling-products',
+    },
 };

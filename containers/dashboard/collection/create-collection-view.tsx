@@ -52,7 +52,7 @@ const CreateCollectionView: React.FC = () => {
     const router = useRouter()
 
     // 🔹 Lưu dữ liệu ban đầu để so sánh thay đổi
-    const [initialData, setInitialData] = useState<any>(null)
+    const [initialData, setInitialData] = useState<Collection | null>(null)
 
     useEffect(() => {
         if (!loading && editMode && collection) {
@@ -76,8 +76,7 @@ const CreateCollectionView: React.FC = () => {
                 name: collection.name || '',
                 meta_title: collection.meta_title || '',
                 meta_description: collection.meta_description || '',
-                description: collection.description || '',
-                imageUrl: collection.image?.url || '',
+                description: collection.description || ''
             })
         }
     }, [loading, editMode, collection, form])
@@ -92,7 +91,7 @@ const CreateCollectionView: React.FC = () => {
             values.meta_title !== initialData.meta_title ||
             values.meta_description !== initialData.meta_description ||
             content !== initialData.description ||
-            currentImageUrl !== initialData.imageUrl
+            currentImageUrl !== initialData.image?.url
         )
     }, [form, content, images, initialData])
 
@@ -122,7 +121,7 @@ const CreateCollectionView: React.FC = () => {
         }
     }
 
-    const handleUpload = async (options: any) => {
+    const handleUpload = async (options: RcCustomRequestOptions) => {
         const { file, onSuccess, onError } = options
         try {
             const formData = new FormData()
@@ -309,11 +308,11 @@ const CreateCollectionView: React.FC = () => {
             {loading ? null : (
                 <div className="min-h-screen bg-gray-50">
                     {/* Header */}
-                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? '!w-[calc(100%-80px)] left-20' : '!w-[calc(100%-256px)] left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
+                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
                         <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
                             <div className="flex gap-1 items-center">
                                 <Button
-                                    className='!border !border-gray-200'
+                                    className='border! border-gray-200!'
                                     type="text"
                                     icon={<ArrowLeft size={20} />}
                                     onClick={onBack}
@@ -354,7 +353,7 @@ const CreateCollectionView: React.FC = () => {
                             <Row gutter={24}>
                                 {/* Left Column */}
                                 <Col xs={24} lg={16}>
-                                    <Card className="!mb-2">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Thông tin danh mục</h2>
                                         <Form.Item
                                             label="Tên danh mục"
@@ -373,7 +372,7 @@ const CreateCollectionView: React.FC = () => {
                                     </Card>
 
                                     {/* SEO */}
-                                    <Card className="!mb-2">
+                                    <Card className="mb-2!">
                                         <div className="flex items-start justify-between">
                                             <h2 className="text-lg font-semibold mb-4">Tối ưu SEO</h2>
                                             {!openSeo && (
@@ -407,7 +406,7 @@ const CreateCollectionView: React.FC = () => {
 
                                 {/* Right Column */}
                                 <Col xs={24} lg={8}>
-                                    <Card className="!mb-2">
+                                    <Card className="mb-2!">
                                         <div className="flex items-start justify-between mb-4">
                                             <h2 className="text-lg font-semibold">Ảnh danh mục</h2>
                                         </div>
@@ -421,7 +420,7 @@ const CreateCollectionView: React.FC = () => {
                                             accept="image/*"
                                             className="py-3"
                                         >
-                                            <div className="text-center !mb-2">
+                                            <div className="text-center mb-2!">
                                                 <UploadIcon size={32} className="mx-auto text-gray-400 mb-2" />
                                                 <p className="text-sm">Kéo thả hoặc chọn file</p>
                                             </div>
@@ -432,7 +431,7 @@ const CreateCollectionView: React.FC = () => {
                             {editMode && collection && (
                                 <Row gutter={24} className="mt-4">
                                     <Col span={24}>
-                                        <Card className="!mb-2">
+                                        <Card className="mb-2!">
                                             <div className="flex items-center justify-between mb-4">
                                                 <h2 className="text-lg font-semibold">
                                                     Sản phẩm trong danh mục

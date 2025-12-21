@@ -94,12 +94,6 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
         return today.toISOString().split('T')[0]
     }
 
-    // Get yesterday's date in YYYY-MM-DD format
-    const getYesterdayDate = () => {
-        const yesterday = new Date()
-        yesterday.setDate(yesterday.getDate() - 1)
-        return yesterday.toISOString().split('T')[0]
-    }
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(e.target.value)
@@ -226,8 +220,8 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                             </thead>
                             <tbody>
                                 {predictions.map((pred) => {
-                                    const difference = pred.actual_sales !== undefined 
-                                        ? pred.actual_sales - pred.predicted_sales 
+                                    const difference = pred.actual_sales !== undefined
+                                        ? pred.actual_sales - pred.predicted_sales
                                         : null
                                     const differencePercent = pred.actual_sales !== undefined && pred.actual_sales > 0
                                         ? ((difference! / pred.actual_sales) * 100)
@@ -263,19 +257,17 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                                                         ) : difference < 0 ? (
                                                             <TrendingDown className="w-4 h-4 text-red-600" />
                                                         ) : null}
-                                                        <span className={`font-medium ${
-                                                            difference > 0 ? 'text-green-600' : 
-                                                            difference < 0 ? 'text-red-600' : 
-                                                            'text-gray-600'
-                                                        }`}>
+                                                        <span className={`font-medium ${difference > 0 ? 'text-green-600' :
+                                                            difference < 0 ? 'text-red-600' :
+                                                                'text-gray-600'
+                                                            }`}>
                                                             {difference > 0 ? '+' : ''}{formatNumber(difference)}
                                                         </span>
                                                         {differencePercent !== null && (
-                                                            <span className={`text-xs ml-1 ${
-                                                                difference > 0 ? 'text-green-600' : 
-                                                                difference < 0 ? 'text-red-600' : 
-                                                                'text-gray-600'
-                                                            }`}>
+                                                            <span className={`text-xs ml-1 ${difference > 0 ? 'text-green-600' :
+                                                                difference < 0 ? 'text-red-600' :
+                                                                    'text-gray-600'
+                                                                }`}>
                                                                 ({differencePercent > 0 ? '+' : ''}{differencePercent.toFixed(1)}%)
                                                             </span>
                                                         )}
@@ -316,13 +308,13 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                     </div>
                 ) : (
                     <div className="space-y-3">
-                        {trending.map((item, index) => (
+                        {trending.map((item) => (
                             <div
                                 key={item.item_id}
                                 className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
                             >
                                 <div className="flex items-center gap-4 flex-1">
-                                    <div className="flex-shrink-0">
+                                    <div className="shrink-0">
                                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-bold">
                                             {item.rank}
                                         </div>
