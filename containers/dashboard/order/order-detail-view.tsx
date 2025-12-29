@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button, Card, Tag, Row, Col } from 'antd'
 import { ArrowLeft, Edit, Printer, X, Pencil } from 'lucide-react'
 import { OrderDetail, LineItemDetail } from '@/types/response/order'
-import { useGlobalContext } from '@/hooks/useGlobalContext'
 import { EFinancialStatus, EFulfillmentOrderStatus, EAuthorType, EOrderStatus } from '@/types/enums/enum'
 import Image from 'next/image'
 import { Source } from '@/types/response/source'
@@ -28,7 +27,6 @@ import { message } from 'antd'
 const OrderDetailView: React.FC = () => {
     const params = useParams()
     const router = useRouter()
-    const { collapsed } = useGlobalContext()
     const [receivePaymentModalOpen, setReceivePaymentModalOpen] = useState(false)
 
     const orderId = params?.id ? Number(params.id) : null
@@ -304,16 +302,15 @@ const OrderDetailView: React.FC = () => {
             {loading ? <></> : (
                 <div className="min-h-screen">
                     {/* Header */}
-                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? '!w-[calc(100%-80px)] left-20' : '!w-[calc(100%-256px)] left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
-                        <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
-                            <div className="flex gap-1 items-center">
+                    <div className={` z-100 w-full flex flex-col justify-center transition-all pt-4`}>
+                        <div className=" h-full flex items-center justify-between w-full">
+                            <div className="flex gap-1 items-center bg-white rounded-[10px]!">
                                 <Button
-                                    className='!border !border-gray-200'
+                                    className='border! border-gray-200!'
                                     type="text"
                                     icon={<ArrowLeft size={20} />}
-                                    onClick={() => router.back()}
+                                    onClick={() => router.push("/admin/order/list")}
                                 />
-                                <h2 className="text-xl font-semibold ml-3 text-center max-md:hidden">Chi tiết đơn hàng</h2>
                             </div>
                             <div className='flex gap-2 overflow-wrap'>
                                 {!isFulfilled && order.status !== EOrderStatus.CANCELLED && (
@@ -347,7 +344,7 @@ const OrderDetailView: React.FC = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="max-w-[1400px] mx-auto p-6">
+                    <div className="max-w-[1400px] mx-auto p-2">
                         <div className="mb-3">
                             <div className="flex items-center gap-2 mb-4 h-[60px]">
                                 <span className="text-2xl font-medium">{order.name || order.order_number}</span>
@@ -363,7 +360,7 @@ const OrderDetailView: React.FC = () => {
                             {/* Timeline - sẽ bổ sung sau */}
                         </div>
 
-                        <Row gutter={24}>
+                        <Row gutter={22} >
                             {/* Left Column */}
                             <Col xs={24} lg={16}>
                                 {/* Sản phẩm */}
@@ -381,29 +378,29 @@ const OrderDetailView: React.FC = () => {
                                 />
 
                                 {/* Thanh toán */}
-                                <Card className="!mb-4">
+                                <Card className="mb-2!">
                                     <Tag color={financialStatus.color}>{financialStatus.text}</Tag>
-                                    <div className="space-y-4">
+                                    <div className="space-y-2">
 
-                                        <div className="space-y-3">
-                                            <div className="flex justify-between text-base">
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between">
                                                 <span>Tổng tiền hàng</span>
                                                 <span className="font-medium">{formatCurrency(totalAmount)}</span>
                                             </div>
 
-                                            <div className="flex justify-between items-center text-base">
+                                            <div className="flex justify-between items-center">
                                                 <span>Phí giao hàng</span>
                                                 <span className="font-medium">{order.shipping_lines?.[0]?.price ? formatCurrency(order.shipping_lines?.[0]?.price) : '0₫'}</span>
                                             </div>
 
-                                            <div className="flex justify-between items-center text-lg font-semibold">
+                                            <div className="flex justify-between items-center font-semibold">
                                                 <span>Thành tiền</span>
                                                 <span className="w-24 text-right">{formatCurrency(finalAmount)}</span>
                                             </div>
                                         </div>
 
                                         {transactions.length > 0 && (
-                                            <div className="border-t pt-3 space-y-2">
+                                            <div className="border-t pt-3 space-y-2 border-gray-100">
                                                 <div className="text-sm font-semibold text-gray-700 mb-2">Khách đã trả</div>
                                                 {transactions.map((transaction) => (
                                                     <div key={transaction.id} className="flex justify-between text-sm">
@@ -426,7 +423,7 @@ const OrderDetailView: React.FC = () => {
                                 </Card>
 
                                 {/* Lịch sử đơn hàng */}
-                                <Card className="!mb-4">
+                                <Card className="mb-2!">
                                     <h2 className="text-lg font-semibold mb-4">Lịch sử đơn hàng</h2>
                                     {events.length > 0 ? (
                                         <div className="space-y-6">
@@ -434,7 +431,7 @@ const OrderDetailView: React.FC = () => {
                                                 <div key={date}>
                                                     <div className="text-sm font-semibold text-gray-700 mb-3">{date}</div>
                                                     <div className="relative pl-8">
-                                                        <div className="absolute left-[6px] top-0 bottom-0 w-0.5 bg-blue-200"></div>
+                                                        <div className="absolute left-1.5 top-0 bottom-0 w-0.5 bg-blue-200"></div>
                                                         {dateEvents.map((event, index) => (
                                                             <div key={event.id || index} className="relative mb-4 last:mb-0">
                                                                 <div className="absolute -left-[25px]  top-1 w-3 h-3 rounded-full bg-blue-500 border-2 border-white z-10 -translate-x-1/2"></div>
@@ -481,7 +478,7 @@ const OrderDetailView: React.FC = () => {
                             <Col xs={24} lg={8}>
                                 {/* Nguồn đơn */}
                                 {order.source && (
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-1">Nguồn đơn</h2>
                                         <div className="flex items-center gap-2">
                                             {renderSourceOption(order.source)}
@@ -491,7 +488,7 @@ const OrderDetailView: React.FC = () => {
 
                                 {/* Khách hàng */}
                                 {order.customer && (
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Khách hàng</h2>
                                         <div className="space-y-1">
                                             {/* Customer summary */}
@@ -551,7 +548,7 @@ const OrderDetailView: React.FC = () => {
                                 )}
 
                                 {/* Ghi chú */}
-                                <Card className="!mb-4">
+                                <Card className="mb-2!">
                                     <div className="flex items-center justify-between mb-4">
                                         <h2 className="text-lg font-semibold mb-4">Ghi chú</h2>
                                         <Button type="text" size="small" icon={<Pencil size={14} />} onClick={() => setOrderNoteModalOpen(true)} />
@@ -563,7 +560,7 @@ const OrderDetailView: React.FC = () => {
                                 </Card>
 
                                 {/* Thông tin bổ sung */}
-                                <Card className="!mb-4">
+                                <Card className="mb-2!">
                                     <h2 className="text-lg font-semibold mb-4">Thông tin bổ sung</h2>
 
                                     {order.location && (

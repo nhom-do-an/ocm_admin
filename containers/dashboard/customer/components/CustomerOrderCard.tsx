@@ -25,7 +25,7 @@ const CustomerOrderCard: React.FC<CustomerOrderCardProps> = ({ order }) => {
     return (
         <Card
             size="small"
-            className="!rounded-xl !border !border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+            className=" shadow-sm hover:shadow-md transition-shadow duration-200"
         >
             <div className="flex items-start justify-between gap-3">
                 <div>

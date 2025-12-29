@@ -691,16 +691,16 @@ const CreateProduct: React.FC = () => {
     }
 
     return (
-        <>{loading ? <></> : <div className="min-h-screen bg-gray-50">
+        <>{loading ? <></> : <div className="min-h-screen">
             {/* Header */}
-            <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
-                <div className="bg-white h-full  flex items-center justify-between shadow-lg w-full px-5">
+            <div className={`z-100  w-full flex flex-col justify-center transition-all pt-4 mb-2!`}>
+                <div className=" h-full  flex items-center justify-between w-full px-2">
                     <div className="flex gap-1 items-center">
                         <Button
-                            className='border! border-gray-200!'
+                            className='border! border-gray-200! bg-white!'
                             type="text"
                             icon={<ArrowLeft size={20} />}
-                            onClick={onBack}
+                            onClick={() => router.push('/admin/product/list')}
                         />
                     </div>
                     {editMode}
@@ -715,7 +715,7 @@ const CreateProduct: React.FC = () => {
             </div>
 
             {/* Content */}
-            <div className="max-w-[1400px] mx-auto p-6">
+            <div className="max-w-[1400px] mx-auto p-2">
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
                     <Row gutter={24}>
                         {/* Left Column */}

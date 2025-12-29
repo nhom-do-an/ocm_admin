@@ -142,7 +142,7 @@ const ShipmentDetailView: React.FC = () => {
         {
             title: 'Sản phẩm',
             key: 'product',
-            width: '60%',
+            width: '50%',
             render: (_, record) => (
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 shrink-0 bg-gray-100 rounded-md overflow-hidden">
@@ -184,7 +184,7 @@ const ShipmentDetailView: React.FC = () => {
         {
             title: 'Thành tiền',
             key: 'total',
-            width: '10%',
+            width: '20%',
             align: 'right',
             render: (_, record) => formatCurrency((record.price || 0) * (record.quantity || 0)),
         },
@@ -251,16 +251,16 @@ const ShipmentDetailView: React.FC = () => {
             {loading ? <></> : (
                 <div className="min-h-screen">
                     {/* Header */}
-                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
-                        <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
+                    <div className={`pt-4 z-100 w-full flex flex-col justify-center transition-all`}>
+                        <div className="h-full flex items-center justify-between w-full px-2">
                             <div className="flex gap-1 items-center">
                                 <Button
-                                    className='!border !border-gray-200'
+                                    className='border! border-gray-200! bg-white!'
                                     type="text"
                                     icon={<ArrowLeft size={20} />}
-                                    onClick={() => router.back()}
+                                    onClick={() => router.push('/admin/shipment/list')}
                                 />
-                                <h2 className="text-xl font-semibold ml-3 text-center max-md:hidden">Chi tiết vận đơn</h2>
+                                <span className="text-xl font-medium ml-3 text-center max-md:hidden">Chi tiết vận đơn</span>
                             </div>
                             <div className='flex gap-2 overflow-wrap'>
                                 <Button
@@ -283,7 +283,7 @@ const ShipmentDetailView: React.FC = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="max-w-[1400px] mx-auto p-6">
+                    <div className="max-w-[1400px] mx-auto p-2">
                         <div className="mb-3">
                             <div className="flex items-center gap-2 mb-4 h-[60px]">
                                 <span className="text-2xl font-medium">{shipment.name || `#${shipment.id}`}</span>
@@ -299,32 +299,32 @@ const ShipmentDetailView: React.FC = () => {
                             {/* Left Column */}
                             <Col xs={24} lg={16}>
                                 {/* Mã vận đơn */}
-                                <Card className="!mb-2">
-                                    <div className="flex !items-center gap-2 mb-4 font-semibold text-lg">
+                                <Card className="mb-2!">
+                                    <div className="flex item-center! gap-2 mb-4 font-semibold text-lg">
                                         <label className="">Mã vận đơn: </label>
                                         <span className="">#{shipment.tracking_info?.tracking_number || shipment.name}</span>
                                     </div>
 
 
                                     {shipment.order_id &&
-                                        <div className="flex !items-center gap-2">
+                                        <div className="flex item-center! gap-2">
                                             <label className="text-sm text-gray-600">Đơn hàng: </label>
                                             <button
                                                 onClick={() => router.push(`/admin/order/${shipment.order_id}`)}
-                                                className="!text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
+                                                className="text-blue-600! hover:text-blue-800 font-medium cursor-pointer"
                                             >
                                                 #{shipment.order_id}
                                             </button>
                                         </div>
                                     }
                                     <div className="space-y-1">
-                                        <div className="flex !items-center gap-2">
+                                        <div className="flex item-center! gap-2">
                                             <label className="text-sm text-gray-600">Kho lấy hàng: </label>
                                             <span className="text-sm">
                                                 {formatLocationAddress()}
                                             </span>
                                         </div>
-                                        <div className="flex !items-center gap-2">
+                                        <div className="flex item-center! gap-2">
                                             <label className="text-sm text-gray-600">Người nhận: </label>
                                             <span className="text-sm">{formatRecipientInfo()}</span>
                                         </div>
@@ -333,7 +333,7 @@ const ShipmentDetailView: React.FC = () => {
 
                                 {/* Thông tin sản phẩm */}
                                 {shipment.line_items && shipment.line_items.length > 0 && (
-                                    <Card className="!mb-2">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Thông tin sản phẩm</h2>
                                         <div className="overflow-x-auto">
                                             <Table
@@ -348,7 +348,7 @@ const ShipmentDetailView: React.FC = () => {
                                 )}
 
                                 {/* Chi tiết trạng thái đơn giao hàng */}
-                                <Card className="!mb-2">
+                                <Card className="mb-2!">
                                     <h2 className="text-lg font-semibold mb-4">Chi tiết trạng thái đơn giao hàng</h2>
                                     {events.length > 0 ? (
                                         <div className="space-y-6">
@@ -401,7 +401,7 @@ const ShipmentDetailView: React.FC = () => {
                             {/* Right Column */}
                             <Col xs={24} lg={8}>
                                 {/* Thông tin phiếu giao hàng */}
-                                <Card className="!mb-2">
+                                <Card className="mb-2!">
                                     <h2 className="text-lg font-semibold mb-4">Thông tin phiếu giao hàng</h2>
 
                                     {/* Thông tin chung */}
@@ -418,7 +418,7 @@ const ShipmentDetailView: React.FC = () => {
                                     </div>
 
                                     {/* Thông tin gói hàng */}
-                                    <div className="mb-4 border-t pt-4">
+                                    <div className="mb-4 border-t pt-4 border-gray-100">
                                         <h3 className="text-sm font-semibold text-gray-900 mb-2">Thông tin gói hàng</h3>
                                         <div className="space-y-2">
                                             <div className="flex items-center gap-2">
@@ -437,7 +437,7 @@ const ShipmentDetailView: React.FC = () => {
                                     </div>
 
                                     {/* Thông tin thanh toán */}
-                                    <div className="border-t pt-4">
+                                    <div className="border-t pt-4 border-gray-100">
                                         <div className="flex items-center justify-between mb-2">
                                             <h3 className="text-sm font-semibold text-gray-900">Thông tin thanh toán</h3>
                                             <Button
@@ -467,7 +467,7 @@ const ShipmentDetailView: React.FC = () => {
                                 </Card>
 
                                 {/* Ghi chú */}
-                                <Card className="!mb-2">
+                                <Card className="mb-2!">
                                     <div className="flex items-center justify-between mb-4">
                                         <h2 className="text-lg font-semibold">Ghi chú</h2>
                                         <Button

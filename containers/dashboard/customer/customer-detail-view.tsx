@@ -9,6 +9,7 @@ import CustomerOrderCard from './components/CustomerOrderCard'
 import { useCustomerDetail } from './hooks/use-customer-detail'
 import EmptyState from '@/components/common/EmptyState'
 import NotFoundOrder from '@/resources/icons/not-found-order.svg'
+import Link from 'next/link'
 
 const currencyFormatter = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -87,13 +88,14 @@ const CustomerDetailView: React.FC = () => {
                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <Button
+                                    className="border! border-gray-200!! bg-white!"
                                     type="text"
                                     icon={<ArrowLeft size={20} />}
-                                    onClick={() => router.back()}
+                                    onClick={() => router.push('/admin/customer/list')}
                                 />
                                 <div>
                                     <div className="flex items-center gap-3 flex-wrap">
-                                        <h1 className="text-2xl font-semibold text-gray-900">{customerName}</h1>
+                                        <span className="text-2xl font-medium text-gray-900">{customerName}</span>
                                         <Tag color={statusTag.color}>{statusTag.text}</Tag>
                                     </div>
                                     <p className="text-sm text-gray-500 mt-1">ID khách hàng: #{customer.id}</p>
@@ -115,22 +117,25 @@ const CustomerDetailView: React.FC = () => {
                             </Space>
                         </div>
 
-                        <Card className="!rounded-2xl !border-gray-200 shadow-md">
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <Card className=" !border-gray-200! shadow-md">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                                 <div className="md:col-span-2">
-                                    <p className="text-sm text-gray-500">Đơn hàng gần nhất</p>
-                                    <p className="text-xl font-semibold text-gray-900 mt-2">{lastOrderName}</p>
+                                    <div className="flex gap-1">
+                                        <p className="text-sm text-gray-500">Đơn hàng gần nhất: </p>
+                                        <Link href={`/admin/order/${lastOrderName}`} className=" font-semibold">{lastOrderName}</Link>
+                                    </div>
+
                                     <p className="text-sm text-gray-500 mt-1">Cập nhật: {lastOrderAt}</p>
                                 </div>
-                                <div>
-                                    <p className="text-sm text-gray-500">Tổng chi tiêu</p>
-                                    <p className="text-2xl font-semibold text-gray-900 mt-2">
+                                <div className='flex gap-1 items-center'>
+                                    <p className="text-sm text-gray-500">Tổng chi tiêu:</p>
+                                    <p className=" font-semibold text-gray-900">
                                         {currencyFormatter.format(totalSpent)}
                                     </p>
                                 </div>
-                                <div>
-                                    <p className="text-sm text-gray-500">Chi tiêu trung bình</p>
-                                    <p className="text-2xl font-semibold text-gray-900 mt-2">
+                                <div className='flex gap-1 items-center'>
+                                    <p className="text-sm text-gray-500">Chi tiêu trung bình:</p>
+                                    <p className=" font-semibold text-gray-900">
                                         {currencyFormatter.format(averageSpent)}
                                     </p>
                                     <p className="text-xs text-gray-500 mt-1">{orderCount} đơn hàng</p>
@@ -142,13 +147,13 @@ const CustomerDetailView: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="lg:col-span-2 space-y-6">
                             <Card
-                                className="!rounded-2xl !border-gray-200 shadow-md h-full"
+                                className=" border-gray-200! shadow-md h-full"
                                 title="Đơn hàng gần đây"
                                 extra={
                                     <Space>
                                         <Button
                                             type="link"
-                                            className="!px-0"
+                                            className="px-0!"
                                             onClick={() => router.push(`/admin/order/list?customer_ids=${customer.id}`)}
                                         >
                                             Xem tất cả
@@ -161,7 +166,7 @@ const CustomerDetailView: React.FC = () => {
                                         <Spin />
                                     </div>
                                 ) : orders.length > 0 ? (
-                                    <div className="space-y-4">
+                                    <div className="space-y-2!">
                                         {orders.map(order => (
                                             <CustomerOrderCard key={order.id} order={order} />
                                         ))}
@@ -178,22 +183,21 @@ const CustomerDetailView: React.FC = () => {
                             </Card>
                         </div>
 
-                        <div className="space-y-6">
-                            <Card className="!rounded-2xl !border-gray-200 shadow-sm" title="Thông tin liên hệ">
-                                <div className="space-y-3 text-sm text-gray-700">
-                                    <div>
-                                        <p className="text-gray-500">Email</p>
+                        <div className="space-y-2!">
+                            <Card className=" border-gray-200! shadow-sm" title="Thông tin liên hệ">
+                                <div className=" text-sm text-gray-700">
+                                    <div className='flex gap-1'>
+                                        <p className="text-gray-500">Email: </p>
                                         <p className="font-medium">{customer.email || 'Chưa có email'}</p>
                                     </div>
-                                    <Divider className="my-2" />
-                                    <div>
-                                        <p className="text-gray-500">Số điện thoại</p>
+                                    <div className='flex gap-1'>
+                                        <p className="text-gray-500">Số điện thoại: </p>
                                         <p className="font-medium">{customer.phone || 'Chưa có số điện thoại'}</p>
                                     </div>
                                 </div>
                             </Card>
 
-                            <Card className="!rounded-2xl !border-gray-200 shadow-sm" title="Địa chỉ mặc định">
+                            <Card className=" !border-gray-200! shadow-sm" title="Địa chỉ mặc định">
                                 {customer.default_address ? (
                                     <div className="space-y-2 text-sm text-gray-700">
                                         <p className="font-semibold">
@@ -225,8 +229,8 @@ const CustomerDetailView: React.FC = () => {
                                 )}
                             </Card>
 
-                            <Card className="!rounded-2xl !border-gray-200 shadow-sm" title="Ghi chú">
-                                <p className="text-sm text-gray-700 min-h-[80px]">
+                            <Card className=" border-gray-200! shadow-sm" title="Ghi chú">
+                                <p className="text-sm text-gray-700">
                                     {customer.note || 'Chưa có ghi chú cho khách hàng này.'}
                                 </p>
                             </Card>

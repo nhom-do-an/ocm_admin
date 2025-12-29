@@ -14,7 +14,6 @@ import EmptyState from '@/components/common/EmptyState'
 import ColumnSettingsModal from './components/ColumnSettingsModal'
 import {
     EOrderStatus,
-    EFulfillmentOrderStatus,
 } from '@/types/enums/enum'
 
 const { RangePicker } = DatePicker
@@ -373,7 +372,7 @@ const OrderListView: React.FC = () => {
             <div className="flex-1 overflow-hidden px-6 pb-6">
                 <div className="bg-white shadow-sm rounded-lg h-full flex flex-col">
                     {/* Status Tabs */}
-                    <div className="mb-3">
+                    <div className="mb-3 px-3">
                         <Tabs
                             activeKey={activeTabKey}
                             items={statusTabs.map(tab => ({

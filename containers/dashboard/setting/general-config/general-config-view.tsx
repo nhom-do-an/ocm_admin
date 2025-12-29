@@ -3,15 +3,12 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Form, Input, Button, Select, Upload, message, UploadFile } from 'antd'
 import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
-import { Upload as UploadIcon, Plus } from 'lucide-react'
+import { Upload as Plus } from 'lucide-react'
 import useGeneralConfig from './hooks/use-general-config'
 import { UpdateStoreRequest, UploadStoreLogoRequest } from '@/types/request/store'
 import attachmentService from '@/services/attachment'
-import { Attachment } from '@/types/response/collection'
 import regionService from '@/services/region'
 import { OldRegion } from '@/types/response/old-region'
-import { ERegionType } from '@/types/enums/enum'
-import Image from 'next/image'
 import Loader from '@/components/Loader'
 
 const GeneralConfigView: React.FC = () => {
@@ -24,8 +21,8 @@ const GeneralConfigView: React.FC = () => {
     const [loadingProvinces, setLoadingProvinces] = useState(false)
     const [loadingDistricts, setLoadingDistricts] = useState(false)
     const [loadingWards, setLoadingWards] = useState(false)
-    const [selectedProvinceCode, setSelectedProvinceCode] = useState<string | undefined>()
-    const [selectedDistrictCode, setSelectedDistrictCode] = useState<string | undefined>()
+    const [selectedProvinceCode, setSelectedProvinceCode] = useState<string | undefined>(store?.province_id ? '' : undefined)
+    const [selectedDistrictCode, setSelectedDistrictCode] = useState<string | undefined>(store?.district_id ? '' : undefined)
 
     useEffect(() => {
         if (store) {
@@ -313,6 +310,7 @@ const GeneralConfigView: React.FC = () => {
                             onChange={handleDistrictChange}
                             allowClear
                             showSearch
+                            defaultValue={store?.district_id}
                             disabled={!selectedProvinceCode}
                             filterOption={(input, option) =>
                                 (option?.children as string)?.toLowerCase().includes(input.toLowerCase())
@@ -335,6 +333,7 @@ const GeneralConfigView: React.FC = () => {
                             placeholder="Chọn xã phường"
                             loading={loadingWards}
                             allowClear
+                            defaultValue={store?.ward_id || ''}
                             showSearch
                             disabled={!selectedDistrictCode}
                             filterOption={(input, option) =>

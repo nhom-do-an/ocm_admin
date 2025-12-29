@@ -17,6 +17,8 @@ export interface StoreDetail {
     ward_name?: string
     province_id?: number
     ward_id?: number
+    district_name?: string
+    district_id?: number
     created_at: string
     updated_at: string
 }

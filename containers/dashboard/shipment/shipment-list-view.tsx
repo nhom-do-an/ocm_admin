@@ -1,6 +1,6 @@
 'use client'
-import React, { useState } from 'react'
-import { Table, Button, Input, Select, Space, DatePicker, Tag, Tabs } from 'antd'
+import React from 'react'
+import { Table, Button, Input, Select, DatePicker, Tag, Tabs } from 'antd'
 import { Search, X } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
 import { useShipmentList } from './hooks/use-shipment-list'
@@ -26,11 +26,9 @@ const ShipmentListView: React.FC = () => {
     const {
         shipments,
         loading,
-        selectedRowKeys,
         pagination,
         filters,
         locations,
-        onSelectChange,
         handleTableChange,
         handleFilterChange,
         handleMultipleFilterChange,
@@ -164,12 +162,6 @@ const ShipmentListView: React.FC = () => {
             },
         },
     ]
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-    }
-
     const dateRangeValue: [dayjs.Dayjs, dayjs.Dayjs] | null = filters.min_created_at && filters.max_created_at
         ? [dayjs(filters.min_created_at, 'DD/MM/YYYY'), dayjs(filters.max_created_at, 'DD/MM/YYYY')]
         : null
@@ -189,7 +181,7 @@ const ShipmentListView: React.FC = () => {
             <div className="flex-1 overflow-hidden px-6 pb-6">
                 <div className="bg-white shadow-sm rounded-lg h-full flex flex-col">
                     {/* Status Tabs */}
-                    <div className="mb-3">
+                    <div className="mb-3 px-5">
                         <Tabs
                             activeKey={activeTabKey}
                             items={statusTabs.map(tab => ({
@@ -326,7 +318,6 @@ const ShipmentListView: React.FC = () => {
                     <div className="flex-1 overflow-y-scroll">
                         <Table
                             size="small"
-                            rowSelection={rowSelection}
                             columns={columns}
                             dataSource={shipments}
                             loading={loading}

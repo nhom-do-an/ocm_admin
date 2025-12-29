@@ -13,7 +13,6 @@ import {
     EFulfillmentOrderStatus,
     EFulfillmentShipmentStatus,
     EFinancialStatus,
-    EFulfillmentStatus,
 } from '@/types/enums/enum'
 import { Location } from '@/types/response/locations'
 
@@ -122,7 +121,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
 
     const filteredVariants = variants.filter(v =>
         !variantSearchKey ||
-        v.name?.toLowerCase().includes(variantSearchKey.toLowerCase()) ||
+        v.product_name?.toLowerCase().includes(variantSearchKey.toLowerCase()) ||
         v.sku?.toLowerCase().includes(variantSearchKey.toLowerCase()) ||
         v.product_name?.toLowerCase().includes(variantSearchKey.toLowerCase())
     )
@@ -226,7 +225,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                         value={filters.variant_ids}
                         onChange={(value) => setFilters({ ...filters, variant_ids: value })}
                         options={filteredVariants.map(variant => ({
-                            label: variant.name || variant.sku || variant.product_name || `Sản phẩm #${variant.id}`,
+                            label: variant.product_name || variant.sku || variant.product_name || `Sản phẩm #${variant.id}`,
                             value: variant.id
                         }))}
                         allowClear
@@ -253,7 +252,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
             ),
         },
         {
-            key: 'order_status',
+            key: 'status',
             label: 'Trạng thái đơn hàng',
             content: (
                 <Select
@@ -273,7 +272,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
             ),
         },
         {
-            key: 'processing_status',
+            key: 'fulfillment_status',
             label: 'Trạng thái xử lý',
             content: (
                 <Select
@@ -291,24 +290,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                 />
             ),
         },
-        {
-            key: 'packaging_status',
-            label: 'Trạng thái đóng gói',
-            content: (
-                <Select
-                    mode="multiple"
-                    placeholder="Chọn trạng thái"
-                    className="w-full"
-                    value={filters.fulfillment_statuses}
-                    onChange={(value) => setFilters({ ...filters, fulfillment_statuses: value })}
-                    options={[
-                        { label: 'Đã đóng gói', value: EFulfillmentStatus.SUCCESS },
-                        { label: 'Chưa đóng gói', value: EFulfillmentOrderStatus.PENDING },
-                    ]}
-                    allowClear
-                />
-            ),
-        },
+
         {
             key: 'delivery_status',
             label: 'Trạng thái giao hàng',
@@ -335,7 +317,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
             ),
         },
         {
-            key: 'payment_status',
+            key: 'financial_status',
             label: 'Trạng thái thanh toán',
             content: (
                 <Select
@@ -436,7 +418,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                             {option.content}
                         </div>
                     ),
-                    className: '!bg-transparent !border-b !border-gray-300',
+                    className: '!bg-transparent !border-b !border-gray-100',
                 }))}
             />
         </Drawer>

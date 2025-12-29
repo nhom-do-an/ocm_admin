@@ -40,7 +40,6 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
     order,
     shipments,
     shipmentsLoading,
-    fulfillmentStatus,
     onOpenLineItemNoteModal,
     formatCurrency,
     formatDate,
@@ -205,7 +204,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
         {
             title: 'Sản phẩm',
             key: 'product',
-            width: '60%',
+            width: '50%',
             render: (_, record) => (
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 shrink-0 bg-gray-100 rounded-md overflow-hidden">
@@ -254,7 +253,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
         {
             title: 'Thành tiền',
             key: 'total',
-            width: '10%',
+            width: '20%',
             align: 'right',
             render: (_, record) => formatCurrency((record.price || 0) * (record.quantity || 0)),
         },
@@ -405,7 +404,7 @@ const OrderLineItemsView: React.FC<OrderLineItemsViewProps> = ({
                 }
 
                 return (
-                    <Card key={groupIndex} className="!mb-4">
+                    <Card key={groupIndex} className="mb-2!">
                         {/* Header với thông tin shipment nếu có external_shipper */}
                         {isExternalShipper && shipment && (
                             <div className="mb-4 space-y-2 pb-4 border-b border-gray-200">

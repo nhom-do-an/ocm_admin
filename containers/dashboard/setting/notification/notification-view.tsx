@@ -1,11 +1,12 @@
 'use client'
 
 import React from 'react'
-import { Card, Switch, message } from 'antd'
+import { Card, Switch } from 'antd'
 import { useRouter } from 'next/navigation'
 import useNotificationTemplates from './hooks/use-notification-templates'
 import { NotificationTemplate, NotificationCategory } from '@/types/response/notification'
 import Loader from '@/components/Loader'
+import Link from 'next/link'
 
 const NotificationView: React.FC = () => {
     const { templates, loading, updating, updateTemplateActive, groupTemplatesByCategory, getCategoryLabel } = useNotificationTemplates()
@@ -38,7 +39,7 @@ const NotificationView: React.FC = () => {
         <div className="max-w-[1000px] mx-auto px-5 pb-10">
             <div className="mb-6">
                 <h1 className="text-2xl font-semibold text-gray-900">Thông báo</h1>
-                <p className="text-sm text-gray-500 mt-1">Quản lý mẫu thông báo và in</p>
+                <p className="text-sm text-gray-500">Quản lý mẫu thông báo và in</p>
             </div>
 
             <Card>
@@ -55,24 +56,23 @@ const NotificationView: React.FC = () => {
                     return (
                         <div key={category} className="mb-8 last:mb-0">
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">{getCategoryLabel(category)}</h2>
-                            <div className="space-y-3">
+                            <div className="space-y-1!">
                                 {categoryTemplates.map(template => (
                                     <Card
                                         key={template.id}
                                         className="hover:shadow-md transition-shadow"
                                     >
                                         <div className="flex items-start justify-between">
-                                            <div className="flex-1">
-                                                <div className="mb-2">
-                                                    <button
-                                                        onClick={() => handleTemplateClick(template.id)}
-                                                        className="text-blue-600 hover:text-blue-800 font-medium text-base"
-                                                    >
-                                                        {template.name}
-                                                    </button>
-                                                </div>
+                                            <div className="flex-1 flex flex-col">
+                                                <Link
+                                                    href={`/admin/notification/${template.id}`}
+                                                    className="text-blue-400 hover:text-blue-800 font-semibold cursor-pointer"
+                                                >
+                                                    {template.name}
+                                                </Link>
+
                                                 {template.description && (
-                                                    <p className="text-sm text-gray-600">{template.description}</p>
+                                                    <span className="text-sm text-gray-600">{template.description}</span>
                                                 )}
                                             </div>
                                             <div className="ml-4 shrink-0">

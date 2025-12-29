@@ -16,7 +16,6 @@ import {
     Modal,
     Upload,
     Select,
-    UploadFile,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
@@ -259,12 +258,12 @@ const VariantDetailView: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:w-full! max-sm:left-0`}>
-                <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
+        <div className="min-h-screen">
+            <div className={` z-100 w-full flex flex-col justify-center transition-all pt-6`}>
+                <div className=" h-full flex items-center justify-between w-full px-2">
                     <div className="flex items-center gap-2">
                         <Button
-                            className="border! border-gray-200!"
+                            className="border! border-gray-200! bg-white!"
                             type="text"
                             icon={<ArrowLeft size={20} />}
                             onClick={goBackToProduct}
@@ -286,7 +285,6 @@ const VariantDetailView: React.FC = () => {
                         )}
                         <Button
                             type="primary"
-                            size="large"
                             onClick={() => form.submit()}
                             loading={saving}
                             disabled={!variant}
@@ -297,13 +295,13 @@ const VariantDetailView: React.FC = () => {
                 </div>
             </div>
 
-            <div className="max-w-[1400px] mx-auto p-6 pt-24">
+            <div className="max-w-[1400px] mx-auto p-2 pt-6">
                 <Form
                     form={form}
                     layout="vertical"
                     onFinish={onSubmit}
                 >
-                    <Row gutter={24}>
+                    <Row gutter={24} className='space-y-2!'>
                         <Col xs={24} lg={7}>
                             <Space direction="vertical" className="w-full">
                                 <Card>
@@ -505,7 +503,7 @@ const VariantDetailView: React.FC = () => {
                                                 </h3>
                                                 {variant?.id && (
                                                     <Link
-                                                        href={`/inventory/history?variant_id=${variant.id}`}
+                                                        href={`/admin/inventory/history?variant_id=${variant.id}`}
                                                         className="text-sm text-blue-600 hover:text-blue-700"
                                                     >
                                                         Xem lịch sử thay đổi kho

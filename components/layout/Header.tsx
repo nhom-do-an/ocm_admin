@@ -205,7 +205,7 @@ function Header() {
         <div className='h-[55px] border-b drop-shadow-sm w-full bg-(--header) border-(--header-border) flex items-center px-5 font-medium text-lg justify-between'
         >
             <div className='flex gap-1 items-center'>
-                <div className="sm:hidden" onClick={() => setOpenSidebar(true)}>
+                <div className="md:hidden cursor-pointer" onClick={() => setOpenSidebar(true)}>
                     <Menu />
                 </div>
                 <Dropdown

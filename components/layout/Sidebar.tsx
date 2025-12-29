@@ -131,7 +131,7 @@ export default function Sidebar(props: Props) {
                         onClick={onSettingOpen}
                         items={[
                             {
-                                key: '/settings',
+                                key: '/admin/settings',
                                 icon: <Settings size={20} />,
                                 label: t('settings.label'),
                             },

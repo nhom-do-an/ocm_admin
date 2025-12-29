@@ -17,7 +17,6 @@ import { ArrowLeft, Search, Trash2, X } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
 import { useCreateOrder } from './hooks/use-create-order'
 import { useRouter } from 'next/navigation'
-import { useGlobalContext } from '@/hooks/useGlobalContext'
 import EmptyState from '@/components/common/EmptyState'
 import NotFoundOrder from '@/resources/icons/not-found-order.svg'
 import VariantCard from './components/VariantCard'
@@ -73,7 +72,6 @@ interface FormValues {
 }
 
 const CreateOrder: React.FC = () => {
-    const { collapsed } = useGlobalContext()
     const {
         sources,
         loading,
@@ -467,7 +465,9 @@ const CreateOrder: React.FC = () => {
         }
 
         if (products.length === 0) {
-            console.error('Vui lòng thêm ít nhất một sản phẩm')
+            notification.error({
+                message: 'Vui lòng thêm sản phẩm trước khi tạo đơn hàng',
+            })
             return
         }
 
@@ -576,10 +576,6 @@ const CreateOrder: React.FC = () => {
         } finally {
             setSubmitting(false)
         }
-    }
-
-    const onBack = () => {
-        router.back()
     }
 
     const handleVariantInputFocus = () => {
@@ -804,16 +800,16 @@ const CreateOrder: React.FC = () => {
             {loading ? <></> : (
                 <div className="min-h-screen">
                     {/* Header */}
-                    <div className={`bg-white h-[65px] z-100 fixed top-0 left-0 w-full flex flex-col justify-center ${collapsed ? 'w-[calc(100%-80px)]! left-20' : 'w-[calc(100%-256px)]! left-64'} transition-all max-sm:!w-full max-sm:left-0`}>
-                        <div className="bg-white h-full flex items-center justify-between shadow-lg w-full px-5">
-                            <div className="flex gap-1 items-center">
+                    <div className={`z-100 w-full flex flex-col justify-center transition-all pt-4 mb-4`}>
+                        <div className="h-full flex items-center justify-between w-full px-2">
+                            <div className="flex gap-1 items-center rounded-[10px]">
                                 <Button
-                                    className='!border !border-gray-200'
+                                    className='border! border-gray-200! bg-white!'
                                     type="text"
                                     icon={<ArrowLeft size={20} />}
-                                    onClick={onBack}
+                                    onClick={() => router.push('/admin/order/list')}
                                 />
-                                <h2 className="text-xl font-semibold ml-3 text-center">Tạo đơn hàng</h2>
+                                <span className="text-xl font-medium ml-3 text-center">Tạo đơn hàng</span>
                             </div>
                             <Space>
 
@@ -831,7 +827,7 @@ const CreateOrder: React.FC = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="max-w-[1400px] mx-auto p-6">
+                    <div className="max-w-[1400px] mx-auto p-2">
                         <Form form={form} layout="vertical" onFinish={handleSubmit}>
                             <Form.Item name="customer_id" hidden>
                                 <Input type="hidden" />
@@ -842,11 +838,11 @@ const CreateOrder: React.FC = () => {
                             <Form.Item name="billing_address" hidden>
                                 <Input type="hidden" />
                             </Form.Item>
-                            <Row gutter={24}>
+                            <Row gutter={22}>
                                 {/* Left Column */}
                                 <Col xs={24} lg={16}>
                                     {/* Sản phẩm */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <div className="flex items-center justify-between">
                                             <h2 className="text-lg font-semibold">Sản phẩm</h2>
                                         </div>
@@ -899,17 +895,17 @@ const CreateOrder: React.FC = () => {
                                     </Card>
 
                                     {/* Thanh toán */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Thanh toán</h2>
 
                                         <div className="space-y-4">
                                             <div className="space-y-3">
-                                                <div className="flex justify-between text-base">
+                                                <div className="flex justify-between">
                                                     <span>Tổng tiền hàng</span>
                                                     <span className="font-medium">{totalAmount.toLocaleString('vi-VN')}₫</span>
                                                 </div>
 
-                                                <div className="flex justify-between items-center text-base">
+                                                <div className="flex justify-between items-center">
                                                     <span>Phí giao hàng</span>
                                                     <InputNumber
                                                         min={0}
@@ -924,13 +920,13 @@ const CreateOrder: React.FC = () => {
                                                     />
                                                 </div>
 
-                                                <div className="flex justify-between items-center text-lg font-semibold pt-3 border-t border-gray-300">
+                                                <div className="flex justify-between items-center font-semibold pt-3 border-t border-gray-300">
                                                     <span>Thành tiền</span>
                                                     <span className="w-24 text-right">{finalAmount.toLocaleString('vi-VN')}₫</span>
                                                 </div>
                                             </div>
 
-                                            <div className="border-t pt-4 space-y-3 border-gray-300  ">
+                                            <div className="border-t pt-4 space-y-3 border-gray-100  ">
                                                 <div>
                                                     <span className="text-sm font-semibold text-gray-800 mr-4">Trạng thái thanh toán</span>
                                                     <Radio.Group
@@ -994,7 +990,7 @@ const CreateOrder: React.FC = () => {
                                     </Card>
 
                                     {/* Giao hàng */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Giao hàng</h2>
                                         <div className="space-y-4">
                                             <div>
@@ -1039,7 +1035,7 @@ const CreateOrder: React.FC = () => {
                                                                             type="link"
                                                                             size="small"
                                                                             onClick={() => setAddDeliveryProviderModalOpen(true)}
-                                                                            className="!px-0"
+                                                                            className="px-0!"
                                                                         >
                                                                             Thêm mới
                                                                         </Button>
@@ -1170,7 +1166,7 @@ const CreateOrder: React.FC = () => {
                                 {/* Right Column */}
                                 <Col xs={24} lg={8}>
                                     {/* Nguồn đơn */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Nguồn đơn</h2>
                                         <Form.Item name="source_id">
                                             <Select
@@ -1187,7 +1183,7 @@ const CreateOrder: React.FC = () => {
                                     </Card>
 
                                     {/* Khách hàng */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Khách hàng</h2>
                                         <div className="relative mb-4 customer-dropdown-container">
                                             <Input
@@ -1242,7 +1238,7 @@ const CreateOrder: React.FC = () => {
                                                                 size="small"
                                                                 onClick={handleViewLastOrder}
                                                                 disabled={!selectedCustomer.last_order_id}
-                                                                className="!px-0"
+                                                                className="px-0!"
                                                             >
                                                                 Đơn gần nhất: {selectedCustomer.last_order_name || '---'}
                                                             </Button>
@@ -1251,7 +1247,7 @@ const CreateOrder: React.FC = () => {
                                                             type="text"
                                                             icon={<X size={16} />}
                                                             onClick={handleRemoveCustomer}
-                                                            className="!text-gray-500"
+                                                            className="text-gray-500!"
                                                         />
                                                     </div>
                                                 </div>
@@ -1297,7 +1293,7 @@ const CreateOrder: React.FC = () => {
                                                 <Button
                                                     type="link"
                                                     size="small"
-                                                    className="!px-0"
+                                                    className="px-0!"
                                                     onClick={() => setShowBillingAddress(prev => !prev)}
                                                 >
                                                     {showBillingAddress ? 'Ẩn địa chỉ thanh toán' : 'Xem địa chỉ thanh toán'}
@@ -1309,7 +1305,7 @@ const CreateOrder: React.FC = () => {
                                     </Card>
 
                                     {/* Ghi chú */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Ghi chú</h2>
                                         <Form.Item name="note">
                                             <TextArea
@@ -1320,7 +1316,7 @@ const CreateOrder: React.FC = () => {
                                     </Card>
 
                                     {/* Thông tin bổ sung */}
-                                    <Card className="!mb-4">
+                                    <Card className="mb-2!">
                                         <h2 className="text-lg font-semibold mb-4">Thông tin bổ sung</h2>
 
                                         <Form.Item

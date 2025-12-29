@@ -249,13 +249,14 @@ const CreateCustomerView: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <Button
+                                    className='border! border-gray-200! bg-white!'
                                     type="text"
                                     icon={<ArrowLeft size={20} />}
-                                    onClick={() => router.back()}
+                                    onClick={() => router.push("/admin/customer/list")}
                                 />
-                                <h1 className="text-2xl font-semibold!">
+                                <span className="text-2xl font-medium!">
                                     {editMode ? 'Chi tiết khách hàng' : 'Thêm mới khách hàng'}
-                                </h1>
+                                </span>
                             </div>
                             <Button
                                 type="primary"
@@ -270,7 +271,7 @@ const CreateCustomerView: React.FC = () => {
                     </div>
 
                     {/* Form Content */}
-                    <div className="flex-1 overflow-y-auto min-h-0">
+                    <div className="flex-1 overflow-y-auto min-h-0 mb-2!">
                         <Form
                             form={form}
                             layout="vertical"
@@ -280,9 +281,9 @@ const CreateCustomerView: React.FC = () => {
                                 gender: 'male',
                             }}
                         >
-                            <div className="grid grid-cols-1 lg:grid-cols-10 gap-4">
+                            <div className="grid grid-cols-1 lg:grid-cols-10 gap-2">
                                 {/* Left Column - Customer Information (8/10) */}
-                                <div className="lg:col-span-7 space-y-4">
+                                <div className="lg:col-span-7 space-y-2!">
                                     {/* Basic Information */}
                                     <Card title="Thông tin cơ bản">
                                         <div className="grid grid-cols-2 gap-4">
@@ -462,7 +463,7 @@ const CreateCustomerView: React.FC = () => {
                     </div>
 
                     {/* Bottom Save Button */}
-                    <div className="shrink-0 pt-4 border-t flex justify-end">
+                    <div className="shrink-0 pt-4 border-t border-gray-200! flex justify-end">
                         <Button
                             type="primary"
                             size="large"
