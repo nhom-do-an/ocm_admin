@@ -16,7 +16,7 @@ import {
     Tag,
     Tooltip,
 } from 'antd'
-import type { RcCustomRequestOptions } from 'rc-upload/lib/interface'
+import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import { ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import TinyEditor from '@/components/TinyEditor'
 import { Attachment, Collection } from '@/types/response/collection'
@@ -123,7 +123,7 @@ const CreateCollectionView: React.FC = () => {
         }
     }
 
-    const handleUpload = async (options: RcCustomRequestOptions) => {
+    const handleUpload = async (options: UploadRequestOption) => {
         const { file, onSuccess, onError } = options
         try {
             const formData = new FormData()
@@ -137,16 +137,16 @@ const CreateCollectionView: React.FC = () => {
             setImages([uploadedFile])
             setFileList([
                 {
-                    uid: file.uid,
+                    uid: String(Date.now()),
                     name: uploadedFile.filename,
                     status: 'done',
                     url: uploadedFile.url,
                 },
             ])
-            onSuccess(uploadedFile)
+            onSuccess?.(uploadedFile)
         } catch (err) {
             notification.error({ message: 'Upload file thất bại' })
-            onError(err)
+            onError?.(err as any)
         }
     }
 

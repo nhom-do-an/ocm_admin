@@ -150,9 +150,12 @@ export const useCreateCustomer = () => {
             router.push('/admin/customer/list')
         } catch (error: unknown) {
             console.error('Error saving customer:', error)
+            const errorMessage = error && typeof error === 'object' && 'response' in error
+                ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message
+                : undefined
             notification.error({
                 message: 'Lỗi',
-                description: error?.response?.data?.message || 'Không thể lưu khách hàng'
+                description: errorMessage || 'Không thể lưu khách hàng'
             })
             throw error
         } finally {

@@ -18,7 +18,7 @@ import {
     Select,
 } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
+import type { UploadProps } from 'antd'
 import { ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import dayjs from 'dayjs'
 import Image from 'next/image'
@@ -205,7 +205,7 @@ const VariantDetailView: React.FC = () => {
         setSelectedImage(variant.image || null)
     }, [variant, form])
 
-    const handleUpload = async (options: RcCustomRequestOptions) => {
+    const handleUpload = async (options: Parameters<NonNullable<UploadProps['customRequest']>>[0]) => {
         const { file, onSuccess, onError } = options
         setUploading(true)
         try {
@@ -215,9 +215,9 @@ const VariantDetailView: React.FC = () => {
             const uploaded = await attachmentService.uploadAttachment(formData)
             const image = uploaded[0]
             setSelectedImage(image)
-            onSuccess(uploaded)
+            onSuccess?.(uploaded)
         } catch (err) {
-            onError(err)
+            onError?.(err as Error)
         } finally {
             setUploading(false)
         }

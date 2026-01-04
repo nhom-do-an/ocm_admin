@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from 'react'
 import { Card, Form, Input, Button, Select, Upload, message, UploadFile } from 'antd'
-import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
+import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import { Upload as Plus } from 'lucide-react'
 import useGeneralConfig from './hooks/use-general-config'
-import { UpdateStoreRequest, UploadStoreLogoRequest } from '@/types/request/store'
+import { UpdateStoreRequest } from '@/types/request/store'
 import attachmentService from '@/services/attachment'
 import regionService from '@/services/region'
 import { OldRegion } from '@/types/response/old-region'
@@ -121,7 +121,7 @@ const GeneralConfigView: React.FC = () => {
         }
     }
 
-    const handleUpload = async (options: RcCustomRequestOptions) => {
+    const handleUpload = async (options: UploadRequestOption) => {
         const { file, onSuccess, onError } = options
         try {
             const formData = new FormData()
@@ -133,7 +133,7 @@ const GeneralConfigView: React.FC = () => {
 
             setFileList([
                 {
-                    uid: file.uid,
+                    uid: Date.now().toString(),
                     name: uploadedFile.filename,
                     status: 'done',
                     url: uploadedFile.url,
@@ -143,10 +143,10 @@ const GeneralConfigView: React.FC = () => {
             // Upload logo to store
             await uploadLogo({ attachment_id: uploadedFile.id })
 
-            onSuccess(uploadedFile)
+            onSuccess?.(uploadedFile)
         } catch (err) {
             message.error('Upload logo thất bại')
-            onError(err)
+            onError?.(err as Error)
         }
     }
 

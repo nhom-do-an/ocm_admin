@@ -18,7 +18,7 @@ import {
     Col,
     UploadFile,
 } from 'antd'
-import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
+import type { UploadProps } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Plus, Trash2, Info, ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
@@ -595,7 +595,7 @@ const CreateProduct: React.FC = () => {
         })))
     }
 
-    const handleUpload = async (options: RcCustomRequestOptions) => {
+    const handleUpload = async (options: Parameters<NonNullable<UploadProps['customRequest']>>[0]) => {
         console.log("upload::", options);
         const { file, onSuccess, onError } = options;
         try {
