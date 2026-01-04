@@ -143,6 +143,11 @@ export const API = {
             GET_TRENDING_PREDICTIONS: '/admin/ai/trending/predictions',
         },
     },
+
+    AI: {
+        GET_TRENDING: '/ai/trending',
+        GET_TRENDING_PREDICTIONS: '/admin/ai/trending/predictions',
+    },
     REPORT: {
         GET_REVENUE_BY_DATE: '/admin/revenue/by-date',
         GET_REVENUE_BY_LOCATION: '/admin/revenue/by-location',

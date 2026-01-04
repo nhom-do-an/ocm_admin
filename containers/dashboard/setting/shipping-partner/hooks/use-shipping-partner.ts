@@ -7,7 +7,7 @@ import { DeliveryProviderStatus, DeliveryProviderType } from '@/types/enums/enum
 import { CreateDeliveryProviderRequest, GetListDeliveryProvidersRequest } from '@/types/request/delivery-provider'
 import { useGlobalNotification } from '@/hooks/useNotification'
 
-interface Filters extends Pick<GetListDeliveryProvidersRequest, 'status' | 'key'> {}
+interface Filters extends Pick<GetListDeliveryProvidersRequest, 'status' | 'key'> { }
 
 export const useShippingPartner = () => {
     const [providers, setProviders] = useState<DeliveryProvider[]>([])
@@ -42,7 +42,7 @@ export const useShippingPartner = () => {
             }))
         } catch (error) {
             console.error('Error fetching delivery providers:', error)
-            notification.error('Không thể tải danh sách đối tác vận chuyển')
+            notification.error({ message: 'Không thể tải danh sách đối tác vận chuyển' })
         } finally {
             setLoading(false)
         }
@@ -63,12 +63,12 @@ export const useShippingPartner = () => {
                 status: (data.status as DeliveryProviderStatus) || DeliveryProviderStatus.Active,
                 type: (data.type as DeliveryProviderType) || DeliveryProviderType.ExternalShipper,
             })
-            notification.success('Thêm đối tác vận chuyển thành công')
+            notification.success({ message: 'Thêm đối tác vận chuyển thành công' })
             setModalOpen(false)
             fetchProviders()
         } catch (error) {
             console.error('Error creating delivery provider:', error)
-            notification.error('Không thể thêm đối tác vận chuyển')
+            notification.error({ message: 'Không thể thêm đối tác vận chuyển' })
             throw error
         }
     }
@@ -76,13 +76,13 @@ export const useShippingPartner = () => {
     const handleUpdate = async (id: number, data: CreateDeliveryProviderRequest) => {
         try {
             await deliveryProviderService.updateDeliveryProvider(id, data)
-            notification.success('Cập nhật đối tác vận chuyển thành công')
+            notification.success({ message: 'Cập nhật đối tác vận chuyển thành công' })
             setModalOpen(false)
             setEditingProvider(null)
             fetchProviders()
         } catch (error) {
             console.error('Error updating delivery provider:', error)
-            notification.error('Không thể cập nhật đối tác vận chuyển')
+            notification.error({ message: 'Không thể cập nhật đối tác vận chuyển' })
             throw error
         }
     }

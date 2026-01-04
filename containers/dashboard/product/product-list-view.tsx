@@ -388,7 +388,11 @@ const ProductListView: React.FC = () => {
                                 position: ['bottomCenter'],
                                 pageSizeOptions: ['10', '20', '50', '100'],
                             }}
-                            onChange={handleTableChange}
+                            onChange={(pagination, filters, sorter, extra) => handleTableChange({
+                                ...pagination,
+                                current: pagination.current ?? 1,
+                                pageSize: pagination.pageSize ?? 10,
+                            })}
                             scroll={{ x: 'max-content', y: 410 }}
                             sticky
                             locale={{

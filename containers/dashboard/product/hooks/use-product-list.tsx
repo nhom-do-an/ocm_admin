@@ -276,7 +276,6 @@ export const useProductList = () => {
     useEffect(() => {
         if (!initialized) return
         fetchProducts()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialized, pagination.current, pagination.pageSize, filters])
 
     return {

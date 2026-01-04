@@ -19,6 +19,7 @@ import {
     UploadFile,
 } from 'antd'
 import type { RcCustomRequestOptions } from 'antd/es/upload/interface'
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Plus, Trash2, Info, ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
 import TinyEditor from '@/components/TinyEditor'
@@ -416,7 +417,7 @@ const CreateProduct: React.FC = () => {
                     vendor: product.vendor || undefined,
                     product_type: product.product_type || undefined,
                     tags: product.tags || [],
-                    collections: product.collections.map(col => col.id)
+                    collections: product.collections.map(col => col.id).filter((id): id is number => id !== undefined)
 
                 })
                 setAttributes(product.attributes || [])
@@ -566,7 +567,7 @@ const CreateProduct: React.FC = () => {
         }
     }
 
-    const handleSelectPublication = (e: React.ChangeEvent<HTMLInputElement>, pub: TPublicationResponse) => {
+    const handleSelectPublication = (e: CheckboxChangeEvent, pub: TPublicationResponse) => {
         if (e.target.checked) {
             setSelectedPublications(prev => [...prev, pub])
         } else {
@@ -602,7 +603,7 @@ const CreateProduct: React.FC = () => {
             formData.append('file', file);
             formData.append('category', 'product');
 
-            const uploaded = await attachmentService.uploadAttachment(formData);
+            const uploaded = await attachmentService.uploadAttachment(formData) as Attachment | Attachment[];
 
             // ✅ Cập nhật URL hiển thị trong fileList
             setFileList((prev) =>
@@ -621,10 +622,10 @@ const CreateProduct: React.FC = () => {
                 return [...prev, uploaded];
             });
 
-            onSuccess(uploaded);
+            onSuccess?.(uploaded);
         } catch (err) {
             notification.error({ message: 'Upload file thất bại' });
-            onError(err);
+            onError?.(err as Error);
         }
     };
 

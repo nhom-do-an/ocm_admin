@@ -54,7 +54,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                     dayjs(initialFilters.min_created_at, 'DD/MM/YYYY'),
                     dayjs(initialFilters.max_created_at, 'DD/MM/YYYY')
                 ]
-                parsedFilters.dateRange = dateRange as [dayjs.Dayjs, dayjs.Dayjs] | null
+                parsedFilters.dateRange = dateRange as [dayjs.Dayjs, dayjs.Dayjs]
             }
 
             setFilters(parsedFilters)
@@ -168,7 +168,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                         value={filters.min_price}
                         onChange={(value) => setFilters({ ...filters, min_price: value || undefined })}
                         formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+                        // parser={value => value!.replace(/\$\s?|(,*)/g, '')}
                         min={0}
                     />
                     <InputNumber
@@ -177,7 +177,7 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                         value={filters.max_price}
                         onChange={(value) => setFilters({ ...filters, max_price: value || undefined })}
                         formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+                        // parser={value => value!.replace(/\$\s?|(,*)/g, '')}
                         min={0}
                     />
                 </Space>
@@ -192,7 +192,13 @@ const FilterDrawer: React.FC<AdvancedFilterProps> = ({
                     placeholder={['Từ ngày', 'Đến ngày']}
                     format="DD/MM/YYYY"
                     value={(filters as { dateRange?: [dayjs.Dayjs, dayjs.Dayjs] | null }).dateRange}
-                    onChange={(dates) => setFilters({ ...filters, dateRange: dates as [dayjs.Dayjs, dayjs.Dayjs] | null })}
+                    onChange={(dates) => {
+                        if (dates && dates[0] && dates[1]) {
+                            setFilters({ ...filters, dateRange: [dates[0], dates[1]] as [dayjs.Dayjs, dayjs.Dayjs] })
+                        } else {
+                            setFilters({ ...filters, dateRange: undefined })
+                        }
+                    }}
                 />
             ),
         },

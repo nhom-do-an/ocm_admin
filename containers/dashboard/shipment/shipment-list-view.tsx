@@ -192,7 +192,7 @@ const ShipmentListView: React.FC = () => {
                                 if (key === 'all') {
                                     handleFilterChange('statuses', undefined)
                                 } else {
-                                    handleFilterChange('statuses', [key])
+                                    handleFilterChange('statuses', key as any)
                                 }
                             }}
                         />
@@ -215,7 +215,7 @@ const ShipmentListView: React.FC = () => {
                                 maxTagCount="responsive"
                                 className="min-w-[150px]"
                                 value={filters.statuses}
-                                onChange={(value) => handleFilterChange('statuses', value)}
+                                onChange={(value) => handleFilterChange('statuses', value as any)}
                                 options={[
                                     { label: 'Chờ lấy hàng', value: EDeliveryStatus.PENDING },
                                     { label: 'Đã lấy hàng', value: EDeliveryStatus.PICKED_UP },
@@ -235,7 +235,7 @@ const ShipmentListView: React.FC = () => {
                                 maxTagCount="responsive"
                                 className="min-w-[150px]"
                                 value={filters.location_ids}
-                                onChange={(value) => handleFilterChange('location_ids', value)}
+                                onChange={(value) => handleFilterChange('location_ids', value as any)}
                                 options={locations.map(location => ({ label: location.name, value: location.id }))}
                                 allowClear
                             />
@@ -288,7 +288,7 @@ const ShipmentListView: React.FC = () => {
                             <div className="mt-3 flex items-center gap-2 flex-wrap">
                                 <span className="text-sm text-gray-500">Đang lọc:</span>
                                 {filters.location_ids && filters.location_ids.length > 0 && (
-                                    <Tag closable color='blue' onClose={() => handleFilterChange('location_ids', [])}>
+                                    <Tag closable color='blue' onClose={() => handleFilterChange('location_ids', undefined)}>
                                         Chi nhánh: {filters.location_ids.length} chi nhánh
                                     </Tag>
                                 )}

@@ -406,7 +406,7 @@ const OrderListView: React.FC = () => {
                                 maxTagCount="responsive"
                                 className="min-w-[150px]"
                                 value={filters.channel_ids}
-                                onChange={(value) => handleFilterChange('channel_ids', value)}
+                                onChange={(value) => handleFilterChange('channel_ids', value as unknown as string[])}
                                 options={channels.map(channel => ({ label: channel.name, value: channel.id }))}
                                 allowClear
                             />

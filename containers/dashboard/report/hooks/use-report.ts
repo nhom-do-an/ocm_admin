@@ -145,14 +145,14 @@ export const useReport = () => {
 
                 try {
                     const requestParams = {
-                        min_date: dateToTimestamp(filters.min_date),
-                        max_date: dateToTimestamp(filters.max_date),
+                        min_date: dateToTimestamp(filters.min_date!),
+                        max_date: dateToTimestamp(filters.max_date!),
                         compare_with_previous: filters.compare_with_previous ?? true,
                     }
 
                     const topProductsParams = {
-                        min_date: dateToTimestamp(filters.min_date),
-                        max_date: dateToTimestamp(filters.max_date),
+                        min_date: dateToTimestamp(filters.min_date!),
+                        max_date: dateToTimestamp(filters.max_date!),
                         limit: 10,
                     }
 

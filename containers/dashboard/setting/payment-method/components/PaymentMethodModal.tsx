@@ -73,7 +73,6 @@ const PaymentMethodModal: React.FC<Props> = ({ open, loading, paymentMethod, onC
         if (open && isBankProvider && beneficiaryAccounts.length === 0) {
             fetchBeneficiaryAccounts()
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open, isBankProvider])
 
     const fetchProviders = async () => {

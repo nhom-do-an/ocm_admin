@@ -10,6 +10,7 @@ import { CreateBeneficiaryAccountRequest, UpdateBeneficiaryAccountRequest } from
 import { BeneficiaryAccountDetail } from '@/types/response/payment-method'
 import beneficiaryAccountService from '@/services/beneficiary-account'
 import useBeneficiaryAccountManagement from '../payment-method/hooks/use-beneficiary-account-management'
+import Image from 'next/image'
 
 const BeneficiaryAccountView: React.FC = () => {
     const router = useRouter()
@@ -124,9 +125,9 @@ const BeneficiaryAccountView: React.FC = () => {
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
                                                 {account.bank_logo && (
-                                                    <img
+                                                    <Image
                                                         src={account.bank_logo}
-                                                        alt={account.bank_short_name}
+                                                        alt={account.bank_short_name || "bank logo"}
                                                         className="w-6 h-6 object-contain"
                                                     />
                                                 )}

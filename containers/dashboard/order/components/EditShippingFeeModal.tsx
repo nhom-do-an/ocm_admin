@@ -105,10 +105,7 @@ const EditShippingFeeModal: React.FC<EditShippingFeeModalProps> = ({
                     <InputNumber
                         min={0}
                         formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                        parser={(value) => {
-                            const numeric = value?.replace(/\$\s?|(,*)/g, '')
-                            return numeric ? Number(numeric) : 0
-                        }}
+
                         className="w-full"
                         addonAfter="₫"
                         placeholder="Nhập phí giao hàng"

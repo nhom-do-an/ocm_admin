@@ -53,7 +53,6 @@ const EventListView: React.FC = () => {
     useEffect(() => {
         setSubjectType(urlFilters.subject_type)
         setDateRange(buildRangeFromFilters(urlFilters))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [urlFilters.subject_type, urlFilters.min_date, urlFilters.max_date])
 
     const groupedEvents = useMemo(() => {

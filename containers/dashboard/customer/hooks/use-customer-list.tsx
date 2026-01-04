@@ -116,8 +116,8 @@ export const useCustomerList = () => {
     const handleTableChange = (newPagination: TablePaginationConfig) => {
         const updatedPagination = {
             ...pagination,
-            current: newPagination.current,
-            pageSize: newPagination.pageSize,
+            current: newPagination.current ?? pagination.current,
+            pageSize: newPagination.pageSize ?? pagination.pageSize,
         }
         setPagination(updatedPagination)
         updateURLParams(filters, updatedPagination)

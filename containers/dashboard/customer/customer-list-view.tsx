@@ -27,7 +27,7 @@ const CustomerListView: React.FC = () => {
         filters[key as keyof typeof filters] !== undefined &&
         filters[key as keyof typeof filters] !== '' &&
         (Array.isArray(filters[key as keyof typeof filters])
-            ? (filters[key as keyof typeof filters] as unknown[]).length > 0
+            ? (filters[key as keyof typeof filters] as unknown as unknown[]).length > 0
             : true)
     ).length
 

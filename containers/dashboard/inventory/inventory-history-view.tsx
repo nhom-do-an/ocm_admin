@@ -82,7 +82,7 @@ const InventoryHistoryView: React.FC<InventoryHistoryViewProps> = ({
             <div className="flex flex-col items-center">
                 {deltaText && (
                     <span
-                        className={`font-medium ${delta > 0 ? 'text-green-600' : delta < 0 ? 'text-red-500' : 'text-gray-700'
+                        className={`font-medium ${delta && delta > 0 ? 'text-green-600' : delta && delta < 0 ? 'text-red-500' : 'text-gray-700'
                             }`}
                     >
                         {deltaText}

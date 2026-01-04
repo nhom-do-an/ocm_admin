@@ -32,7 +32,7 @@ const UpdateAssigneeModal: React.FC<UpdateAssigneeModalProps> = ({
     const fetchUsers = async () => {
         setLoadingUsers(true)
         try {
-            const data = await userService.getListUsers({ limit: 1000 })
+            const data = await userService.getListUsers({ size: 1000 })
             setUsers(data?.users || [])
         } catch (error) {
             console.error('Failed to load users', error)

@@ -100,8 +100,10 @@ const GeneralConfigView: React.FC = () => {
             setLoadingDistricts(true)
             const regions = await regionService.getDistricts(provinceCode)
             setDistricts(regions || [])
+            return regions || []
         } catch (error) {
             console.error('Failed to fetch districts:', error)
+            return []
         } finally {
             setLoadingDistricts(false)
         }
@@ -288,7 +290,7 @@ const GeneralConfigView: React.FC = () => {
                             allowClear
                             showSearch
                             filterOption={(input, option) =>
-                                (option?.children as string)?.toLowerCase().includes(input.toLowerCase())
+                                (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
                             }
                         >
                             {provinces.map(province => (
@@ -313,7 +315,7 @@ const GeneralConfigView: React.FC = () => {
                             defaultValue={store?.district_id}
                             disabled={!selectedProvinceCode}
                             filterOption={(input, option) =>
-                                (option?.children as string)?.toLowerCase().includes(input.toLowerCase())
+                                (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
                             }
                         >
                             {districts.map(district => (
@@ -337,7 +339,7 @@ const GeneralConfigView: React.FC = () => {
                             showSearch
                             disabled={!selectedDistrictCode}
                             filterOption={(input, option) =>
-                                (option?.children as string)?.toLowerCase().includes(input.toLowerCase())
+                                (option?.label as string)?.toLowerCase().includes(input.toLowerCase())
                             }
                         >
                             {wards.map(ward => (

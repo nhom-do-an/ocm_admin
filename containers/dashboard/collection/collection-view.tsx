@@ -36,7 +36,6 @@ const CollectionListView: React.FC = () => {
         if (debouncedKey === prevDebouncedKeyRef.current) return
         prevDebouncedKeyRef.current = debouncedKey
         handleFilterChange('key', debouncedKey || undefined)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedKey])
 
     const activeFiltersCount = Object.keys(filters).filter(key =>

@@ -16,6 +16,7 @@ import {
     Tag,
     Tooltip,
 } from 'antd'
+import type { RcCustomRequestOptions } from 'rc-upload/lib/interface'
 import { ArrowLeft, Upload as UploadIcon } from 'lucide-react'
 import TinyEditor from '@/components/TinyEditor'
 import { Attachment, Collection } from '@/types/response/collection'
@@ -73,6 +74,7 @@ const CreateCollectionView: React.FC = () => {
             setFileList(fileListFromImages)
 
             setInitialData({
+                ...collection,
                 name: collection.name || '',
                 meta_title: collection.meta_title || '',
                 meta_description: collection.meta_description || '',

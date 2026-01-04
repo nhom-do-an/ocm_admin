@@ -63,7 +63,7 @@ const ReportChartCard: React.FC<ReportChartCardProps> = ({
                 </div>
                 <div className="flex gap-1 items-center">
                     <p className="text-[18px] font-semibold text-gray-900 ">
-                        <span className="mr-1">{formatValue(totalValue)}</span>
+                        <span className="mr-1">{totalValue !== undefined ? formatValue(totalValue) : '-'}</span>
                         {percentage !== undefined && percentage !== null && (
                             <sup className={`text-[10px] font-medium ${getPercentageColor()}`}>
                                 {percentage > 0 && <span>↑</span>}

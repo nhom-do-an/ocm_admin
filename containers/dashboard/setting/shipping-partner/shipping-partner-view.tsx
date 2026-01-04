@@ -6,7 +6,7 @@ import { Plus, Search } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
 import AddDeliveryProviderModal from '@/containers/dashboard/order/components/AddDeliveryProviderModal'
 import { useShippingPartner } from './hooks/use-shipping-partner'
-import { DeliveryProviderStatus } from '@/types/enums/enum'
+import { DeliveryProviderStatus, DeliveryProviderType } from '@/types/enums/enum'
 import { DeliveryProvider } from '@/types/request/order'
 
 const statusColors: Record<DeliveryProviderStatus, string> = {
@@ -170,7 +170,11 @@ const ShippingPartnerView: React.FC = () => {
                     setModalOpen(false)
                 }}
                 onSave={handleSubmit}
-                initialValues={editingProvider || undefined}
+                initialValues={editingProvider ? {
+                    ...editingProvider,
+                    status: editingProvider.status as DeliveryProviderStatus,
+                    type: editingProvider.type as DeliveryProviderType
+                } : undefined}
             />
         </div>
     )

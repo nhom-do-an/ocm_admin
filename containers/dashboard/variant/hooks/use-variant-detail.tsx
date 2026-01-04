@@ -60,7 +60,7 @@ export const useVariantDetail = () => {
 
     useEffect(() => {
         fetchData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, [variantId])
 
     const goBackToProduct = () => {
