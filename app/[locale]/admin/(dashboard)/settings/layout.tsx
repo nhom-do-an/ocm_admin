@@ -18,7 +18,7 @@ function SettingLayout({
     return (
         <div className='w-full h-full flex flex-row md:px-2 pt-2 bg-accent'>
             <div className={`h-screen transition w-fit max-md:hidden `}>
-                <Sidebar menuItems={settingMenuItems} theme='light' menuClass='!rounded-[8px] w-[50]' sidebarClass='rounded !bg-transparent ' currentPath={SCREEN.GENERAL_SETTING.PATH} />
+                <Sidebar menuItems={settingMenuItems} theme='light' menuClass='!rounded-[8px] w-[50]' sidebarClass='rounded !bg-transparent ' />
             </div>
 
             <div className={`flex-1 h-full overflow-y-scroll transition-all max-sm:hidden`}>
@@ -31,7 +31,7 @@ function SettingLayout({
                     <button onClick={() => router.push(SCREEN.HOME.PATH)}><X /></button>
                 </div>
                 <div className="h-full overflow-y-scroll mt-2 w-screen ">
-                    <Sidebar menuItems={settingMenuItems} theme='light' menuClass='max-w-[300px] mx-auto' sidebarClass='rounded !bg-transparent' currentPath={SCREEN.GENERAL_SETTING.PATH} />
+                    <Sidebar menuItems={settingMenuItems} theme='light' menuClass='max-w-[300px] mx-auto' sidebarClass='rounded !bg-transparent' />
                 </div>
 
             </div>}
