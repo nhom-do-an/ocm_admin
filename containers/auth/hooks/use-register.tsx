@@ -15,7 +15,7 @@ import { AxiosError } from 'axios';
 import { useFormik } from 'formik';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
 const useRegister = () => {
@@ -106,7 +106,7 @@ const useRegister = () => {
         }
     }
 
-    useState(() => {
+    useEffect(() => {
         getProvinces();
     }, []);
 
