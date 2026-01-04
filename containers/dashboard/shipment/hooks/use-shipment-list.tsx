@@ -146,7 +146,7 @@ export const useShipmentList = () => {
     const updateURL = (newFilters: InternalFilters) => {
         const params = new URLSearchParams()
         params.set('page', pagination.current.toString())
-        params.set('limit', pagination.pageSize.toString())
+        params.set('size', pagination.pageSize.toString())
 
         if (newFilters.key) params.set('key', newFilters.key)
         if (newFilters.order_id) params.set('order_id', newFilters.order_id.toString())
@@ -160,13 +160,13 @@ export const useShipmentList = () => {
 
     const handleTableChange = (newPagination: TablePaginationConfig) => {
         setPagination({
-            current: newPagination.current,
-            pageSize: newPagination.pageSize,
+            current: newPagination.current ?? pagination.current,
+            pageSize: newPagination.pageSize ?? pagination.pageSize,
             total: pagination.total,
         })
         const params = new URLSearchParams(searchParams.toString())
-        params.set('page', newPagination.current.toString())
-        params.set('limit', newPagination.pageSize.toString())
+        params.set('page', (newPagination.current ?? pagination.current).toString())
+        params.set('size', (newPagination.pageSize ?? pagination.pageSize).toString())
         router.push(`?${params.toString()}`, { scroll: false })
     }
 
@@ -188,7 +188,7 @@ export const useShipmentList = () => {
         const emptyFilters: InternalFilters = {}
         setFilters(emptyFilters)
         setPagination(prev => ({ ...prev, current: 1 }))
-        router.push('?page=1&limit=20', { scroll: false })
+        router.push('?page=1&size=20', { scroll: false })
     }
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
