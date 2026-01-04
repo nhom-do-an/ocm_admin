@@ -32,7 +32,7 @@ export default function TinyEditor({ value, onChange }: TinyEditorProps) {
                 language: 'vi',
 
                 /* --- Bật chức năng upload ảnh nội bộ --- */
-                images_upload_handler: async (blobInfo, progress) => {
+                images_upload_handler: async (blobInfo: any, progress: any) => {
                     // 1️⃣ Cách đơn giản: chuyển ảnh thành base64 (dễ dùng, không cần backend)
                     return new Promise((resolve) => {
                         const base64 = 'data:' + blobInfo.blob().type + ';base64,' + blobInfo.base64()
