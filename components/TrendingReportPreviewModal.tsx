@@ -42,7 +42,6 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
                 setPdfUrl(null)
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open])
 
     const generatePreview = async () => {
@@ -90,18 +89,18 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
 
             // Generate PDF from iframe body
             const opt = {
-                margin: [0, 0, 0, 0],
+                margin: [0, 0, 0, 0] as [number, number, number, number],
                 filename: getReportFileName(),
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
+                image: { type: 'jpeg' as const, quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
                     useCORS: true,
                     logging: false,
                     windowWidth: bodyElement.scrollWidth || 794,
                     windowHeight: bodyElement.scrollHeight || 1123,
                     allowTaint: true
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             }
 
@@ -164,18 +163,18 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
 
             // Generate and download PDF
             const opt = {
-                margin: [0, 0, 0, 0],
+                margin: [0, 0, 0, 0] as [number, number, number, number],
                 filename: getReportFileName(),
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
+                image: { type: 'jpeg' as const, quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
                     useCORS: true,
                     logging: false,
                     windowWidth: bodyElement.scrollWidth || 794,
                     windowHeight: bodyElement.scrollHeight || 1123,
                     allowTaint: true
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             }
 
