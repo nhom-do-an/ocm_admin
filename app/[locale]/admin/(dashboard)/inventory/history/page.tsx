@@ -1,7 +1,7 @@
 import InventoryHistoryView from '@/containers/dashboard/inventory/inventory-history-view'
 
 interface InventoryHistoryPageProps {
-    searchParams?: Record<string, string | string[] | undefined>
+    searchParams?: Promise<Record<string, string | string[] | undefined>>
 }
 
 const parseNumberParam = (value?: string | string[]) => {
@@ -11,9 +11,10 @@ const parseNumberParam = (value?: string | string[]) => {
     return Number.isFinite(parsed) ? parsed : undefined
 }
 
-const InventoryHistoryPage = ({ searchParams }: InventoryHistoryPageProps) => {
-    const variantId = parseNumberParam(searchParams?.variant_id)
-    const locationId = parseNumberParam(searchParams?.location_id)
+const InventoryHistoryPage = async ({ searchParams }: InventoryHistoryPageProps) => {
+    const resolvedParams = await searchParams
+    const variantId = parseNumberParam(resolvedParams?.variant_id)
+    const locationId = parseNumberParam(resolvedParams?.location_id)
 
     return (
         <InventoryHistoryView
