@@ -18,9 +18,4 @@ services:
       - NODE_ENV=production
     env_file:
       - .env
-    networks:
-      - backend
     restart: always
-networks:
-  backend:
-    external: true
