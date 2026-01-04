@@ -1,4 +1,4 @@
-FROM node:20.16.0-alpine
+FROM node:20.17.0-alpine
 
 WORKDIR /app
 
@@ -15,9 +15,9 @@ ENV NEXT_PUBLIC_POS_PATH=${NEXT_PUBLIC_POS_PATH}
 ENV NEXT_PUBLIC_TINYMCE_API_KEY=${NEXT_PUBLIC_TINYMCE_API_KEY}
 # RUN echo "Based on commit: $NEXT_PUBLIC_BASE_API_URL"
 
-COPY package*.json ./
+COPY package*.json yarn.lock* ./
 COPY . .
-RUN yarn install
+RUN yarn install --frozen-lockfile || yarn install
 
 RUN yarn build
 
