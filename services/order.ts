@@ -1,8 +1,8 @@
 import Axios from "./axios";
 import { TApiResponse } from "@/types/response/response";
 import { API } from "@/constants/api";
-import { CreateOrderPaymentRequest, CreateOrderRequest, GetListOrdersRequest, UpdateOrderItemsRequest, UpdateOrderRequest } from "@/types/request/order";
-import { GetListOrdersResponse, OrderDetail } from "@/types/response/order";
+import { CreateOrderPaymentRequest, CreateOrderRequest, GetListOrdersRequest, GetOrderQRPaymentRequest, UpdateOrderItemsRequest, UpdateOrderRequest } from "@/types/request/order";
+import { GetListOrdersResponse, OrderDetail, OrderQrResponse } from "@/types/response/order";
 import { GetEventsRequest } from "@/types/request/event";
 import { GetListEventsResponse } from "@/types/response/event";
 import { Transaction } from "@/types/response/transation";
@@ -84,7 +84,15 @@ const orderService = {
     ): Promise<OrderDetail> {
         const res = await Axios.put<TApiResponse<OrderDetail>>(API.ORDER.CANCEL_ORDER(id), data);
         return res.data.data as OrderDetail;
-    }
+    },
+    async getOrderQRPayment(
+        params: GetOrderQRPaymentRequest
+    ): Promise<OrderQrResponse> {
+        const res = await Axios.get<TApiResponse<OrderQrResponse>>(API.ORDER.GET_ORDER_QR_PAYMENT(params.order_id), {
+            params,
+        });
+        return res.data.data as OrderQrResponse;
+    },
 }
 
 export default orderService;

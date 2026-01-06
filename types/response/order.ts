@@ -101,6 +101,13 @@ export interface GetListOrdersResponse {
     count: number;
 }
 
+export interface OrderQrResponse {
+    qr_url: string;
+    description: string;
+    account_number: string;
+    account_name: string;
+    amount: number;
+}
 
 
 

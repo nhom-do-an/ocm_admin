@@ -191,3 +191,8 @@ export interface UpdateShippingLineRequestV2 {
     price?: number | null; // null để xóa (khi ID có giá trị), bắt buộc khi thêm/sửa
     type?: ShippingLineType | null; // Bắt buộc khi thêm mới
 }
+
+export interface GetOrderQRPaymentRequest {
+    beneficiary_account_id: number;
+    order_id: number;
+}

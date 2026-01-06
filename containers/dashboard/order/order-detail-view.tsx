@@ -14,6 +14,7 @@ import EditShippingAddressModal from './components/EditShippingAddressModal'
 import UpdateAssigneeModal from './components/UpdateAssigneeModal'
 import UpdateOrderNoteModal from './components/UpdateOrderNoteModal'
 import UpdateExpectedDeliveryModal from './components/UpdateExpectedDeliveryModal'
+import OrderQRPaymentModal from './components/OrderQRPaymentModal'
 import useOrderDetail from './hooks/use-order-detail'
 import type { Event } from '@/types/response/event'
 import { AddressDetail } from '@/types/response/customer'
@@ -59,6 +60,7 @@ const OrderDetailView: React.FC = () => {
     const [printingOrder, setPrintingOrder] = useState(false)
     const [cancelOrderModalOpen, setCancelOrderModalOpen] = useState(false)
     const [cancellingOrder, setCancellingOrder] = useState(false)
+    const [qrPaymentModalOpen, setQrPaymentModalOpen] = useState(false)
 
     const openLineItemNoteModal = (lineItem: LineItemDetail) => {
         setNoteModal({
@@ -413,7 +415,7 @@ const OrderDetailView: React.FC = () => {
 
                                         {(financialStatusValue === EFinancialStatus.UNPAID || (financialStatusValue === EFinancialStatus.PARTIALLY_PAID && remainingAmount > 0)) && order.status !== EOrderStatus.CANCELLED && (
                                             <div className="flex gap-3 mt-4 justify-end">
-                                                <Button type="default">Lấy mã QR</Button>
+                                                <Button type="default" onClick={() => setQrPaymentModalOpen(true)}>Lấy mã QR</Button>
                                                 <Button type="primary" onClick={() => setReceivePaymentModalOpen(true)}>
                                                     Nhận tiền
                                                 </Button>
@@ -664,6 +666,14 @@ const OrderDetailView: React.FC = () => {
                 onConfirm={handleCancelOrder}
                 loading={cancellingOrder}
             />
+            {orderId && (
+                <OrderQRPaymentModal
+                    open={qrPaymentModalOpen}
+                    onCancel={() => setQrPaymentModalOpen(false)}
+                    orderId={orderId}
+                    amount={financialStatusValue === EFinancialStatus.PARTIALLY_PAID ? remainingAmount : finalAmount}
+                />
+            )}
 
         </>
     )

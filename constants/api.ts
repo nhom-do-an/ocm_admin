@@ -64,6 +64,7 @@ export const API = {
         CREATE_ORDER_PAYMENTS: (id: number) => `/admin/orders/${id}/payments`,
         GET_ORDER_PRINT: (id: number) => `/admin/orders/${id}/print`,
         CANCEL_ORDER: (id: number) => `/admin/orders/${id}/cancel`,
+        GET_ORDER_QR_PAYMENT: (orderId: number) => `/admin/orders/${orderId}/qr-payment`,
     },
     VARIANT: {
         GET_VARIANTS: '/admin/variants',
