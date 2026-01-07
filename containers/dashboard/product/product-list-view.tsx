@@ -65,7 +65,7 @@ const ProductListView: React.FC = () => {
                             width={40}
                             height={40}
                             alt={record.name}
-                            src="/icon/default_image.png"
+                            src="/admin/icon/default_image.png"
                             className='text-gray-300'
 
                         />}

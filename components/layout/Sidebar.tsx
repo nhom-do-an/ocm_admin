@@ -83,9 +83,10 @@ export default function Sidebar(props: Props) {
     return (
         <Sider
             trigger={null}
-            collapsible
-            collapsed={collapsed}
+            collapsible={setCollapsed !== undefined}
+            collapsed={collapsed ?? false}
             width={256}
+            collapsedWidth={80}
             className={`max-h-screen h-screen bg-black flex flex-col relative ${sidebarClass}`}
         >
             {/* Header */}

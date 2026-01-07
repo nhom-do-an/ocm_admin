@@ -18,7 +18,7 @@ function SettingLayout({
     return (
         <div className='w-full h-full flex flex-row md:px-2 pt-2 bg-accent'>
             <div className={`h-screen transition w-fit max-md:hidden `}>
-                <Sidebar menuItems={settingMenuItems} theme='light' menuClass='!rounded-[8px] w-[50]' sidebarClass='rounded !bg-transparent ' />
+                <Sidebar menuItems={settingMenuItems} theme='light' menuClass='!rounded-[8px] min-w-[150px]' sidebarClass='rounded !bg-transparent !w-auto' />
             </div>
 
             <div className={`flex-1 h-full overflow-y-scroll transition-all max-sm:hidden`}>
