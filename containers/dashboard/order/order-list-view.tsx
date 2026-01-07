@@ -125,7 +125,7 @@ const OrderListView: React.FC = () => {
             key: 'customer',
             width: 200,
             render: (_, record) => {
-                const customerName = record.customer?.email || '---'
+                const customerName = (record.customer?.first_name || record.customer?.last_name) ? `${record.customer?.first_name} ${record.customer?.last_name}` : record.customer?.email || '---'
                 const isCancelled = record.status === EOrderStatus.CANCELLED
                 if (record.customer?.id) {
                     return (
