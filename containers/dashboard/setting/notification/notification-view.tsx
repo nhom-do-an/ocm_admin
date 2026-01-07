@@ -65,7 +65,7 @@ const NotificationView: React.FC = () => {
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1 flex flex-col">
                                                 <Link
-                                                    href={`/admin/notification/${template.id}`}
+                                                    href={`/admin/settings/notification/${template.id}`}
                                                     className="text-blue-400 hover:text-blue-800 font-semibold cursor-pointer"
                                                 >
                                                     {template.name}

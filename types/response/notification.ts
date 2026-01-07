@@ -15,6 +15,7 @@ export interface NotificationTemplate {
     can_edit_active: boolean
     category: NotificationCategory
     store_id: number
+    html_content: string
     created_at: string
     updated_at: string
 }
