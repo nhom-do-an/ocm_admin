@@ -109,6 +109,12 @@
   "event_management": {
     "label": "Nhật ký hoạt động"
   },
+  "banner_management": {
+    "label": "Quản lý banner"
+  },
+  "contact_management": {
+    "label": "Thông tin liên hệ"
+  },
   "auth": {
     "login": "Đăng nhập vào cửa hàng của bạn",
     "phone_label": "Số điện thoại",

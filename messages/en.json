@@ -98,6 +98,12 @@
   "event_management": {
     "label": "Activity Log"
   },
+  "banner_management": {
+    "label": "Banner Management"
+  },
+  "contact_management": {
+    "label": "Contact Info"
+  },
   "report": {
     "label": "Reports"
   }

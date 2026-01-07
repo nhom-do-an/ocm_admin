@@ -156,4 +156,18 @@ export const API = {
         GET_REVENUE_BY_CUSTOMER: '/admin/revenue/by-customer',
         GET_TOP_SELLING_PRODUCTS: '/admin/revenue/top-selling-products',
     },
+    BANNER: {
+        LIST: '/admin/banners',
+        GET_DETAIL: (id: number) => `/admin/banners/${id}`,
+        CREATE: '/admin/banners',
+        UPDATE: (id: number) => `/admin/banners/${id}`,
+        DELETE: (id: number) => `/admin/banners/${id}`,
+    },
+    CONTACT: {
+        LIST: '/admin/contacts',
+        GET_DETAIL: (id: number) => `/admin/contacts/${id}`,
+        CREATE: '/admin/contacts',
+        UPDATE: (id: number) => `/admin/contacts/${id}`,
+        DELETE: (id: number) => `/admin/contacts/${id}`,
+    },
 };

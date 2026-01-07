@@ -1,5 +1,5 @@
 
-import { Bell, CreditCard, History, IdCard, MapPinned, Store, Truck, TruckElectric, TvMinimalPlay } from 'lucide-react'
+import { Bell, CreditCard, History, IdCard, Image, ImagePlay, MapPinned, Phone, Store, Truck, TruckElectric, TvMinimalPlay } from 'lucide-react'
 import { SCREEN } from './constant'
 import { AppMenuItem } from './menu'
 
@@ -45,6 +45,16 @@ export const settingMenuItems: AppMenuItem[] = [
         key: SCREEN.NOTIFICATION_MANAGEMENT.PATH,
         label: SCREEN.NOTIFICATION_MANAGEMENT.LABEL,
         icon: <Bell size={20} />,
+    },
+    {
+        key: SCREEN.BANNER_MANAGEMENT.PATH,
+        label: SCREEN.BANNER_MANAGEMENT.LABEL,
+        icon: <ImagePlay size={20} />,
+    },
+    {
+        key: SCREEN.CONTACT_MANAGEMENT.PATH,
+        label: SCREEN.CONTACT_MANAGEMENT.LABEL,
+        icon: <Phone size={20} />,
     },
     {
         key: SCREEN.EVENT_MANAGEMENT.PATH,

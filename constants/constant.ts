@@ -126,6 +126,16 @@ export const SCREEN = {
         NAME: "event_management.name",
         PATH: "/admin/settings/event",
         LABEL: "event_management.label"
+    },
+    BANNER_MANAGEMENT: {
+        NAME: "banner_management.name",
+        PATH: "/admin/settings/banner",
+        LABEL: "banner_management.label"
+    },
+    CONTACT_MANAGEMENT: {
+        NAME: "contact_management.name",
+        PATH: "/admin/settings/contact",
+        LABEL: "contact_management.label"
     }
 }
 
