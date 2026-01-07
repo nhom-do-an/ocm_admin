@@ -3,16 +3,21 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
     basePath: '/admin',
-    assetPrefix: '/admin', // Add this to ensure all assets use /admin prefix
+    assetPrefix: '/admin',
     images: {
         remotePatterns: [
+            // Cho phép HTTP (local development và Docker)
+            {
+                protocol: 'http',
+                hostname: '**',
+            },
+            // Cho phép HTTPS (production)
             {
                 protocol: 'https',
-                hostname: '*',
+                hostname: '**',
             },
         ],
     },
-
 };
 
 const withNextIntl = createNextIntlPlugin();
