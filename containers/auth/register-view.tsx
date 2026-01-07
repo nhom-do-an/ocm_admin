@@ -29,7 +29,7 @@ const RegisterView = () => {
     return <ProtectedRegisterRoute>
         {fetchLoading ? <Loader /> : <div className="w-screen h-screen center overflow-y-scroll px-4">
             <div className="w-full max-sm:w-[500px] rounded-lg px-8 py-3 max-w-[600px] bg-white shadow-lg h-fit overflow-y-scroll">
-                <Image src="/icon/full_logo.png" alt="Logo" width={200} height={80} className=" mx-auto" />
+                <Image src="/admin/icon/full_logo.png" alt="Logo" width={200} height={80} className=" mx-auto" />
                 <h1 className="text-start text-[26px] font-semibold text-gray-900">{t('register')}</h1>
                 <p className="text-start text-[14px] text-gray-500 !mb-[28px]">{t('register_description')}</p>
                 <Form form={form} layout="vertical" onFinish={formik.handleSubmit} className='max-w-[500px] !mx-auto'>
@@ -165,15 +165,15 @@ const RegisterView = () => {
                         {(() => {
                             const isDisabled = loading || !formik.isValid || !formik.dirty;
                             return (
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            loading={loading}
-                            disabled={isDisabled}
-                            className={`${isDisabled ? 'bg-gray-300 text-white !border-gray-300' : 'bg-[#006663] text-white hover:opacity-90'} w-[220px] max-sm:w-full !h-[50px] !rounded-full !max-w-[300px] !block !mx-auto !text-[18px] !mt-4`}
-                        >
-                            {t('register_button')}
-                        </Button>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={loading}
+                                    disabled={isDisabled}
+                                    className={`${isDisabled ? 'bg-gray-300 text-white !border-gray-300' : 'bg-[#006663] text-white hover:opacity-90'} w-[220px] max-sm:w-full !h-[50px] !rounded-full !max-w-[300px] !block !mx-auto !text-[18px] !mt-4`}
+                                >
+                                    {t('register_button')}
+                                </Button>
                             );
                         })()}
                     </Form.Item>

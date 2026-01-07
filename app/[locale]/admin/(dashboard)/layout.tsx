@@ -13,7 +13,7 @@ import DashboardProtected from '@/containers/protected/dashboard-protected'
                         </Layout> */}
 
 export const metadata: Metadata = {
-    title: 'Next Base',
+    title: 'Hệ thống quản lý bán hàng đa kênh Omni',
 }
 
 export default async function LocaleLayout({

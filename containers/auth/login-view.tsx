@@ -29,7 +29,7 @@ const LoginView = () => {
     return <ProtectedLoginRoute>
         <div className="w-screen h-screen center">
             <div className="w-full max-sm:w-[500px]  rounded-lg px-8 py-3 max-w-[600px] bg-white shadow-lg">
-                <Image src="/icon/full_logo.png" alt="Logo" width={200} height={80} className=" mx-auto" />
+                <Image src="/admin/icon/full_logo.png" alt="Logo" width={200} height={80} className=" mx-auto" />
                 <h1 className="text-center text-[26px] font-semibold! mb-[30px]! max-sm:text[18px]! max-sm:text-start max-sm:mb-[20px]">{t('login')}</h1>
                 <Form form={form} layout="vertical" onFinish={formik.handleSubmit} className='max-w-[500px] mx-auto!'>
 
