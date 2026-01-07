@@ -95,7 +95,7 @@ export default function Sidebar(props: Props) {
                     className={`flex items-center justify-between bg-[#001529] text-white border-b border-white/5 ${collapsed && 'justify-center py-2 mb-2'
                         } px-5 absolute left-0 top-0 w-full z-50 h-[55px]`}
                 >
-                    {!collapsed && <Image src="/icon/full_logo.png" width={100} height={30} alt="logo" />}
+                    {!collapsed && <Image src="/admin/icon/full_logo.png" width={100} height={30} alt="logo" />}
                     {!openSidebar && <span onClick={() => setCollapsed(!collapsed)} className="cursor-pointer">
                         {collapsed ? <ChevronLeft /> : <ChevronRight />}
                     </span>}
