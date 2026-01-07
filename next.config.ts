@@ -3,6 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
     basePath: '/admin',
+    assetPrefix: '/admin', // Add this to ensure all assets use /admin prefix
     images: {
         remotePatterns: [
             {
