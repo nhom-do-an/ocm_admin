@@ -130,7 +130,7 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                         </button>
                     )}
                     {!selectedDate && (
-                        <span className="text-xs text-gray-500">(Mặc định: predictions mới nhất)</span>
+                        <span className="text-xs text-gray-500">(Mặc định: hôm nay)</span>
                     )}
                 </div>
 
@@ -147,7 +147,7 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg shadow-md p-6 border border-orange-200">
+                <div className="bg-orange-50 rounded-lg shadow-md p-6 border border-orange-200">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-orange-700 mb-1">Tổng dự báo bán</p>
@@ -160,7 +160,7 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow-md p-6 border border-blue-200">
+                <div className="bg-blue-50 rounded-lg shadow-md p-6 border border-blue-200">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-blue-700 mb-1">Tổng dự báo doanh thu</p>
@@ -173,7 +173,7 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                     </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-lg shadow-md p-6 border border-red-200">
+                <div className="bg-red-50 rounded-lg shadow-md p-6 border border-red-200">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-red-700 mb-1">Sản phẩm trending hôm nay</p>
@@ -315,7 +315,7 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                             >
                                 <div className="flex items-center gap-4 flex-1">
                                     <div className="shrink-0">
-                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-bold">
+                                        <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
                                             {item.rank}
                                         </div>
                                     </div>
