@@ -18,6 +18,7 @@ import OrderQRPaymentModal from './components/OrderQRPaymentModal'
 import useOrderDetail from './hooks/use-order-detail'
 import type { Event } from '@/types/response/event'
 import { AddressDetail } from '@/types/response/customer'
+import { formatDateTime, formatDateOnly, formatTimeOnly } from '@/utils/date'
 import InvoiceViewer from './components/InvoiceViewer'
 import OrderLineItemsView from './components/OrderLineItemsView'
 import CancelOrderModal from './components/CancelOrderModal'
@@ -132,36 +133,8 @@ const OrderDetailView: React.FC = () => {
         return `${amount.toLocaleString('vi-VN')}₫`
     }
 
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return ''
-        const date = new Date(dateString)
-        return date.toLocaleString('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        })
-    }
-
-    const formatDateOnly = (dateString?: string) => {
-        if (!dateString) return ''
-        const date = new Date(dateString)
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        })
-    }
-
-    const formatTime = (dateString?: string) => {
-        if (!dateString) return ''
-        const date = new Date(dateString)
-        return date.toLocaleTimeString('vi-VN', {
-            hour: '2-digit',
-            minute: '2-digit',
-        })
-    }
+    const formatDate = formatDateTime
+    const formatTime = formatTimeOnly
 
     const groupEventsByDate = (eventsList: Event[]) => {
         const grouped: Record<string, Event[]> = {}

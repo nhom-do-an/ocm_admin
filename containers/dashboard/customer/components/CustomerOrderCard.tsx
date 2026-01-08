@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import dayjs from 'dayjs'
+import { formatWithPattern } from '@/utils/date'
 import { Card } from 'antd'
 import StatusChip from '@/containers/dashboard/order/components/StatusChip'
 import { OrderDetail } from '@/types/response/order'
@@ -19,7 +19,7 @@ const currencyFormatter = new Intl.NumberFormat('vi-VN', {
 
 const CustomerOrderCard: React.FC<CustomerOrderCardProps> = ({ order }) => {
     const orderDisplayName = order.name || `#${order.order_number ?? order.id}`
-    const createdAt = order.created_at ? dayjs(order.created_at).format('DD/MM/YYYY HH:mm') : '---'
+    const createdAt = order.created_at ? formatWithPattern(order.created_at, 'DD/MM/YYYY HH:mm') : '---'
     const totalPrice = order.total_price ?? 0
 
     return (

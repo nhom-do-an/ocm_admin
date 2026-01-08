@@ -6,6 +6,7 @@ import type { ColumnsType } from 'antd/es/table'
 import { useOrderList } from './hooks/use-order-list'
 import { OrderDetail } from '@/types/response/order'
 import dayjs from 'dayjs'
+import { formatWithPattern } from '@/utils/date'
 import { useRouter } from 'next/navigation'
 import StatusChip from './components/StatusChip'
 import FilterDrawer from './components/FilterDrawer'
@@ -292,7 +293,7 @@ const OrderListView: React.FC = () => {
             width: 180,
             render: (date) => {
                 if (!date) return '-'
-                const formatted = dayjs(date).format('DD/MM/YYYY HH:mm')
+                const formatted = formatWithPattern(date, 'DD/MM/YYYY HH:mm')
                 return <span>{formatted}</span>
             },
         },
@@ -303,7 +304,7 @@ const OrderListView: React.FC = () => {
             width: 180,
             render: (date) => {
                 if (!date) return '-'
-                const formatted = dayjs(date).format('DD/MM/YYYY HH:mm')
+                const formatted = formatWithPattern(date, 'DD/MM/YYYY HH:mm')
                 return <span>{formatted}</span>
             },
         },
@@ -314,7 +315,7 @@ const OrderListView: React.FC = () => {
             width: 180,
             render: (date) => {
                 if (!date) return '-'
-                const formatted = dayjs(date).format('DD/MM/YYYY')
+                const formatted = formatWithPattern(date, 'DD/MM/YYYY')
                 return <span>{formatted}</span>
             },
         },
@@ -325,7 +326,7 @@ const OrderListView: React.FC = () => {
             width: 180,
             render: (date) => {
                 if (!date) return '-'
-                const formatted = dayjs(date).format('DD/MM/YYYY HH:mm')
+                const formatted = formatWithPattern(date, 'DD/MM/YYYY HH:mm')
                 return <span>{formatted}</span>
             },
         },

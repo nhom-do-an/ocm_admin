@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react'
 import { Table, Select, Button, Space } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import dayjs from 'dayjs'
+import { formatWithPattern } from '@/utils/date'
 import Link from 'next/link'
 import { RefreshCw } from 'lucide-react'
 import { useInventoryHistory, InventoryAdjustmentWithChanges } from './hooks/use-inventory-history'
@@ -144,9 +144,9 @@ const InventoryHistoryView: React.FC<InventoryHistoryViewProps> = ({
             render: (value: string) =>
                 value ? (
                     <div className="flex flex-col">
-                        <span className="font-medium">{dayjs(value).format('HH:mm:ss')}</span>
+                        <span className="font-medium">{formatWithPattern(value, 'HH:mm:ss')}</span>
                         <span className="text-xs text-gray-500">
-                            {dayjs(value).format('DD/MM/YYYY')}
+                            {formatWithPattern(value, 'DD/MM/YYYY')}
                         </span>
                     </div>
                 ) : (

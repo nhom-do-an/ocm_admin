@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/es/table'
 import FilterDrawer from '@/containers/dashboard/product/components/FilterDrawer'
 import { useProductList } from './hooks/use-product-list'
 import { Product } from '@/types/response/product'
-import dayjs from 'dayjs'
+import { formatWithPattern } from '@/utils/date'
 import { PStatusOptions, PTypeOptions } from '@/constants/constant'
 import { useRouter } from 'next/navigation'
 
@@ -150,8 +150,8 @@ const ProductListView: React.FC = () => {
             align: 'center',
             render: (date) => {
                 if (!date) return '-'
-                const formatted = dayjs(date).format('DD/MM/YYYY')
-                const fullDate = dayjs(date).format('DD/MM/YYYY HH:mm:ss')
+                const formatted = formatWithPattern(date, 'DD/MM/YYYY')
+                const fullDate = formatWithPattern(date, 'DD/MM/YYYY HH:mm:ss')
                 return (
                     <Tooltip title={fullDate}>
                         <span className="cursor-help">{formatted}</span>

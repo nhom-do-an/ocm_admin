@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 import { Button, Card, Divider, Empty, Space, Spin, Tag } from 'antd'
 import { ArrowLeft, Pencil, ShoppingBag } from 'lucide-react'
 import { useRouter, useParams } from 'next/navigation'
-import dayjs from 'dayjs'
+import { formatWithPattern } from '@/utils/date'
 import CustomerOrderCard from './components/CustomerOrderCard'
 import { useCustomerDetail } from './hooks/use-customer-detail'
 import EmptyState from '@/components/common/EmptyState'
@@ -45,7 +45,7 @@ const CustomerDetailView: React.FC = () => {
     const orderCount = customer?.orders_count || 0
     const averageSpent = orderCount > 0 ? Math.round(totalSpent / orderCount) : 0
     const lastOrderName = customer?.last_order_name || '---'
-    const lastOrderAt = customer?.updated_at ? dayjs(customer.updated_at).format('DD/MM/YYYY HH:mm') : '---'
+    const lastOrderAt = customer?.updated_at ? formatWithPattern(customer.updated_at, 'DD/MM/YYYY HH:mm') : '---'
     const statusTag = customer?.status === 'enabled'
         ? { color: 'green', text: 'Đã có tài khoản' }
         : { color: 'orange', text: 'Chưa có tài khoản' }

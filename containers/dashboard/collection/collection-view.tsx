@@ -4,7 +4,7 @@ import { Table, Button, Input, Space, Image, Tooltip } from 'antd'
 import { Search, Plus, X } from 'lucide-react'
 import type { ColumnsType } from 'antd/es/table'
 
-import dayjs from 'dayjs'
+import { formatWithPattern } from '@/utils/date'
 import { useRouter } from 'next/navigation'
 import { useCollectionList } from './hooks/use-collection-list'
 import { Collection } from '@/types/response/collection'
@@ -121,8 +121,8 @@ const CollectionListView: React.FC = () => {
             align: 'center',
             render: (date) => {
                 if (!date) return '-'
-                const formatted = dayjs(date).format('DD/MM/YYYY')
-                const fullDate = dayjs(date).format('DD/MM/YYYY HH:mm:ss')
+                const formatted = formatWithPattern(date, 'DD/MM/YYYY')
+                const fullDate = formatWithPattern(date, 'DD/MM/YYYY HH:mm:ss')
                 return (
                     <Tooltip title={fullDate}>
                         <span className="cursor-help">{formatted}</span>
