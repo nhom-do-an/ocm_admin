@@ -138,10 +138,10 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ limit = 10 }) => {
                 <button
                     onClick={handleOpenPreview}
                     disabled={loading || (trending.length === 0 && predictions.length === 0)}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors shadow-md"
+                    className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors shadow-md"
                 >
-                    <Eye className="w-4 h-4" />
-                    <span>Xem trước & Xuất báo cáo PDF</span>
+                    <Eye className="w-4 h-4 text-white" />
+                    <span className="text-white">Xem trước & Xuất báo cáo PDF</span>
                 </button>
             </div>
 

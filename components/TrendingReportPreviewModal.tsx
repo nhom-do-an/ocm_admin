@@ -1,10 +1,10 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Button } from 'antd'
-import { Download, X, Eye } from 'lucide-react'
+import { Download, Eye } from 'lucide-react'
 import { TrendingItem, TrendingPrediction } from '@/types/response/trending'
-import { generateTrendingReportHTML, getReportFileName } from '@/utils/trendingReportHTMLTemplate'
-import html2pdf from 'html2pdf.js'
+import { pdf } from '@react-pdf/renderer'
+import TrendingReportPDF, { getReportFileName } from '@/utils/trendingReportPDF'
 
 interface TrendingReportPreviewModalProps {
     open: boolean
@@ -30,7 +30,6 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
     const [pdfUrl, setPdfUrl] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const [downloading, setDownloading] = useState(false)
-    const iframeRef = useRef<HTMLIFrameElement>(null)
 
     useEffect(() => {
         if (open) {
@@ -47,72 +46,23 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
     const generatePreview = async () => {
         try {
             setLoading(true)
-            const html = generateTrendingReportHTML({
-                trending,
-                predictions,
-                totalPredictedSales,
-                totalPredictedRevenue,
-                selectedDate
-            })
+            
+            // Generate PDF blob using @react-pdf/renderer
+            const blob = await pdf(
+                <TrendingReportPDF
+                    trending={trending}
+                    predictions={predictions}
+                    totalPredictedSales={totalPredictedSales}
+                    totalPredictedRevenue={totalPredictedRevenue}
+                    selectedDate={selectedDate}
+                />
+            ).toBlob()
 
-            // Create a hidden iframe to render HTML in complete isolation
-            const iframe = document.createElement('iframe')
-            iframe.style.position = 'fixed'
-            iframe.style.left = '-9999px'
-            iframe.style.top = '0'
-            iframe.style.width = '210mm'
-            iframe.style.height = '297mm'
-            iframe.style.border = 'none'
-            iframe.style.visibility = 'hidden'
-            document.body.appendChild(iframe)
-
-            // Wait for iframe to load
-            await new Promise<void>((resolve) => {
-                iframe.onload = () => resolve()
-                iframe.srcdoc = html
-            })
-
-            // Wait for content to fully render
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-            if (!iframeDoc || !iframeDoc.body) {
-                throw new Error('Cannot access iframe document')
-            }
-
-            const bodyElement = iframeDoc.body
-
-            // Verify content exists
-            if (!bodyElement.innerHTML || bodyElement.innerHTML.trim() === '') {
-                throw new Error('HTML content is empty')
-            }
-
-            // Generate PDF from iframe body
-            const opt = {
-                margin: [0, 0, 0, 0] as [number, number, number, number],
-                filename: getReportFileName(),
-                image: { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    windowWidth: bodyElement.scrollWidth || 794,
-                    windowHeight: bodyElement.scrollHeight || 1123,
-                    allowTaint: true
-                },
-                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            }
-
-            const pdfBlob = await html2pdf().set(opt).from(bodyElement).outputPdf('blob')
-            const url = URL.createObjectURL(pdfBlob)
+            // Create URL for preview
+            const url = URL.createObjectURL(blob)
             setPdfUrl(url)
-
-            // Cleanup iframe immediately
-            document.body.removeChild(iframe)
         } catch (error) {
             console.error('Error generating PDF preview:', error)
-            setLoading(false)
         } finally {
             setLoading(false)
         }
@@ -121,67 +71,27 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
     const handleDownload = async () => {
         try {
             setDownloading(true)
-            const html = generateTrendingReportHTML({
-                trending,
-                predictions,
-                totalPredictedSales,
-                totalPredictedRevenue,
-                selectedDate
-            })
+            
+            // Generate PDF blob
+            const blob = await pdf(
+                <TrendingReportPDF
+                    trending={trending}
+                    predictions={predictions}
+                    totalPredictedSales={totalPredictedSales}
+                    totalPredictedRevenue={totalPredictedRevenue}
+                    selectedDate={selectedDate}
+                />
+            ).toBlob()
 
-            // Create a hidden iframe to render HTML in complete isolation
-            const iframe = document.createElement('iframe')
-            iframe.style.position = 'fixed'
-            iframe.style.left = '-9999px'
-            iframe.style.top = '0'
-            iframe.style.width = '210mm'
-            iframe.style.height = '297mm'
-            iframe.style.border = 'none'
-            iframe.style.visibility = 'hidden'
-            document.body.appendChild(iframe)
+            // Create download link
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.href = url
+            link.download = getReportFileName()
+            link.click()
 
-            // Wait for iframe to load
-            await new Promise<void>((resolve) => {
-                iframe.onload = () => resolve()
-                iframe.srcdoc = html
-            })
-
-            // Wait for content to render
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
-            if (!iframeDoc || !iframeDoc.body) {
-                throw new Error('Cannot access iframe document')
-            }
-
-            const bodyElement = iframeDoc.body
-
-            // Verify content exists
-            if (!bodyElement.innerHTML || bodyElement.innerHTML.trim() === '') {
-                throw new Error('HTML content is empty')
-            }
-
-            // Generate and download PDF
-            const opt = {
-                margin: [0, 0, 0, 0] as [number, number, number, number],
-                filename: getReportFileName(),
-                image: { type: 'jpeg' as const, quality: 0.98 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    windowWidth: bodyElement.scrollWidth || 794,
-                    windowHeight: bodyElement.scrollHeight || 1123,
-                    allowTaint: true
-                },
-                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            }
-
-            await html2pdf().set(opt).from(bodyElement).save()
-
-            // Cleanup iframe immediately
-            document.body.removeChild(iframe)
+            // Cleanup
+            URL.revokeObjectURL(url)
             onDownload()
         } catch (error) {
             console.error('Error downloading PDF:', error)
@@ -205,6 +115,11 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
             centered
             destroyOnClose
             className="trending-report-preview-modal"
+            style={{ top: 20 }}
+            styles={{
+                body: { padding: '24px' },
+                content: { borderRadius: '8px' }
+            }}
         >
             <div className="space-y-4">
                 {loading ? (
@@ -216,21 +131,14 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
                     </div>
                 ) : pdfUrl ? (
                     <>
-                        <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+                        <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
                             <iframe
-                                ref={iframeRef}
                                 src={pdfUrl}
-                                className="w-full h-[600px] border-0"
+                                className="w-full h-[70vh] border-0"
                                 title="PDF Preview"
                             />
                         </div>
                         <div className="flex justify-end gap-3 pt-4 border-t">
-                            <Button
-                                icon={<X className="w-4 h-4" />}
-                                onClick={onCancel}
-                            >
-                                Đóng
-                            </Button>
                             <Button
                                 type="primary"
                                 icon={<Download className="w-4 h-4" />}
@@ -254,4 +162,3 @@ const TrendingReportPreviewModal: React.FC<TrendingReportPreviewModalProps> = ({
 }
 
 export default TrendingReportPreviewModal
-
